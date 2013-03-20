@@ -89,19 +89,9 @@ app.controller('MainCtrl',['$scope','$window','$http','$route','$location','$q',
   }
 
   window.onbeforeunload = function(e) {
-    // // if(scope.$root.dirtyForms){
-    //   // var dirty = false;
-    //   // var msg = [];
-    //   // for(var i in scope.$root.dirtyForms){
-    //   //   var value =scope.$root.dirtyForms[i];
-    //   //   dirty =  value || dirty;
-    //   //   if(value){
-    //   //     msg.push('第'+(i+1)+'题');
-    //   //   }
-    //   // }
-    //   // if(dirty){
-    //     return '未保存的数据将丢失,确定要离开本页?';
-    //   // }
-    // // }
+    var event = scope.$root.broadcast('unload');
+    if(event.defaultPrevented){
+      return '将丢失未保存的更改,您确定要退出本页?';
+    }
   };
 }]);
