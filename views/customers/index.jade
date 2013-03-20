@@ -1,0 +1,116 @@
+extends ../layout
+
+block sidebar
+  h1 会员管理
+  ul.sidenav
+    li.current
+      a(href='/customers') 会员列表
+    li
+      a(href='/levels') 会员类别
+    li
+      a(href='/admins') 工作人员管理
+
+append head
+  script
+    $(function(){
+      $(document).on('click','a[data-type=delete-selected]',function(e){
+        e.preventDefault();
+        if(!$('input[name="ids[]"]:checked').length){
+          return false;
+        }
+        $('form#selects input[name=_method]').val('delete');
+        if(window.confirm('确定删除选中的记录?')){
+          $('form#selects').submit();
+        }
+      });
+      $(document).on('click','a[data-type=batch-selected]',function(e){
+        e.preventDefault();
+        var left,top;
+        var offset = $(this).offset();
+        $('#batch-popup').toggle().css('left',offset.left).css('top',offset.top+ $(this).height() + 10);
+      });
+      $(document).on('click','#batch-popup button',function(){
+        if(!$('input[name="ids[]"]:checked').length){
+          alert('请先选择需要编辑的记录.');
+          return false;
+        }
+        $('form#selects input[name=_method]').val('put');
+        $('form#selects input[name=levelId]').val($('#batch-popup').find('select').val());
+        $('form#selects').submit();
+      });
+    });
+
+block content
+  .toolbar
+    a.btn.btn-green.btn-round(href='/customers/new' , data-type='add') 添加
+    a.relative.btn.btn-green.btn-round(href='#' , data-type='batch-selected')
+      |批量编辑
+    #batch-popup
+      label 设定会员类别:
+      select
+        :qejs(models=models)
+          <% models.Level.findAll() -> levels %>
+            <% levels.forEach(function(level){ -%>
+              <option value="<%= level.id %>"><%= level.Name %></option>
+            <% }) -%>
+          <% <- -%>
+      button.btn.btn-blue 应用
+    a.btn.btn-green.btn-round(href='#' , data-type='refresh') 刷新
+    a.btn.btn-green.btn-round(href='#' , data-type='delete-selected') 删除
+    a.btn.btn-green.btn-round(href='/customers.csv' , data-type='export') 导出
+    form(method='get').search
+      select(name='by')
+        option(value='UserName',selected= collection.by=='UserName') 用户名
+        option(value='Email' ,selected=collection.by=='Email') 邮箱
+        option(value='Name' ,selected=collection.by=='Name') 姓名
+        option(value='School ',selected=collection.by=='School') 学校
+      input(name='q',value=collection.q)
+      button(type='submit').btn.btn-blue 搜索
+  .main
+    form#selects(method='post')
+      input(type='hidden',name='_method',value='delete')
+      input(type='hidden',name='levelId',value='')
+      table
+        thead
+          tr
+            th.span25px
+              input(type='checkbox',data-type='select-all')
+            th 会员ID
+            th 会员类别
+            th 姓名
+            th 身份
+            th 用户名
+            th 邮箱
+            th 性别
+            th 学校
+            th 年级
+            th 最后登陆时间
+            th.span20 操作
+        tbody
+          each model, i in collection
+            tr(class=((i % 2 == 0) ? 'odd' : 'even') + (model.level.Order == 4 ? ' highlight' : ''))
+              td
+                input(type='checkbox',value=model.id,data-type='select',name='ids[]')
+              td= model.id
+              td= model.levelText()
+              td= model.Name
+              td= model.roleText()
+              td= model.UserName
+              td= model.Email
+              td= model.Gender ? '男' : '女'
+              td= model.School
+              td= model.gradeText()
+              td
+                if model.LoginTime
+                  = moment(model.LoginTime).format('YYYY-MM-DD hh:mm:ss')
+              td
+                a(href='/customers/#{model.id}', data-type='view') 查看
+                a(data-type='delete', href='/customers/#{model.id}' , data-method='delete' , data-confirm='确定删除本记录?' , rel="nofollow") 删除
+                a(data-type='edit'  ,href='/customers/#{model.id}/edit') 编辑
+                a(data-type='toggle-enabled', href='/customers/#{model.id}/toggle_enabled', data-method='put',data-confirm='确定禁用本用户?' )
+                  if model.Enabled
+                    |禁用
+                  else
+                    |启用
+    .pagination
+      != paginate(collection)

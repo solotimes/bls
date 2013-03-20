@@ -1,0 +1,58 @@
+extends index
+
+block content
+  .main
+    .form
+      .form-header
+        ul.tabs
+          li.tab.current
+            a(href='/customers/#{instance.id}')会员信息
+          li.tab
+            a(href='#')记录
+      include ../flash
+      .field.gray
+        span.label
+          会员ID
+        span
+          =instance.id
+        span(style='margin-left:20px') 注册时间 #{moment(instance.CreatedAt).format('YYYY-MM-DD HH:mm')}
+      .field
+        span.label 会员类别
+        span=instance.levelText()
+      .field
+        span.label 姓名:
+        span=instance.Name
+      .field
+        span.label 用户名:
+        span=instance.UserName
+      .field
+        span.label Email:
+        span=instance.Email
+      .field
+        span.label 性别:
+        span
+          if instance.Gender
+            |男
+          else
+            |女
+      .field
+        span.label 身份:
+        span=instance.roleText()
+      .field
+        span.label 关联用户:
+        span
+          :qejs(instance=instance)
+            <% instance.getRelated() -> related -%>
+            <%=  (related||[]).map(function(c){return c.Name}).join(',') %>
+            <% <- -%>
+      .field
+        span.label 学校:
+        span=instance.School
+      .field
+        span.label 年级:
+        span=instance.gradeText()
+      .field
+        span.label 班级:
+        span=instance.Class
+      .actions
+        a(href='/customers/#{instance.id}/edit').btn.btn-orange 修改

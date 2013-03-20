@@ -1,0 +1,5 @@
+if !!flash
+	.flash-messages
+		-for(f in flash)
+			.flash(class='flash-#{f}')
+				!= flash[f]

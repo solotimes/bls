@@ -1,0 +1,46 @@
+form(action= !instance.isNewRecord ? '/admins/#{instance.id}' : '/admins',method='post')
+  if !instance.isNewRecord
+    input(type='hidden',name='_method',value='put')
+    .field.gray
+      span.label
+        工号ID
+      span
+        =instance.id
+      span(style='margin-left:20px') 添加时间 #{moment(instance.CreatedAt).format('YYYY-MM-DD HH:mm')}
+  .field
+    span.label 姓名:
+    input(type='text',name='instance[Name]',value=instance.Name)
+  .field
+    span.label 用户名:
+    input(type='text',name='instance[UserName]',value=instance.UserName)
+  .field
+    span.label Email:
+    input(type='text',name='instance[Email]',value=instance.Email)
+  .field
+    span.label 密码
+      if !instance.isNewRecord
+        |(不修改请留空)
+      |:
+    input(type='password',name='instance[pass]')
+  .field
+    span.label 角色:
+    :qejs(instance = instance, models=models)
+      <% models.AdminRole.findAll() -> roles %>
+        <% roles.forEach(function(role){ -%>
+          <label>
+            <input type="checkbox" name="roleIds" value="<%= role.id %>"
+             <%=instance.rolesList().indexOf(role.Name)!=-1 ? 'checked' : ''%>
+            />
+            <%= role.Name %>
+          </label>
+        <% }) -%>
+      <% <- %>
+    //- each role in roles
+    //-   label
+    //-     input(type='checkbox',name='roleIds[]',value=role.id,checked= (instance.rolesList().indexOf(role.Name)!=-1))
+    //-     =role.Name
+  .actions
+    if !instance.isNewRecord
+      button(type="submit").btn.btn-orange 更新
+    else
+      button(type="submit").btn.btn-orange 添加

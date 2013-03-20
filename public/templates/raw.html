@@ -1,0 +1,40 @@
+<div ng-controller="RawCtrl" class='inner'>
+	<div class='panel'>
+		<div class='title'>
+			<p>
+				<span class='field'>姓名: {{paper.customer.Name}}</span>
+				<span class='field'>等级: {{paper.customer.level.Name}}</span>
+				<span class='field'>学校: {{paper.customer.School}}</span>
+				<span class='field'>年级: {{paper.customer.grade.Name}}</span>
+			</p>
+			<p>
+				<span class='field'>上传日期: {{paper.customer.CreatedAt | date:'yyyy-MM-dd'}}</span>
+			</p>
+		</div>
+		<div class='clearfix'>
+			<div class='actions pull-right'>
+				<button class='btn btn-orange' ng-click='recapture()' ng-show='needRecapture()'>需要重拍</button>
+				<div class='assign'  ng-show='paper.Status==0 &amp;&amp; !needRecapture()'>
+					<button class='btn btn-blue' ng-click='loadInputers()' ng-disabled='!!inputers'>分配录入</button>
+					<select ng-options="i.id as i.Name for i in inputers" ng-model='paper.AdminId' ng-show='!!inputers'></select>
+					<button class='btn btn-orange' ng-click='assign()' ng-show='paper.AdminId'>确定</button>
+				</div>
+			</div>
+			<p>
+				<span class='field'>录入:  {{paper.assignedTo.Name}}</span>
+				<span class='field'>最后编辑: {{paper.lastlog.Name}} {{paper.lastlog.CreatedAt | date:'yyyy-MM-dd HH:mm'}}</span>
+			</p>
+		</div>
+		<div class='record'  ng-show='paper.pics[selectedPic].AudioPath'>
+			第{{selectedPic+1}}面:
+			<button  class='btn btn-blue audio' audio-src='paper.pics[selectedPic].audio'>播放录音</button>
+		</div>
+		<ul class='pic-selectors' pics='paper.pics' index-var='selectedPic' show-checkbox='paper.Status == 0 || paper.Status == 4' checkbox-field='RecaptureMark' checkbox-label='重拍'>
+		</ul>
+	</div>
+	<ul class='pics'>
+		<li scrollable ng-show="selectedPic == $index" ng-repeat="pic in paper.pics">
+			<img class='paper-pic' ng-src="{{pic.image}}" show-overlay='pic.RecaptureMark'>
+		</li>
+	</ul>
+</div>

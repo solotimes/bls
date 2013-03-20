@@ -1,0 +1,64 @@
+!!! 5
+//if lt IE 7
+  html.no-js.lt-ie9.lt-ie8.lt-ie7.ie6
+//if IE 7
+  html.no-js.lt-ie9.lt-ie8.ie7
+//if IE 8
+  html.no-js.lt-ie9.ie8
+// [if gt IE 8] <!
+html.no-js
+  // <![endif]
+  head
+    meta(charset='utf-8')
+    meta(content='IE=edge,chrome=1', http-equiv='X-UA-Compatible')
+    title 学之云后台管理
+    meta(content='', name='description')
+    meta(content='andrew', name='author')
+    link(href='/favicon.ico', rel='shortcut icon')
+    block head
+      !=js('app')
+      !=css('reset')
+      !=css('app')
+      !=css('token-input')
+  body(class=(locals.bodyClass || []))
+    .wrapper
+      .header
+        .pull-right.corner
+          span #{currentUser.Name} 您好!
+          a.btn.btn-grey(href='#') 账号管理
+          a.btn.btn-orange(href='/logout') 退出
+        .brand
+          img(src='/img/admin-logo.png')
+          | 学之云 后台管理
+        .navbar
+          ul
+            li(class=/^\/customer_papers\/(raw|\d+)/.test(req.url) ? 'current' : '')
+              a(href='/customer_papers') 上传试卷管理
+            li
+              a(href='#') 用户试卷管理
+            li
+              a(href='#') 试卷库管理
+            li
+              a(href='#') 扩展练习考卷
+            li
+              a(href='#') 试卷模板管理
+            li
+              a(href='#') 题目库管理
+            li(class= /^\/admins|\/customers|\/levels/.test(req.url) ? 'current' : '')
+              a(href='/customers') 会员管理
+            //- li
+            //-   a(href='#') CMS页面
+            li
+              a(href='#') 系统设置
+      block container
+        .container
+          .sidebar
+            block sidebar
+          .content
+            block content
+    .ajax-spinner
+      .sending 发送中...
+      .loading 加载中...
+      .success 完成!
+      .fail 错误 点击
+        a(href='#')刷新

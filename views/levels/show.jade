@@ -1,0 +1,44 @@
+extends index
+
+block content
+  .main
+    .form
+      .form-header
+        ul.tabs
+          li.tab.current
+            a(href='#')工作人员信息
+      include ../flash
+      .field.gray
+        span.label
+          工号ID
+        span
+          =instance.id
+        span(style='margin-left:20px') 添加时间 #{moment(instance.CreatedAt).format('YYYY-MM-DD HH:mm')}
+      .field
+        span.label 姓名:
+        span=instance.Name
+      .field
+        span.label 用户名:
+        span=instance.UserName
+      .field
+        span.label Email:
+        span=instance.Email
+      .field
+        span.label 角色:
+        span= instance.rolesList().join(', ')
+      .field
+        span.label 登陆时间
+        if instance.LoginTime
+          span= moment(instance.LoginTime).format('YYYY-MM-DD HH:mm')
+      .field
+        span.label 登陆ip
+        span= instance.LoginIP
+      .field
+        span.label 上次登陆时间
+        if instance.LastLoginTime
+          span= moment(instance.LastLoginTime).format('YYYY-MM-DD HH:mm')
+      .field
+        span.label 上次登陆ip
+        span= instance.LastLoginIP
+      .actions
+        a(href='/admins/#{instance.id}/edit').btn.btn-orange 修改

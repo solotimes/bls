@@ -1,0 +1,19 @@
+form(action= !instance.isNewRecord ? '/levels/#{instance.id}' : '/levels',method='post')
+  if !instance.isNewRecord
+    input(type='hidden',name='_method',value='put')
+    .field.gray
+      span.label
+        |ID
+      span
+        =instance.id
+  .field
+    span.label 名称:
+    input(type='text',name='instance[Name]',value=instance.Name)
+  .field
+    span.label 顺序:
+    input(type='text',name='instance[Order]',value=instance.Order)
+  .actions
+    if !instance.isNewRecord
+      button(type="submit").btn.btn-orange 更新
+    else
+      button(type="submit").btn.btn-orange 添加

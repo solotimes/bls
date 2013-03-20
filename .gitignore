@@ -1,0 +1,6 @@
+.nodemonignore
+.svn
+node_modules/*
+config.js
+Guardfile
+test.js

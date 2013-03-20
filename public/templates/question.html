@@ -1,0 +1,86 @@
+<div class='box box-blue selector'>
+  <label class='blue'>选择已有题目:</label>
+  <select ng-model='question' ng-options='q.question as q.label for q in questionsWithLabels'></select>
+</div>
+<form name='qform'>
+<div class='box box-blue'>
+  <div class='info'>
+    <span class='orange'>题号: {{qid+1}}</span>
+    <span class='gray'>题目ID: {{question.id}}</span>
+    <span class='gray'>已录入: {{savedQuestions()}}题</span>
+  </div>
+  <div class='fields question-type'>
+    <label>创建题目类型:</label>
+    <button class='btn' ng-class='{"btn-orange": (question.Type==0)}' ng-click='question.Type=0'>单选题</button>
+    <button class='btn' ng-class='{"btn-orange": (question.Type==1)}' ng-click='question.Type=1'>填空题</button>
+    <button class='btn' ng-class='{"btn-orange": (question.Type==2)}' ng-click='question.Type=2'>主观题</button>
+  </div>
+  <div class='fields question-body'>
+    <label class='gray'>提干: </label>
+    <div ng-model='question.Body' contenteditable='true'/>
+  </div>
+  <div class='fields question-answers'>
+    <div ng-switch='question.Type'>
+      <div ng-switch-when='0' ng-controller='MultipleChoiceCtrl'>
+        <label class='gray'>选项: </label>
+        <button class='btn-add pull-right' ng-click='addChoice()'>+ 添加</button>
+        <div class='choice' ng-repeat='choice in question.Choices' ng-class='{correct:$index==(question.Answer.charCodeAt(0)-65)}'>
+          <div class='pull-left'><label class='abc'>{{$index | toABC}}:</label></div>
+          <div class='pull-right'><label><input type='radio' name='correct' ng-value='$index | toABC' ng-model='question.Answer'/>正确</label>
+          <a class='del' ng-click='removeChoice($index)'>删除</a></div>
+          <div ng-model='choice.body' contenteditable='true'/>
+        </div>
+      </div>
+      <div ng-switch-when='1' ng-controller='FillinBlanksCtrl'>
+        <label class='gray'>正确答案:</label>
+        <div ng-model='question.Answer' contenteditable='true' class='less'/>
+      </div>
+      <div ng-switch-when='2' ng-controller='FillinBlanksCtrl'>
+        <label class='gray'>正确答案:</label>
+        <div ng-model='question.Answer' contenteditable='true'/>
+      </div>
+    </div>
+
+  </div>
+  <div class='fields question-solutions'>
+    <label>解题思路:</label>
+    <div ng-model='question.Solution' contenteditable='true' class='more'/>
+  </div>
+  <div  class='fields knowledge-points'>
+    <label class='blue'>归属知识点:</label>
+    <button class='btn-add' ng-click='addKnowLedgePoint()'>+ 添加</button>
+    <ul class='box'>
+      <li ng-repeat='knowledge in question.knowledges'>
+        <span class='name'>{{knowledge.Name}}</span>
+        <span class='difficulty' ng-class='"difficulty-"+knowledge.difficulty'></span>
+        <button class='trash'></button>
+      </li>
+    </ul>
+  </div>
+  <div class='fields question-condition hbox'>
+    <label class='blue'>条件:</label>
+    <select ng-model='question.Condition' ng-options='v.value as v.label for v in [{label:"条件1",value:"1"},{label:"条件2",value:"2"}]'></select>
+    <label class='blue'>问法:</label>
+    <select ng-model='question.Method' ng-options='v.value as v.label for v in [{label:"问法1",value:"1"},{label:"问法2",value:"2"}]'></select>
+  </div>
+  <div class='fields question-difficulty'>
+    <label class='blue'>难易度:</label>
+    <span class='stars stars-big' ng-model='question.Difficulty'></span>
+  </div>
+  <div class='fields question-mark' ng-class='{wrong: question.meta.wrong}'>
+    <label class='blue'>用户回答:</label>
+    <label><input type='radio' ng-value='false' ng-model='question.meta.wrong'/>正确</label>
+    <label class='orange'><input type='radio' ng-value='true' ng-model='question.meta.wrong'/>错误</label>
+  </div>
+  <div>
+
+  </div>
+  <div class='buttons'>
+    <a class='btn' href='/customer_papers/'>退出</a>
+    <a class='btn btn-blue' ng-show='[3,5,6,7].indexOf(paper.Status)!==-1' ng-click='finishPaper(questions)'>保存全卷</a>
+    <a class='btn btn-green' ng-show='[1,2].indexOf(paper.Status) != -1 &amp;&amp;savedQuestions() > 0' ng-click='finishWrongQuestions()'>完成错题输入</a>
+    <a class='btn' ng-click='nextQuestion(qid)'>下一题</a>
+    <a class='btn btn-orange' ng-click='saveQuestion(qid)'>保存</a>
+  </div>
+</div>
+</form>

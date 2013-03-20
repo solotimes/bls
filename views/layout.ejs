@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie6"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8 ie7"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9 ie8"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset='utf-8'>
+  <meta content='IE=edge,chrome=1' http-equiv='X-UA-Compatible'>
+  <title>学之云后台管理</title>
+  <meta content='' name='description'>
+  <meta content='andrew' name='author'>
+  <link href='/favicon.ico' rel='shortcut icon'>
+  <%- js('app') %>
+  <%- css('reset') %>
+  <%- css('app') %>
+  <%- head -%>
+</head>
+<body <%- ( !!locals.bodyClass ? ('class="'+bodyClass+'"') : '') %>>
+  <div class='wrapper'>
+    <div class='header'>
+      <div class='pull-right corner'>
+        <span>您好! <%= currentUser.Name %></span>
+        <a href="#" class='btn btn-grey'>账号管理</a>
+        <a href="/logout" class='btn btn-orange'>退出</a>
+      </div>
+      <div class='brand'>
+        <img src="/img/admin-logo.png">
+        学之云 后台管理
+      </div>
+      <div class='navbar'>
+         <ul>
+          <li class='current'><a href='#'>上传试卷管理</a></li>
+          <li><a href='#'>试卷库管理</a></li>
+          <li><a href='#'>题目库管理</a></li>
+          <li><a href='#'>会员管理</a></li>
+          <li><a href='#'>CMS页面</a></li>
+          <li><a href='#'>系统设置</a></li>
+         </ul>
+      </div>
+    </div>
+    <div class='container'>
+      <div class='sidebar'>
+        <%-sidebar%>
+      </div>
+      <div class='main'>
+        <%-body%>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

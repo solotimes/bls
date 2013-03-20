@@ -1,0 +1,26 @@
+/**
+ * Created with JetBrains PhpStorm.
+ * User: Administrator
+ * Date: 13-1-15
+ * Time: 上午10:23
+ */
+var config = module.exports = {};
+
+config.env = 'development';
+config.port = 3000;
+config.db = {
+    host: 'localhost',
+    user: 'root',
+    pass: '',
+    name: 'banglaoshi'
+};
+config.uploadDir = './public/upload/';
+
+//远程访问上传文件的路径前缀
+config.uploadPath = '/upload/';
+
+config.maxUpload = '5mb';
+config.cookieKey = '00ac88ea1af5d8f5d54b79db0a12af790194627a8c057dbf7de1fbc9d4c21ae854ff5fefd2470c6dc6fa606671f9527e3618f8824149ae417754bc2fc66449b9';
+config.sessionSecrect = '0886c1e89fecd46b527b006b39117244262a86c5121aeda97e7c000bdfa05f76c471bb7f634ed886ee99756274d4eafacf78800d2c136d9bbec79c033231c84e';
+config.sessionKey = 'banglaoshi';
+config.loggerType = 'dev'; // default, short, tiny, dev

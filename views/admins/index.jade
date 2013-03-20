@@ -1,0 +1,74 @@
+extends ../layout
+
+block sidebar
+  h1 会员管理
+  ul.sidenav
+    li
+      a(href='/customers') 会员列表
+    li
+      a(href='/levels') 会员类别
+    li.current
+      a(href='/admins') 工作人员管理
+
+append head
+  script
+    $(function(){
+      $(document).on('click','a[data-type=delete-selected]',function(e){
+        e.preventDefault();
+        if(!$('input[name="ids[]"]:checked').length){
+          return false;
+        }
+        if(window.confirm('确定删除选中的记录?')){
+          $('form#delete').submit();
+        }
+      })
+    });
+
+block content
+  .toolbar
+    a.btn.btn-green.btn-round(href='/admins/new' , data-type='add') 添加
+    //- a.btn.btn-green.btn-round(href='#' , data-type='batch') 批量编辑
+    //- a.btn.btn-green.btn-rounTd(href='#' , data-type='refresh') 刷新
+    a.btn.btn-green.btn-round(href='#' , data-type='delete-selected') 删除
+    form(method='get').search
+      select(name='by')
+        option(value='UserName') 用户名
+        option(value='Email') Email
+      input(name='q',value=collection.q)
+      button(type='submit').btn.btn-blue 搜索
+  .main
+    form#delete(method='post')
+      input(type='hidden',name='_method',value='delete')
+      table
+        thead
+          tr
+            th.span25px
+              input(type='checkbox',data-type='select-all')
+            th.span25px ID
+            th.span20 角色
+            th 姓名
+            th 用户名
+            th Email
+            th 登录时间
+            th ip地址
+            th.span20 操作
+        tbody
+          each model, i in collection
+            tr(class=(i % 2 == 0) ? 'odd' : 'even')
+              td
+                input(type='checkbox',value=model.id,data-type='select',name='ids[]')
+              td= model.id
+              td= model.rolesList().join(' ')
+              td= model.Name
+              td= model.UserName
+              td= model.Email
+              td
+                if model.LoginTime
+                  = moment(model.LoginTime).format('YYYY-MM-DD hh:mm:ss')
+              td= model.LoginIP
+              td
+                a(href='/admins/#{model.id}', data-type='view') 查看
+                a(data-type='delete', href='/admins/#{model.id}' , data-method='delete' , data-confirm='确定删除本记录?' , rel="nofollow") 删除
+                a(data-type='edit'  ,href='/admins/#{model.id}/edit') 编辑
+    .pagination
+      != paginate(collection)

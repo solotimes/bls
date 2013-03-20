@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie6"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8 ie7"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9 ie8"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset='utf-8'>
+  <meta content='IE=edge,chrome=1' http-equiv='X-UA-Compatible'>
+  <title>学之云后台管理</title>
+  <meta content='' name='description'>
+  <meta content='andrew' name='author'>
+  <link href='/favicon.ico' rel='shortcut icon'>
+  <%- js('app') %>
+  <%- css('app') %>
+</head>
+<body class="login">
+  <div class='wrapper'>
+<% include ../flash %>
+    <div class='login-box'>
+      <div class='logo'>
+        <img src="/img/login-logo.png">
+      </div>
+      <form accept-charset="UTF-8" action="/login" method="post">
+        <div class='fields'>
+          <input type='text' placeholder='用户名' name='username'/>
+          <input type='password' placeholder='密码' name='password'/>
+        </div>
+        <div class='actions'>
+          <img src="/captcha.jpg"/>
+          <input type='text' placeholder='验证码' name='captcha' class='captcha'/>
+          <button>登录</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>
