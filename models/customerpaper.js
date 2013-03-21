@@ -27,8 +27,7 @@ module.exports = function(sequelize, DataTypes)
         CreatedAt: {type:DataTypes.DATE, defaultValue: DataTypes.NOW},
         RecordedAt: {type:DataTypes.DATE},
         CodeName: {type:DataTypes.STRING},
-        AudioPath: {type:DataTypes.STRING},
-        Meta: {type:DataTypes.TEXT} //元信息 text/json {questions:[{id:1,num:'题号',wrong:false}...]}
+        AudioPath: {type:DataTypes.STRING}
     },{
       instanceMethods: {
         statusText: function(){

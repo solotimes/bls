@@ -2,6 +2,7 @@ extends ../layout
 append head
   - locals.bodyClass = 'fluid'
   !=js('customer_papers')
+  !=css('jquery.iviewer')
   script(src='/jmeditor/JMEditor.js')
   script
     window.paper = !{JSON.stringify(instance)};
@@ -11,7 +12,7 @@ append head
       <% models.Grade.findAll() -> grades %>
         window.grades = <%-JSON.stringify(grades)%>;
       <% <- -%>
-      <% instance.getQuestions() -> questions %>
+      <% instance.getQuestions(models.Question.getFullQuery()) -> questions %>
         window.questions = <%-JSON.stringify(questions || [])%>;
       <% <- -%>
     </script>

@@ -5,6 +5,8 @@
  * Time: 下午5:44
  */
 var Q = require('q');
+var Sequelize = require('sequelize');
+var Utils = Sequelize.Utils;
 
 module.exports = function(sequelize, DataTypes)
 {
@@ -36,36 +38,58 @@ module.exports = function(sequelize, DataTypes)
             try{
               values.Choices = JSON.parse(this.Choices);
             }catch(e){}
+            values.Wrong = this.Wrong;
+            values.Order = this.Order;
             return values;
         }
       },
       classMethods: {
-        createInstance: function(instance){
+        getFullQuery: function(){
+          return {
+            attributes: Utils._.keys(this.attributes).concat(['Wrong','Order']),
+            order: Utils.addTicks('Order')
+          };
+        },
+        saveInstance: function(attrs){
             var models = require('../models');
             var self = this;
             try{
-              for(var k in instance){
-                if('object' === typeof instance[k]){
-                  instance[k] = JSON.stringify(instance[k]);
+              for(var k in attrs){
+                if('object' === typeof attrs[k]){
+                  attrs[k] = JSON.stringify(attrs[k]);
                 }
               }
             }catch(e){}
             var question;
-            var p = Q.when(self.upsert(instance)).then(function(q){
+            var p = Q.when(self.upsert(attrs)).then(function(q){
               question = q;
               return q;
             });
-            if(!!instance.CustomerPaperId){
-              p = p.then(function(){
-                return Q.when(models.CustomerPaper.find(instance.CustomerPaperId));
-              }).then(function(paper){
-                return Q.when(question.addCustomerPaper(paper));
-              }).fail(function(errors){
-                if(errors[0].code == 'ER_DUP_ENTRY'){
-                  return;
+
+            ['Paper','CustomerPaper'].forEach(function(PaperModel){
+              var paperIdKey = 'PaperModel'+'Id',
+                  paperId = instance[paperIdKey];
+              if(!!paperId){
+                p = p.then(function(){
+                  return Q.when(models[PaperModel].find(paperId));
+                }).then(function(paper){
+                  return Q.when(question['add'+PaperModel](paper));
+                });
+                //更新关系表
+                if('undefined' !== typeof attrs.Wrong || 'undefined' !== attrs.Order){
+                  // var relationship = attrs.relationship[PaperModel];
+                  var where = {};
+                  where[paperIdKey]=paperId;
+                  where.QuestionId = question.id;
+                  var sql = qg.updateQuery(models[PaperModel].tableName+'Questions',
+                    {Wrong:attrs.Wrong,Order: attrs.Order}, //set
+                    where); //where
+                  p = p.then(function(){
+                    return Q.when(models.sequelize.query(sql));
+                  });
                 }
-              });
-            }
+              }
+            });
             // if(!!instance.PaperId){
             //   p = p.then(function(){
             //     return Q.when(models.Paper.find(instance.PaperId));

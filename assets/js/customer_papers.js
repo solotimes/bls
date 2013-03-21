@@ -1,3 +1,4 @@
+//=require ./lib/jqueryui
 //=require_tree ./lib
 //=require_tree ./paper
 

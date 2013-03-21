@@ -10,7 +10,7 @@
     "sequelize": "*",
     "connect-assets": "*",
     "coffee-script": "*",
-    "mysql": "~2.0.0-alpha7",
+    "mysql": "0.9.6",
     "connect-mysql": "~0.2.5",
     "moment": "~2.0.0",
     "canvas": "~1.0.1",
@@ -25,6 +25,6 @@
     "q": "0.8.x",
     "qejs": "~3.0.5",
     "querystring": "0.2.x",
-    "iconv-lite": "~0.2.7"
+    "iconv-lite": "~0.2.7",
   }
 }
