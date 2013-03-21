@@ -7,6 +7,11 @@ var app = angular.module('Paper', ['paper.filters', 'paper.services', 'paper.dir
 
 
 app.controller('QuestionCtl',['$scope','$http','$routeParams','$location',function(scope,http,routeParams,location){
+
+  scope.$on('unload',function(e){
+    // e.preventDefault();
+  });
+
   function newQuestion(attrs){
     attrs = attrs || {};
     return  angular.extend({

@@ -3,10 +3,32 @@ var models = require('../../models'),
     utility = require('../logics/utility'),
     extend = require('extend'),
     Q = require('q'),
-    async = require('async');
+    async = require('async'),
+    Utils = Sequelize.Utils;
 
-exports.index = function(req, res){
-  res.send(200);
+exports.index = {
+  json: function(req,res,next){
+    var parentModels = ['customer_paper','paper'];
+    var p;
+    var paperModel, paperId;
+    for(var i in parentModels){
+      if( (paperModel = req[parentModels[i]]) ){
+        break;
+      }
+    }
+    if(paperModel){
+      p = Q.when(paperModel.getQuestions(models.Question.getFullQuery()));
+    }else{
+      p = Q.when(models.Question.all());
+    }
+    p.then(function(quesions){
+      res.send(quesions);
+    })
+    .fail(function(err){
+      logger.log(err);
+      res.send(err);
+    });
+  }
 };
 
 
@@ -27,7 +49,7 @@ exports.create = {
         }
         Q.all(instance.map(function(question){
           //并发写入所有试题
-          return models.Question.createInstance(question);
+          return models.Question.saveInstance(question);
         }))
         .then(function(questions){
           if(questions.length==1)

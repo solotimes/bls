@@ -736,8 +736,26 @@ a,a:hover{
     li{
       .vbox;
       .box-flex;
-      overflow: scroll;
       border: 3px solid #666666;
+      position: relative;
+      overflow: hidden;
+    }
+    .iviewer{
+      .vbox;
+      .box-flex;
+      position: relative;
+    }
+    .overlay{
+      background: black;
+      width: 100%;
+      height: auto;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      position: absolute;
+      display: none;
+      opacity: 0.6;
+      z-index: 9990;
     }
   }
   ul.pic-selectors{
@@ -764,28 +782,6 @@ a,a:hover{
         text-align: center;
         color: #666a6a;
       }
-    }
-  }
-  .pics{
-    position: relative;
-    img{
-      max-width: 100%;
-      cursor: pointer;
-      pointer-events:;
-      &.zoomed{
-        max-width: none;
-      }
-    }
-    .overlay{
-      background: black;
-      width: 100%;
-      height: auto;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      position: absolute;
-      display: none;
-      opacity: 0.6;
     }
   }
 }

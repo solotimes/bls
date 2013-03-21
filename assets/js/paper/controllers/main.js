@@ -89,9 +89,17 @@ app.controller('MainCtrl',['$scope','$window','$http','$route','$location','$q',
   }
 
   window.onbeforeunload = function(e) {
-    var event = scope.$root.broadcast('unload');
+    var event = scope.$root.$broadcast('unload');
     if(event.defaultPrevented){
       return '将丢失未保存的更改,您确定要退出本页?';
     }
   };
+
+  // $scope.$on(
+  //     "$routeChangeSuccess",
+  //     function( $currentRoute, $previousRoute ){
+  //         // Update the rendering.
+  //         // render();
+  //     }
+  // );
 }]);

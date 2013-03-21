@@ -33,8 +33,8 @@
 		</ul>
 	</div>
 	<ul class='pics'>
-		<li scrollable ng-show="selectedPic == $index" ng-repeat="pic in paper.pics">
-			<img class='paper-pic' ng-src="{{pic.image}}" show-overlay='pic.RecaptureMark'>
+		<li show-overlay='pic.RecaptureMark' ng-show="selectedPic == $index" ng-repeat="pic in paper.pics" src='{{pic.image}}'>
+			<div class='iviewer' src='{{pic.image}}'></div>
 		</li>
 	</ul>
 </div>

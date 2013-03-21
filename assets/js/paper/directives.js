@@ -46,26 +46,23 @@ angular.module('paper.directives', [])
       }
     };
   }])
- .directive('paperPic', ['$compile', function($compile) {
+ .directive('showOverlay', [function() {
     return {
-      restrict: 'C',
+      restrict: 'A',
       link: function link(scope, elm, attrs) {
         if(attrs.showOverlay){
-          elm.after('<div class="overlay"></div>');
-          var overlay = elm.next('.overlay');
+          elm.append('<div class="overlay"></div>');
+          var overlay = elm.find('.overlay');
           scope.$watch(attrs.showOverlay,function(value,oldValue){
             if(value){
               // elm.parent().css('overflow','hidden');
-              overlay.stop(true,true).fadeIn();
+              overlay.stop(true,true).fadeIn(200);
             }else{
-              overlay.stop(true,true).fadeOut();
+              overlay.stop(true,true).fadeOut(200);
               // elm.parent().css('overflow','auto');
             }
           },true);
         }
-        elm.click(function(){
-          elm.toggleClass('zoomed');
-        });
       }
     };
   }])
@@ -170,34 +167,38 @@ return {
    }
  };
 })
-.directive('scrollable', [function(){
-  // Runs during compile
-  return {
-    // require: 'ngModel', // Array = multiple requires, ? = optional, ^ = check parent elements
-    restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
-    // compile: function(tElement, tAttrs, function transclude(function(scope, cloneLinkingFn){ return function linking(scope, elm, attrs){}})),
-    link: function($scope, iElm, iAttrs, controller) {
-      iElm.data('lastPos',{left:iElm.scrollLeft(), top: iElm.scrollTop()});
-      iElm.data('lastScroll',(new Date()).getTime());
-      iElm.scroll(function(){
-        var el = $(this);
-        var lastPos = el.data('lastPos');
-        var lastScroll = el.data('lastScroll');
-        el.data('lastPos',{left:el.scrollLeft(), top: el.scrollTop()});
-        var now = (new Date()).getTime();
-        el.data('lastScroll',now);
-        if(now - lastScroll < 300)
-          return;
-        if(Math.abs(el.scrollTop() - lastPos.top)>50){
-          console.log(Math.abs(el.scrollTop() - lastPos.top));
-          el.scrollTop(lastPos.top);
-        }
-        if(Math.abs(el.scrollLeft() - lastPos.left)>50){
-          console.log(Math.abs(el.scrollLeft() - lastPos.left));
-          el.scrollLeft(lastPos.left);
-        }
+.directive('iviewer', [function(){
 
+  return {
+    // require: 'src', // Array = multiple requires, ? = optional, ^ = check parent elements
+    restrict: 'C', // E = Element, A = Attribute, C = Class, M = Comment
+    // compile: function(tElement, tAttrs, function transclude(function(scope, cloneLinkingFn){ return function linking(scope, elm, attrs){}})),
+    link: function($scope, iElm, iAttrs) {
+      function imageLoaded(e){
+        var el = $(this);
+        var state = iElm.parent().is(':visible');
+        iElm.parent().show();
+        setTimeout(function(){
+          var w = el.iviewer('info','orig_width');
+          var h = el.iviewer('info','orig_height');
+          var cw = iElm.parent().width();
+          el.iviewer('set_zoom',cw/w*100);
+          el.iviewer('moveTo',0,-1*h/2);
+          // el.once('ivieweronafterzoom',function(){
+          //   .iviewer('moveTo',0,-1*h/2);
+          // });
+          iElm.parent().toggle(state);
+        },0);
+      }
+      var viewer = $(iElm).iviewer({
+        src: iAttrs.src,
+        zoom_max: 120,
+        onFinishLoad: imageLoaded
+      });
+      viewer.on('load','image',imageLoaded);
+      iElm.resize(function(){
+        viewer.iviewer('update');
       });
     }
-  };
+    };
 }]);
