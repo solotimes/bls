@@ -50,9 +50,9 @@ module.exports = function(sequelize, DataTypes)
             order: Utils.addTicks('Order')
           };
         },
-        saveInstance: function(attrs){
+        saveInstance: function(attrs,parentModel){
             var models = require('../models');
-            var self = this;
+            var self = this; // Question
             try{
               for(var k in attrs){
                 if('object' === typeof attrs[k]){
@@ -60,47 +60,33 @@ module.exports = function(sequelize, DataTypes)
                 }
               }
             }catch(e){}
-            var question;
+
+            //var during the chain
+            var question,qg = models.sequelize.queryInterface.QueryGenerator;
             var p = Q.when(self.upsert(attrs)).then(function(q){
               question = q;
-              return q;
             });
-
-            ['Paper','CustomerPaper'].forEach(function(PaperModel){
-              var paperIdKey = 'PaperModel'+'Id',
-                  paperId = instance[paperIdKey];
-              if(!!paperId){
+            if(parentModel){
+              var association = self.getAssociation(parentModel.__factory);
+              var addParent = association.accessors.add;
+              p = p.then(function(){
+                // return parentModel.addQuestion(question);
+                return Q.when(question[addParent](parentModel));
+              });
+              //更新关系表
+              if('undefined' !== typeof attrs.Wrong || 'undefined' !== attrs.Order){
                 p = p.then(function(){
-                  return Q.when(models[PaperModel].find(paperId));
-                }).then(function(paper){
-                  return Q.when(question['add'+PaperModel](paper));
-                });
-                //更新关系表
-                if('undefined' !== typeof attrs.Wrong || 'undefined' !== attrs.Order){
-                  // var relationship = attrs.relationship[PaperModel];
+                  var keys = Utils._.keys(association.connectorDAO.primaryKeys);
                   var where = {};
-                  where[paperIdKey]=paperId;
-                  where.QuestionId = question.id;
-                  var sql = qg.updateQuery(models[PaperModel].tableName+'Questions',
+                  where[association.foreignIdentifier]=parentModel.id;
+                  where[association.identifier] = question.id;
+                  var sql = qg.updateQuery(association.connectorDAO.tableName,
                     {Wrong:attrs.Wrong,Order: attrs.Order}, //set
                     where); //where
-                  p = p.then(function(){
                     return Q.when(models.sequelize.query(sql));
-                  });
-                }
+                });
               }
-            });
-            // if(!!instance.PaperId){
-            //   p = p.then(function(){
-            //     return Q.when(models.Paper.find(instance.PaperId));
-            //   }).then(function(paper){
-            //     return question.addPaper(paper);
-            //   }).fail(function(errors){
-            //     if(errors[0].code == 'ER_DUP_ENTRY'){
-            //       return;
-            //     }
-            //   });
-            // }
+            }
             return p.then(function(){return question;});
           }
         }

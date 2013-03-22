@@ -1,11 +1,14 @@
 app.controller('MainCtrl',['$scope','$window','$http','$route','$location','$q',function(scope,window,http,route,location,Q){
   scope.window = window;
   scope.$root.paper = window.paper;
+  scope.$root.paper_type = 'CustomerPaper';
   scope.$root.orgStatus = scope.$eval('paper.Status');
   scope.$root.grades = window.grades;
   scope.$root.paper.GradeId = scope.$eval('paper.GradeId || paper.customer.GradeId');
-  scope.$root.questionsData = window.questions || [];
-  scope.$root.questionCount = 0;
+  scope.$root.questions = window.questions || [];
+  scope.$root.paperPath = '/customer_papers/'+scope.paper.id;
+  scope.$root.questionsPath = scope.$root.paperPath + '/questions';
+  // scope.$root.questionCount = window.questions.length;
 
   // scope.questionCount = scope.questions.length;
   scope.savePaper = function(attrs){
@@ -40,18 +43,18 @@ app.controller('MainCtrl',['$scope','$window','$http','$route','$location','$q',
     //   }
     // }
     var promise = Q.when();
-    if(scope.questions){
-      promise = http.post('/questions/',{instance:scope.questions}).then(function(res){
-        var qs = res.data;
-        if(!qs.length) qs = [qs];
-        qs.forEach(function(q,i){
-          delete q.Meta;
-          $.extend(true,scope.questions[i],q);
-          scope.questions[i].meta.id = q.id;
-        });
-        // scope.$root.dirtyForms = null;
-      });
-    }
+    // if(scope.questions){
+    //   promise = http.post('/questions/',{instance:scope.questions}).then(function(res){
+    //     var qs = res.data;
+    //     if(!qs.length) qs = [qs];
+    //     qs.forEach(function(q,i){
+    //       delete q.Meta;
+    //       $.extend(true,scope.questions[i],q);
+    //       scope.questions[i].meta.id = q.id;
+    //     });
+    //     // scope.$root.dirtyForms = null;
+    //   });
+    // }
     return promise.then(function(){
       //检查所有错题是否解答
       var select = questions.filter(function(q){
@@ -72,19 +75,21 @@ app.controller('MainCtrl',['$scope','$window','$http','$route','$location','$q',
     }
   };
   scope.savedQuestions = function (){
-    if(!scope.paper.Meta) return 0;
-    return scope.paper.Meta.questions.filter(function(q){
-      return ('undefined' != typeof q.id);
+    if(!scope.$root.questions) return 0;
+    return scope.$root.questions.filter(function(q){
+      return angular.isUndefined(q.id);
     }).length;
   };
   scope.createNewPaper = function(){
-    if(scope.$root.questionCount > 0){
-      location.path('/question');
+    if(scope.$root.paper.QuestionsTotal > 0){
+      scope.savePaper().success(function(){
+        location.path('/question');
+      });
     }else{
       alert('请输入题目总数');
     }
   };
-  if(scope.paper.Meta){
+  if(scope.paper.QuestionsTotal > 0){
     location.path('/question');
   }
 

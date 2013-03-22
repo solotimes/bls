@@ -6,17 +6,22 @@ var models = require('../../models'),
     async = require('async'),
     Utils = Sequelize.Utils;
 
+function fetchParentModel(req){
+  var parentModels = ['customer_paper','paper'];
+  var p;
+  for(var i in parentModels){
+    if( (req.parentModel = req[parentModels[i]]) ){
+      break;
+    }
+  }
+
+  return req.parentModel;
+}
+
 exports.index = {
   json: function(req,res,next){
-    var parentModels = ['customer_paper','paper'];
-    var p;
-    var paperModel, paperId;
-    for(var i in parentModels){
-      if( (paperModel = req[parentModels[i]]) ){
-        break;
-      }
-    }
-    if(paperModel){
+    fetchParentModel(req);
+    if(req.parentModel){
       p = Q.when(paperModel.getQuestions(models.Question.getFullQuery()));
     }else{
       p = Q.when(models.Question.all());
@@ -43,13 +48,14 @@ exports.show = {
 
 exports.create = {
   json:function(req, res ,next){
+        fetchParentModel(req);
         var instance = req.param('instance');
         if(!instance.length){
           instance = [instance];
         }
         Q.all(instance.map(function(question){
           //并发写入所有试题
-          return models.Question.saveInstance(question);
+          return models.Question.saveInstance(question,req.parentModel);
         }))
         .then(function(questions){
           if(questions.length==1)

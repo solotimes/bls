@@ -27,7 +27,8 @@ module.exports = function(sequelize, DataTypes)
         CreatedAt: {type:DataTypes.DATE, defaultValue: DataTypes.NOW},
         RecordedAt: {type:DataTypes.DATE},
         CodeName: {type:DataTypes.STRING},
-        AudioPath: {type:DataTypes.STRING}
+        AudioPath: {type:DataTypes.STRING},
+        QuestionsTotal: {type:DataTypes.INTEGER, defaultValue: 0}
     },{
       instanceMethods: {
         statusText: function(){
@@ -72,6 +73,10 @@ module.exports = function(sequelize, DataTypes)
           // }else{
           //   //状态5-7
           // }
+        },
+        getFullQuestions: function(){
+          var models = require('../models');
+          return this.getQuestions(models.Question.getFullQuery());
         },
         toJSON: function(){
             var values = this.values;

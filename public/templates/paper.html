@@ -1,5 +1,5 @@
-<div class='inner'>
-	<div class='meta-info' ng-controller='MetaCtrl'>
+<div class='inner' ng-controller='RecordingCtrl'>
+	<div class='meta-info'>
 		<div class='title'>
 			<label>试卷标题:</label>
 			<input type='text' ng-model="paper.Name"/>
@@ -12,17 +12,17 @@
 			<label>年级:</label>
 			<select ng-options='grade.id as grade.Name for grade in grades' ng-model='paper.GradeId'></select>
 			<label>总题数: </label>
-			<input class='input-s' type='text' ng-model="$root.questionCount" ng-disabled='questions.length > 0'/>
+			<input class='input-s' type='text' ng-model="$root.paper.QuestionsTotal" ng-disabled='$root.questions.length > 0'/>
 			<span>题</span>
 		</div>
 		<div class='gray'>
 			<span>试卷ID: {{paper.CodeName}}</span>
 			<span>试卷状态: </span>
 			<span paper-status='paper.Status'></span>
-			<span>试卷来源: 会员上传</span>
+			<span>试卷来源: {{'会员上传'}}</span>
 		</div>
 	</div>
-	<div class='buttons' ng-show='paper.Status!=0 &amp;&amp; paper.Status!=4 &amp;&amp; paper.Meta==null'>
+	<div class='buttons' ng-show='paper.Status!=0 &amp;&amp; paper.Status!=4 &amp;&amp; $root.questions.length==0'>
 		 <a  ng-click='createNewPaper()' class='btn btn-orange big'>创建新卷子</a>
 		 <a href='#/search' class='btn btn-blue big'>搜索试卷库</a>
 	</div>

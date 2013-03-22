@@ -12,11 +12,11 @@ append head
       <% models.Grade.findAll() -> grades %>
         window.grades = <%-JSON.stringify(grades)%>;
       <% <- -%>
-      <% instance.getQuestions(models.Question.getFullQuery()) -> questions %>
+      <% instance.getFullQuestions() -> questions %>
         window.questions = <%-JSON.stringify(questions || [])%>;
       <% <- -%>
     </script>
 block container
   .fluid-layout(ng-app='Paper', ng-controller="MainCtrl")
     .leftpart.raw(ng-include,src="'/templates/raw.html'")
-    .rightpart.paper(ng-include,src="'/templates/paper.html'")
+    .rightpart.paper(ng-include,src="'/templates/recording.html'")

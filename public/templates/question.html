@@ -5,7 +5,7 @@
 <form name='qform'>
 <div class='box box-blue'>
   <div class='info'>
-    <span class='orange'>题号: {{qid+1}}</span>
+    <span class='orange'>题号: {{question.Order+1}}</span>
     <span class='gray'>题目ID: {{question.id}}</span>
     <span class='gray'>已录入: {{savedQuestions()}}题</span>
   </div>
@@ -67,10 +67,10 @@
     <label class='blue'>难易度:</label>
     <span class='stars stars-big' ng-model='question.Difficulty'></span>
   </div>
-  <div class='fields question-mark' ng-class='{wrong: question.meta.wrong}'>
+  <div class='fields question-mark' ng-class='{wrong: question.Wrong}'>
     <label class='blue'>用户回答:</label>
-    <label><input type='radio' ng-value='false' ng-model='question.meta.wrong'/>正确</label>
-    <label class='orange'><input type='radio' ng-value='true' ng-model='question.meta.wrong'/>错误</label>
+    <label><input type='radio' ng-value='false' ng-model='question.Wrong'/>正确</label>
+    <label class='orange'><input type='radio' ng-value='true' ng-model='question.Wrong'/>错误</label>
   </div>
   <div>
 
