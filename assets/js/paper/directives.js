@@ -100,11 +100,11 @@ angular.module('paper.directives', [])
  }])
  .directive('paperStatus',function(){
     var STATUS = {
-      0: '未处理'  ,
-      1: '待标错题' ,
-      2: '待录错题' ,
-      3: '待录全卷' ,
-      4:  '需重拍'  ,
+      0: '未处理',
+      1: '待标错题',
+      2: '待录错题',
+      3: '待录全卷',
+      4: '需重拍',
       5: '错题未解答',
       6: '完成解答'
     };
@@ -167,6 +167,19 @@ return {
    }
  };
 })
+.directive('beforeChange', [function(){
+  // Runs during compile
+  return {
+    restrict: 'A',
+    link: function($scope, iElm, iAttrs, controller) {
+      var scope = $scope.$new();
+      iElm.change(function(e){
+        scope.$event = e;
+        scope.$eval(iAttrs.beforeChange);
+      });
+    }
+  };
+}])
 .directive('iviewer', [function(){
 
   return {

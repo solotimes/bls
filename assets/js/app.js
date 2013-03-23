@@ -6,7 +6,6 @@
   $(function(){
     $(document).on('change','input[data-type=select-all]',function(){
       var checked = $(this).is(':checked');
-      console.log(checked);
       $('input[data-type=select]').prop('checked',checked).trigger('change');
     });
     $(document).on('change','input[data-type=select]',function(){

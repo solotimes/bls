@@ -82,13 +82,13 @@ block content
               td
                 case model.Status
                   when 0
-                    a.action-0(href='/customer_papers/#{model.id}',data-type='assign') 分配
+                    a.action-0(href='/customer_papers/#{model.id}#recording',data-type='assign') 分配
                   when 1
-                    a.action-1(href='/customer_papers/#{model.id}',data-type='mark') 标错题
+                    a.action-1(href='/customer_papers/#{model.id}#marking',data-type='mark') 标错题
                   when 4
                     a(href='/customer_papers/#{model.id}',data-type='view') 查看
                   default
-                    a.action-3(href='/customer_papers/#{model.id}',data-type='record') 录入
+                    a.action-3(href='/customer_papers/#{model.id}#recording',data-type='record') 录入
                 if currentUser.checkRoles(['分配员'])
                   a(data-type='delete', href='/customer_papers/#{model.id}' , data-method='delete' , data-confirm='确定删除本记录?' , rel="nofollow") 删除
     .pagination

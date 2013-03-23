@@ -421,7 +421,45 @@ a,a:hover{
     }
   }
 }
-
+.span25px{
+  width: 25px;
+}
+.span50px{
+  width: 50px;
+}
+.span100px{
+  width: 100px;
+}
+.span05{
+  width: 5%;
+}
+.span10{
+  width: 10%;
+}
+.span15{
+  width: 15%;
+}
+.span20{
+  width: 20%;
+}
+.span40{
+  width: 30%;
+}
+.span50{
+  width: 30%;
+}
+.span60{
+  width: 30%;
+}
+.span70{
+  width: 30%;
+}
+.span80{
+  width: 30%;
+}
+.center{
+  text-align: center;
+}
 .main{
   margin-top: 5px;
   &.levels{
@@ -473,42 +511,6 @@ a,a:hover{
     }
     input{
       vertical-align: middle;
-    }
-    .span25px{
-      width: 25px;
-    }
-    .span50px{
-      width: 50px;
-    }
-    .span100px{
-      width: 100px;
-    }
-    .span05{
-      width: 5%;
-    }
-    .span10{
-      width: 10%;
-    }
-    .span15{
-      width: 15%;
-    }
-    .span20{
-      width: 20%;
-    }
-    .span40{
-      width: 30%;
-    }
-    .span50{
-      width: 30%;
-    }
-    .span60{
-      width: 30%;
-    }
-    .span70{
-      width: 30%;
-    }
-    .span80{
-      width: 30%;
     }
   }
   .form{
@@ -793,6 +795,9 @@ a,a:hover{
   &.box-blue{
     border-color:#3ba4dd;
   }
+  &.box-orange{
+    border-color:rgb(253,106,0);
+  }
 }
 
 .star(@width,@n){
@@ -862,6 +867,10 @@ a,a:hover{
     > div:not(:last-child){
       margin-bottom: 10px;
     }
+    .underline{
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e4e4e4;
+    }
     .title{
       .hbox;
       font-size: 18px;
@@ -874,6 +883,11 @@ a,a:hover{
     span:not(:last-child){
       margin-right: 10px;
     }
+  }
+  h2{
+    font-size: 16px;
+    display: block;
+    margin: 0 10px;
   }
   .selector{
     .hbox;
@@ -892,6 +906,14 @@ a,a:hover{
   .knowledge-points{
     ul{
 
+    }
+  }
+  .buttons-marking{
+    margin-right: 10px;
+    display: block;
+    text-align: right;
+    *:last-child{
+      margin-right: 0;
     }
   }
   .buttons{
@@ -990,6 +1012,44 @@ a,a:hover{
       margin-left: 5px;
       width: 20px;
       line-height: 40px;
+    }
+  }
+  .table-wrapper{
+    padding: 0 10px;
+    .border-box;
+    width: 100%;
+  }
+  table{
+    margin: 10px 0 30px 0;
+    width: 100%;
+    border: 1px solid #d4d4d4;
+    border-top: none;
+    caption{
+      border: 1px solid #d4d4d4;
+      border-bottom: none;
+      padding-left: 40px;
+      text-align: left;
+      color: #c65911;
+      font-size: 18px;
+      border-bottom: 2px solid #c65911;
+      line-height: 30px;
+    }
+    tr{
+      line-height: 30px;
+      -webkit-transition: background-color 300ms linear;
+      -moz-transition: background-color 300ms linear;
+      -o-transition: background-color 300ms linear;
+      -ms-transition: background-color 300ms linear;
+      transition: background-color 300ms linear;
+      input{
+        vertical-align: 0;
+      }
+      &.even{
+        background: #f2f2f2;
+      }
+      &.highlight{
+        background: #ffe699;
+      }
     }
   }
 }

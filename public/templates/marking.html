@@ -1,0 +1,38 @@
+<div class='inner'>
+	<div class='box box-orange meta-info'>
+		<div class='title'>
+			<span>试卷标题:&nbsp;&nbsp;&nbsp;&nbsp;{{paper.Name}}</span>
+		</div>
+		<div class='underline gray'>
+			<span>年级: &nbsp;&nbsp;&nbsp;&nbsp;{{paper.GradeName()}}</span>
+			<span>总题数:&nbsp;&nbsp;&nbsp;&nbsp; {{paper.QuestionsTotal}}</span>
+			<span>题</span>
+		</div>
+		<div class='gray'>
+			<span>试卷ID: {{paper.CodeName}}</span>
+			<span>试卷状态: </span>
+			<span paper-status='paper.Status'></span>
+			<span>试卷来源: {{'会员上传'}}</span>
+		</div>
+	</div>
+</div>
+<h2 class='orange'>请标注{{paper.customer.Name}}的错题:</h2>
+
+<form name='markingForm'>
+	<div ng-show='paper.questionsByType[type.order].length > 0' class='table-wrapper' ng-repeat='type in questionTypes'>
+		<table>
+			<caption>{{type.long}}</caption>
+			<tr ng-repeat='question in paper.questionsByType[type.order]' ng-class-even='"even"' ng-class='{highlight:question.Wrong}'>
+				<td class='center span25px'><input type='checkbox' ng-value='false' ng-checked='question.Wrong' ng-model='question.Wrong'/></td>
+				<td class='center span25px'>{{$index+1}}</td>
+				<td class='gray center span50px'>{{questionTypes[question.Type].short}}</td>
+				<td ng-bind-html-unsafe='question.Body'></td>
+			</tr>
+		</table>
+	</div>
+
+	<div class='buttons-marking'>
+	  <a class='btn' href='/customer_papers/'>退出</a>
+	  <a class='btn btn-orange' ng-click='mark()'>完成错题标注</a>
+	</div>
+</form>

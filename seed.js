@@ -1,6 +1,8 @@
 var Sequelize = require("sequelize"),
     models = require('./models'),
+    qi = models.sequelize.getQueryInterface(),
     async = require('async'),
+    q = require('q');
     utility = require('./routes/logics/utility'),
     moment = require('moment');
 
@@ -19,6 +21,22 @@ function createAll(Model,records){
 
 function seed(){
     async.auto({
+      AddColumns: function(fn){
+        var chainer = new Sequelize.Utils.QueryChainer();
+        chainer.add(qi.addColumn('CustomerPapersQuestions','Wrong',{
+          type: Sequelize.BOOLEAN,
+          defaultValue: false
+        }));
+        chainer.add(qi.addColumn('CustomerPapersQuestions','Order',Sequelize.INTEGER));
+        chainer.add(qi.addColumn('CustomerPapersQuestions','Number',Sequelize.STRING));
+        chainer.add(qi.addColumn('PapersQuestions','Wrong',{
+          type: Sequelize.BOOLEAN,
+          defaultValue: false
+        }));
+        chainer.add(qi.addColumn('PapersQuestions','Order',Sequelize.INTEGER));
+        chainer.add(qi.addColumn('PapersQuestions','Number',Sequelize.STRING));
+        chainer.run().done(fn);
+      },
       Grades:function(fn){
         var grades = [
           {Name:"预初",  Order:1},
@@ -110,18 +128,19 @@ function seed(){
         chainer.runSerially().done(fn);
       }],
       CustomerPapers: ['Customers',function(fn,results){
-        var customers = results.Customers;
-        var papers = [];
-        for(var i = 0; i < 40 ; i++){
-            var cid = Math.round(Math.random()*(customers.length-1));
-            papers.push({
-                Name:'测试试卷'+i,
-                CustomerId: customers[cid].id,
-                CreatedAt:utility.getCurrentTime(),
-                CodeName: moment().format('YYYYMDD-X')
-            });
-        }
-        createAll(CustomerPaper,papers).done(fn);
+        // var customers = results.Customers;
+        // var papers = [];
+        // for(var i = 0; i < 40 ; i++){
+        //     var cid = Math.round(Math.random()*(customers.length-1));
+        //     papers.push({
+        //         Name:'测试试卷'+i,
+        //         CustomerId: customers[cid].id,
+        //         CreatedAt:utility.getCurrentTime(),
+        //         CodeName: moment().format('YYYYMDD-X')
+        //     });
+        // }
+        // createAll(CustomerPaper,papers).done(fn);
+        fn();
       }],
       CustomerPaperPics: function(fn){
         var pics = [];

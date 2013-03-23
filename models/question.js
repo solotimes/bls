@@ -11,12 +11,12 @@ var Utils = Sequelize.Utils;
 module.exports = function(sequelize, DataTypes)
 {
     return sequelize.define('Question', {
-        Name: {type:DataTypes.STRING},
+        // Name: {type:DataTypes.STRING},
         Body: {type:DataTypes.TEXT},
         //提干内容缩略 用于搜索
         Excerpt: {type:DataTypes.STRING},
         CreatedAt: {type:DataTypes.DATE},
-        Tags: {type:DataTypes.STRING},
+        // Tags: {type:DataTypes.STRING},
         //类型  0 选择题 1 填空题 2主观题
         Type: {type:DataTypes.INTEGER},
         //选择题选项 text/json
@@ -30,7 +30,9 @@ module.exports = function(sequelize, DataTypes)
         //难易度 1-5
         Difficulty: {type:DataTypes.INTEGER},
         //问法
-        Method: {type: DataTypes.STRING}
+        Method: {type: DataTypes.STRING},
+        //备注信息
+        Description: {type: DataTypes.STRING}
     },{
       instanceMethods:{
         toJSON: function(){

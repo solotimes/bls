@@ -1,4 +1,4 @@
-<div class='inner' ng-controller='RecordingCtrl'>
+<div class='inner'>
 	<div class='meta-info'>
 		<div class='title'>
 			<label>试卷标题:</label>
@@ -12,7 +12,7 @@
 			<label>年级:</label>
 			<select ng-options='grade.id as grade.Name for grade in grades' ng-model='paper.GradeId'></select>
 			<label>总题数: </label>
-			<input class='input-s' type='text' ng-model="$root.paper.QuestionsTotal" ng-disabled='$root.questions.length > 0'/>
+			<input class='input-s' type='text' ng-model="paper.QuestionsTotal" ng-disabled='paper.questions.length > 0'/>
 			<span>题</span>
 		</div>
 		<div class='gray'>
@@ -22,9 +22,26 @@
 			<span>试卷来源: {{'会员上传'}}</span>
 		</div>
 	</div>
-	<div class='buttons' ng-show='paper.Status!=0 &amp;&amp; paper.Status!=4 &amp;&amp; $root.questions.length==0'>
-		 <a  ng-click='createNewPaper()' class='btn btn-orange big'>创建新卷子</a>
-		 <a href='#/search' class='btn btn-blue big'>搜索试卷库</a>
+	<div ng-switch='subview'>
+		<div ng-switch-when='question'>
+			<!-- 问题录入面板 -->
+			<div class='box box-blue selector'>
+			  <label class='blue'>选择已有题目:</label>
+			  <select ng-model='$parent.question' ng-options='q.question as q.label for q in questionsWithLabels'></select>
+			</div>
+			<div ng-include='"/templates/question.html"'></div>
+			<div class='buttons'>
+			  <a class='btn' href='/customer_papers/'>退出</a>
+			  <a class='btn btn-blue' ng-show='paper.readyForStatus(5,6) || paper.Status==6' ng-click='paper.finish()'>保存试卷</a>
+			  <a class='btn btn-green' ng-show='paper.readyForStatus(3)' ng-click='paper.changeStatus(3)'>完成错题输入</a>
+			  <a class='btn' ng-hide='isLastQuestion()' ng-click='nextQuestion()'>下一题</a>
+			  <a class='btn btn-orange' ng-click='saveQuestion()'>保存</a>
+			</div>
+		</div>
+		<div ng-switch-when='init' class='buttons' ng-show='paper.Status ==2'>
+			<!-- 初始化面板 -->
+			 <a ng-click='initPaper()' class='btn btn-orange big'>创建新卷子</a>
+			 <a ng-click='searchTemplates()' class='btn btn-blue big'>搜索试卷库</a>
+		</div>
 	</div>
-	<div ng-view class='view'></div>
 </div>

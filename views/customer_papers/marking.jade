@@ -19,4 +19,4 @@ append head
 block container
   .fluid-layout(ng-app='Paper', ng-controller="MainCtrl")
     .leftpart.raw(ng-include,src="'/templates/raw.html'")
-    .rightpart.paper(ng-view)
+    .rightpart.paper(ng-include,src="'/templates/recording.html'")

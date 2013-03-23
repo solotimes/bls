@@ -28,7 +28,8 @@ module.exports = function(sequelize, DataTypes)
         RecordedAt: {type:DataTypes.DATE},
         CodeName: {type:DataTypes.STRING},
         AudioPath: {type:DataTypes.STRING},
-        QuestionsTotal: {type:DataTypes.INTEGER, defaultValue: 0}
+        QuestionsTotal: {type:DataTypes.INTEGER, defaultValue: 0},
+        CorrectRate: {type:DataTypes.INTEGER}
     },{
       instanceMethods: {
         statusText: function(){
