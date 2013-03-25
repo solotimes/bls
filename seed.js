@@ -4,6 +4,7 @@ var Sequelize = require("sequelize"),
     async = require('async'),
     q = require('q');
     utility = require('./routes/logics/utility'),
+    fs = require('fs'),
     moment = require('moment');
 
 for(var modelName in models){
@@ -154,6 +155,15 @@ function seed(){
           });
         }
         createAll(CustomerPaperPic,pics).done(fn);
+      },
+      Knowledges: function(fn){
+        var json = JSON.parse(fs.readFileSync(__dirname + '/knowledges.json'));
+        points = json.points;
+        var chainer = new Sequelize.Utils.QueryChainer();
+        points.forEach(function(point,i){
+          chainer.add(Knowledge,'create',[{Name:point,Difficulty:3}]);
+        });
+        chainer.runSerially().done(fn);
       }
     },function(error, results){
       console.log(error);
