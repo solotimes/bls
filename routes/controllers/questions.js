@@ -50,14 +50,18 @@ exports.create = {
   json:function(req, res ,next){
         fetchParentModel(req);
         var instance = req.param('instance');
+        var questions = [];
         if(!instance.length){
           instance = [instance];
         }
-        Q.all(instance.map(function(question){
-          //并发写入所有试题
-          return models.Question.saveInstance(question,req.parentModel);
-        }))
-        .then(function(questions){
+        instance.reduce(function(p,q){
+          return p.then(function(res){
+            if(res)
+              questions.push(res);
+            return models.Question.saveInstance(q,req.parentModel);
+          });
+        },Q.resolve())
+        .then(function(){
           if(questions.length==1)
             res.send(questions[0]);
           else

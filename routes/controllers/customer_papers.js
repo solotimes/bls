@@ -48,7 +48,7 @@ exports.raw = function(req, res ,next){
   var q = (req.param('q') || '').trim();
   var by = (req.param('by')||'').trim();
   var scope = (req.param('scope')||'').trim();
-  var condition = 'RecordedAt is NULL';
+  // var condition = 'RecordedAt is NULL';
   var where,searchParams={};
 
   if("undefined" !== typeof models.CustomerPaper[scope]){

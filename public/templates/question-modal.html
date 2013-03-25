@@ -1,0 +1,52 @@
+<div class="modal-inner view clearfix"  ng-controller='QuestionModalCtrl'>
+	<div class="question-info underline-dashed">
+		<div class="pull-right" ng-show='mode==0'>
+			<button class="btn btn-orange" ng-click='switchMode(1)'>编辑</button>
+			<button class="btn" ng-click='cancel()'>关闭</button>
+		</div>
+		<span class='gray'>题目ID：  {{question.id}}</span>
+		<span class='gray'>{{questionTypes[question.Type]}}</span>
+	</div>
+	<div ng-switch='mode'>
+		<div ng-switch-when='0'>
+			<!-- 查看 -->
+			<div class="question box">
+				<span math-html='question.Body' class='question-body'></span>
+				<div class="box box-dashed" ng-switch='question.Type'>
+					<ol class="choices" ng-switch-when='0'>
+						<!-- 选择题 -->
+						<li math-html='choice.body' ng-repeat='choice in question.Choices' ng-class='{correct:$index==(question.Answer.charCodeAt(0)-65)}'></li>
+					</ol>
+					<div ng-switch-when='1' math-html='question.Answer'></div>
+					<div ng-switch-when='2' math-html='question.Answer'></div>
+				</div>
+				<div class="underline-dashed field">
+					<span class="tag">知识点</span>
+				</div>
+				<div class="underline-dashed field">
+					<span class="tag">难易度</span>
+					<span class='stars' ng-model='question.Difficulty' readonly='true'></span>
+				</div>
+				<div class="underline-dashed field">
+					<span class="tag">解题思路</span>
+					<div math-html='question.Solution'></div>
+				</div>
+				<div class="underline-dashed field">
+					<span class="tag">条件</span>
+					<div>{{Question.Condition}}</div>
+				</div>
+				<div class="underline-dashed field">
+					<span class="tag">问法</span>
+					<div>{{Question.Method}}</div>
+				</div>
+			</div>
+		</div>
+		<div ng-switch-when='1'>
+			<div ng-include='"/templates/question.html"'></div>
+			<div class="pull-right">
+				<button class="btn" ng-click='switchMode(0)'>取消</button>
+				<button class='btn btn-orange' ng-click='save()'>保存查看</button>
+			</div>
+		</div>
+	</div>
+</div>

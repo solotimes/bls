@@ -14,7 +14,6 @@ app.controller('RecordingCtrl',['$scope','$http','paper',function(scope,http,pap
 
   scope.$watch('paper.questions',function(questions){
     scope.questionsWithLabels = questions.map(function(q,i){
-      q.Excerpt = $(q.Body).text().substring(0,20);
       return {
         label: (i+1)+'. '+q.Excerpt,
         question: q,
@@ -32,6 +31,10 @@ app.controller('RecordingCtrl',['$scope','$http','paper',function(scope,http,pap
   scope.saveQuestion = function(){
     scope.$broadcast('save-question');
   };
+
+  scope.$on('question-saved',function(){
+    paper.save();
+  });
 
   scope.isLastQuestion = function(){
     if(scope.question)

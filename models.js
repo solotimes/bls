@@ -67,11 +67,16 @@ Admin.hasMany(CustomerPaper,{as: 'AssignedPapers'});
 AdminRole.hasMany(Admin);
 AdminLog.belongsTo(Admin);
 
-Grade.hasMany(KnowledgeCategory);
-KnowledgeCategory.hasMany(KnowledgeCategory);
-KnowledgeCategory.hasMany(Knowledge);
+// Grade.hasMany(KnowledgeCategory);
+// KnowledgeCategory.hasMany(KnowledgeCategory);
+// KnowledgeCategory.hasMany(Knowledge);
 
 Question.hasMany(Knowledge);
+CustomerPaper.hasMany(Knowledge);
+Paper.hasMany(Knowledge);
+Knowledge.hasMany(Question);
+Knowledge.hasMany(Paper);
+Knowledge.hasMany(CustomerPaper);
 
 GeneratedPaper.hasMany(GeneratedPaperResult);
 Question.hasMany(GeneratedPaperResult);

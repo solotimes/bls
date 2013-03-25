@@ -50,6 +50,7 @@ angular.module('paper.services', [])
   };
 
   Paper.prototype.save = function(attrs){
+    var self = this;
     var saveObj = angular.copy(this);
     if(attrs)
       angular.extend(saveObj,attrs);
@@ -59,9 +60,38 @@ angular.module('paper.services', [])
     if(this.Status !== 0 && this.Status !== 4 && this.Status !== 2 && !saveObj.RecordedAt){
       saveObj.RecordedAt = new Date();
     }
+    saveObj.CorrectRate = this.getCorrectRate();
     return http.put(this.$path,{instance: saveObj}).success(function(res){
-      $.extend(true,this,res);
-    }.bind(this));
+      $.extend(true,self,res);
+    });
+  };
+
+  var _ChnNumbers='一二三四五';
+  var _TypeNames = ['选择题','填空题','简答题'];
+  var _types;
+  Paper.prototype.getQuestionsGroupByTypes = function(){
+    if(_types) return _types;
+    _types = [ ];
+    for(var i = 0,j = 0; i< 3; i++){
+      if(this.questionsByType[i].length){
+        _types.push({
+          order: j,
+          long: _ChnNumbers[j] + '、' + _TypeNames[i],
+          short: _TypeNames[i],
+          questions: this.questionsByType[i]
+        });
+        j++;
+      }
+    }
+    return _types;
+  };
+
+  Paper.prototype.getCorrectRate = function(){
+    if(!this.QuestionsTotal){
+      return 0;
+    }
+    var wrongCount = this.questions.filter(function(q){return q.Wrong;}).length;
+    return Math.ceil((this.QuestionsTotal-wrongCount)/this.QuestionsTotal * 100);
   };
 
   Paper.prototype.newQuestion = function(attrs){
@@ -101,6 +131,7 @@ angular.module('paper.services', [])
   };
 
   Paper.prototype.saveAllQuestions = function() {
+    var self = this;
     if(this.questions.length){
       return http.post(this.$questionsPath,{instance:this.questions}).then(function(res){
         var qs = res.data;
@@ -109,9 +140,87 @@ angular.module('paper.services', [])
           $.extend(true,this.questions[i],q);
         });
         this.reloadQuestions();
-      }.bind(this));
+      });
     }
     return Q.when();
+  };
+
+  Paper.prototype.removeQuestion = function(indexOrQuestion){
+    var question,self=this;
+    if(angular.isNumber(indexOrQuestion)){
+      question = this.questions[indexOrQuestion];
+    }else{
+      question = indexOrQuestion;
+    }
+
+    var p;
+    if(!angular.isUndefined(question.id)){
+      question._delete = true;
+      p = this.saveQuestion(question);
+    }else{
+      p = Q.when();
+    }
+    // self.questions.forEach(function(q,i){
+      // console.log(i,q.id,q.Order);
+    // });
+    // self.questions.splice(question.Order,1);
+    // console.log('del',question.id,question.Order,question);
+    return p.then(function(){
+      self.QuestionsTotal--;
+      self.save();
+    }).then(function(){
+      self.questions.splice(question.Order,1);
+      self.questions.forEach(function(q){
+        if(q.Order > question.Order){
+          q.Order--;
+        }
+      });
+      return self.saveAllQuestions();
+    });
+  };
+
+  Paper.prototype.moveUpQuestion = function(indexOrQuestion){
+    var question,self=this;
+    if(angular.isNumber(indexOrQuestion)){
+      question = this.questions[indexOrQuestion];
+    }else{
+      question = indexOrQuestion;
+    }
+    if(question.Order === 0)
+      return;
+    var swap = self.questions[question.Order-1];
+    swap.Order++;
+    question.Order--;
+    self.questions.splice(question.Order,2,question,swap);
+    return self.saveAllQuestions();
+  };
+
+  Paper.prototype.moveDownQuestion = function(indexOrQuestion){
+    var question,self=this;
+    if(angular.isNumber(indexOrQuestion)){
+      question = this.questions[indexOrQuestion];
+    }else{
+      question = indexOrQuestion;
+    }
+    if(question.Order >= self.QuestionsTotal-1)
+      return;
+    var swap = self.questions[question.Order+1];
+    swap.Order--;
+    question.Order++;
+    self.questions.splice(swap.Order,2,swap,question);
+    self.reloadQuestions();
+    return self.saveAllQuestions();
+  };
+
+  Paper.prototype.swapQuestions = function(q1,q2) {
+    if(!q1 || !q2)
+      return ;
+    this.questions[q2.Order]=q1;
+    this.questions[q1.Order]=q2;
+    var o1 = q1.Order;
+    q1.Order = q2.Order;
+    q2.Order = o1;
+    this.saveAllQuestions();
   };
 
   Paper.prototype.reloadQuestions = function(){
@@ -125,9 +234,11 @@ angular.module('paper.services', [])
         }else{
           questions.push(this.questions[j++]);
         }
+        // if(!questions[i]._delete)
         this.questionsByType[questions[i].Type].push(questions[i]);
       }
       this.questions = questions;
+      _types = null;
     // }
   };
   Paper.prototype.needRecapture = function() {
@@ -199,8 +310,9 @@ angular.module('paper.services', [])
   };
 
   Paper.prototype.GradeName = function(){
+    var self = this;
     try{
-      return this.$grades.filter(function(g){return this.GradeId == g.id;}.bind(this))[0].Name;
+      return this.$grades.filter(function(g){return self.GradeId == g.id;})[0].Name;
     }catch(e){
       return '';
     }

@@ -2,6 +2,7 @@ app.controller('MainCtrl',['$scope','$window','$http','$route','$location','$q',
   scope.window = window;
   scope.$root.grades = window.grades;
   scope.$root.paper = paper;
+  scope.$root.rootPath = '/customer_papers';
   // scope.$root.paper = window.paper;
   // scope.$root.paper_type = 'CustomerPaper';
   // scope.$root.orgStatus = scope.$eval('paper.Status');

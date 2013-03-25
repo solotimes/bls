@@ -1,8 +1,9 @@
 extends ../layout
 append head
   - locals.bodyClass = 'fluid'
-  !=js('customer_papers')
+  !=js('papers')
   !=css('jquery.iviewer')
+  !=css('facebox')
   script(src='/jmeditor/JMEditor.js')
   script
     window.paper = !{JSON.stringify(instance)};

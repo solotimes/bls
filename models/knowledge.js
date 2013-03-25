@@ -10,6 +10,7 @@ module.exports = function(sequelize, DataTypes)
 {
     return sequelize.define('Knowledge', {
         Name: {type:DataTypes.STRING},
-        Order: {type:DataTypes.INTEGER}
-    })
+        //可实现性
+        Difficulty: {type:DataTypes.INTEGER}
+    });
 }

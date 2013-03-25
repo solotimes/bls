@@ -14,7 +14,7 @@
 		<div class='clearfix'>
 			<div class='actions pull-right'>
 				<button class='btn btn-orange' ng-click='recapture()' ng-show='paper.readyFor(4)'>需要重拍</button>
-				<div class='assign' ng-hide='paper.Status!=0'>
+				<div class='assign' ng-hide='paper.Status!=0 || paper.needRecapture() '>
 					<button class='btn btn-blue' ng-click='loadInputers()' ng-disabled='!!inputers'>分配录入</button>
 					<select ng-options="i.id as i.Name for i in inputers" ng-model='paper.AdminId' ng-show='!!inputers'></select>
 					<button class='btn btn-orange' ng-click='assign()' ng-show='paper.AdminId'>确定</button>

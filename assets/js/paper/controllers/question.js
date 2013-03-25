@@ -1,5 +1,4 @@
-app.controller('QuestionCtl',['$scope','$http','$routeParams','$location','paper',function(scope,http,routeParams,location,paper){
-
+app.controller('QuestionCtrl',['$scope','$http','$routeParams','$location','paper',function(scope,http,routeParams,location,paper){
   scope.$on('unload',function(e){
     if(scope.qform.$dirty)
       e.preventDefault();
@@ -13,11 +12,20 @@ app.controller('QuestionCtl',['$scope','$http','$routeParams','$location','paper
   scope.$on('save-question',function(){
     paper.saveQuestion(scope.question).then(function(){
       scope.qform.$setPristine();
+      scope.$emit('question-saved');
     });
   });
 
   scope.$watch('qform.$dirty',function(value){
     scope.$emit('dirty-state-change',value);
+  });
+
+  scope.$watch('question.Body',function(value){
+    var temp = $(value);
+    temp.find('.math').mathquill();
+    temp.find('.selectable').remove();
+    scope.question.Excerpt = temp.text().substring(0,20);
+    temp.remove();
   });
 }]);
 

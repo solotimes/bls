@@ -62,21 +62,24 @@ module.exports = function(sequelize, DataTypes)
                 }
               }
             }catch(e){}
-
-            //var during the chain
+            var association;
             var question,qg = models.sequelize.queryInterface.QueryGenerator;
             var p = Q.when(self.upsert(attrs)).then(function(q){
               question = q;
             });
             if(parentModel){
-              var association = self.getAssociation(parentModel.__factory);
-              var addParent = association.accessors.add;
+              association = self.getAssociation(parentModel.__factory);
+              var accessor = !!attrs._delete ? association.accessors.remove : association.accessors.add;
               p = p.then(function(){
                 // return parentModel.addQuestion(question);
-                return Q.when(question[addParent](parentModel));
+                return Q.when(question[accessor](parentModel));
+              }).fail(function(error){
+                //忽略错误
+                logger.log(error);
+                return ;
               });
               //更新关系表
-              if('undefined' !== typeof attrs.Wrong || 'undefined' !== attrs.Order){
+              if(!attrs._delete || 'undefined' !== typeof attrs.Wrong || 'undefined' !== attrs.Order){
                 p = p.then(function(){
                   var keys = Utils._.keys(association.connectorDAO.primaryKeys);
                   var where = {};

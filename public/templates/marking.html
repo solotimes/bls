@@ -19,14 +19,14 @@
 <h2 class='orange'>请标注{{paper.customer.Name}}的错题:</h2>
 
 <form name='markingForm'>
-	<div ng-show='paper.questionsByType[type.order].length > 0' class='table-wrapper' ng-repeat='type in questionTypes'>
+	<div class='table-wrapper' ng-repeat='type in paper.getQuestionsGroupByTypes()'>
 		<table>
 			<caption>{{type.long}}</caption>
-			<tr ng-repeat='question in paper.questionsByType[type.order]' ng-class-even='"even"' ng-class='{highlight:question.Wrong}'>
+			<tr ng-repeat='question in type.questions' ng-class-even='"even"' ng-class='{highlight:question.Wrong}'>
 				<td class='center span25px'><input type='checkbox' ng-value='false' ng-checked='question.Wrong' ng-model='question.Wrong'/></td>
 				<td class='center span25px'>{{$index+1}}</td>
-				<td class='gray center span50px'>{{questionTypes[question.Type].short}}</td>
-				<td ng-bind-html-unsafe='question.Body'></td>
+				<td class='gray center span50px'>{{type.short}}</td>
+				<td math-html='question.Body'></td>
 			</tr>
 		</table>
 	</div>

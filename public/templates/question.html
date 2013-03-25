@@ -1,6 +1,6 @@
-<form ng-controller='QuestionCtl' name='qform'>
-  <div class='box box-blue'>
-    <div class='info'>
+<form ng-controller='QuestionCtrl' name='qform'>
+  <div class='box' ng-class='{"box-blue":(!modalMode)}'>
+    <div class='info' ng-show='!modalMode'>
       <span class='orange'>题号: {{question.Order+1}}</span>
       <span class='gray'>题目ID: {{question.id}}</span>
       <span class='gray'>已录入: {{paper.savedQuestions()}}题</span>
@@ -64,7 +64,7 @@
       <label class='blue'>难易度:</label>
       <span class='stars stars-big' ng-model='question.Difficulty'></span>
     </div>
-    <div class='fields question-mark' ng-class='{wrong: question.Wrong}'>
+    <div class='fields question-mark' ng-class='{wrong: question.Wrong}'  ng-show='!modalMode'>
       <label class='blue'>用户回答:</label>
       <label><input type='radio' ng-value='false' ng-model='question.Wrong'/>正确</label>
       <label class='orange'><input type='radio' ng-value='true' ng-model='question.Wrong'/>错误</label>

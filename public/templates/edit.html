@@ -1,0 +1,62 @@
+<div class="inner view">
+	<div class="paper-info underline-dashed">
+		<div class="buttons pull-right">
+			<button class="btn btn-orange" ng-click='save()'>保存查看</button>
+			<a href='#/' class="btn">取消</a>
+		</div>
+		<span paper-status="paper.Status"></span>
+		<span class='gray'>卷子ID: {{paper.id}}</span>
+		<span class='gray'>录入: {{paper.assignedTo.Name}} {{paper.RecoredAt |  date:'yyyy-MM-dd' }}</span>
+		<span class='gray'>最后修改: </span>
+		<h2 class="correct-rate blue">正确率{{paper.CorrectRate}}%</h2>
+	</div>
+	<form name='paper-form'>
+		<div class="paper-content">
+			<!-- begin-edit-mode -->
+			<label>年级:</label>
+			<select ng-options='grade.id as grade.Name for grade in grades' ng-model='paper.GradeId'></select>
+			<label>性质:</label>
+			<select></select>
+			<label>试卷标题</label>
+			<input type="text" ng-model='paper.Name'>
+			<!-- end-edit-mode -->
+		</div>
+		<div ng-repeat='type in paper.getQuestionsGroupByTypes()' class="question-section">
+			<h3>{{type.long}}</h3>
+			<ol>
+				<li class="question box" ng-repeat='question in type.questions' ng-class='{wrong:question.Wrong}'>
+					<span math-html='question.Body' class='question-body'></span>
+					<div class="box box-dashed" ng-switch='question.Type'>
+						<ol class="choices" ng-switch-when='0'>
+							<!-- 选择题 -->
+							<li math-html='choice.body' ng-repeat='choice in question.Choices' ng-class='{correct:$index==(question.Answer.charCodeAt(0)-65)}'></li>
+						</ol>
+						<div ng-switch-when='1' math-html='question.Answer'></div>
+						<div ng-switch-when='2' math-html='question.Answer'></div>
+					</div>
+					<div class='actions'>
+						<div class='pull-right'>
+							<label class='wrong'>
+								<input type="checkbox" ng-model='question.Wrong' ng-checked='!!question.Wrong'>
+								回答错误
+							</label>
+						</div>
+						<button ng-click='editQuestion(question)'>修改</button>
+						<button ng-click='swapQuestions(question,type.questions[$index-1])'>上移</button>
+						<button ng-click='swapQuestions(question,type.questions[$index+1])'>下移</button>
+						<button ng-click='removeQuestion(question)'>删除</button>
+					</div>
+				</li>
+			</ol>
+		</div>
+		<div class='buttons'>
+			<div>
+				<button class="btn btn-blue">添加一题</button>
+			</div>
+		</div>
+		<div class='buttons pull-right'>
+			<a href='#/' class="btn">取消</a>
+			<button class="btn btn-orange" ng-click='save()'>保存查看</button>
+		</div>
+	</form>
+</div>

@@ -127,18 +127,59 @@ return {
     // Specify how UI should be updated
     var editor = CKEDITOR.inline(element[0]);
     ngModel.$render = function() {
-      if(ngModel.$viewValue != editor.getData())
-       editor.setData(ngModel.$viewValue || '');
+      editor.setData(ngModel.$viewValue || '');
+      // element.html(ngModel.$viewValue);
+      setTimeout(function(){
+        element.find('.math').mathquill('editable');
+      },500);
     };
 
-    // Listen for change events to enable binding
-    element.bind('keyup change blur', function() {
+    // element.on('keyup','.math', function(e) {
+    //   var code = (e.keyCode ? e.keyCode : e.which);
+    //   if(code == 13 && $(this).data('editing') === true) { //Enter keycode
+    //     $(this).mathquill('revert').mathquill().data('editing',false);
+    //     e.preventDefault();
+    //     e.stopPropagation();
+    //   }
+    // });
+
+    // element.on('blur','.math',function(e){
+    //   var span = $(this);
+    //   if(span.is('.mathquill-editable'))
+    //     return;
+    //   span.replaceWith($('<span class="math">'+span.mathquill('latex')+'</span>'));
+    // });
+
+    // element.on('click','.math',function(e) {
+    //   var span = $(this);
+    //   if(span.is('.mathquill-editable'))
+    //     return;
+    //   span.replaceWith($('<span class="math">'+span.mathquill('latex')+'</span>'));
+    // });
+
+    element.on('keyup blur',function(e){
+      // if($(e.target).closest('.math').data('editing'))
+      //   return ;
       scope.$apply(read);
+    });
+
+    element.on('insertMath' ,function(){
+      window.setTimeout(function(){element.find('.math:not(.mathquill-rendered-math)').mathquill('editable');},100);
     });
 
     // Write data to the model
     function read() {
-     ngModel.$setViewValue(editor.getData());
+      var c = element.clone();
+      c.find('.math').each(function(i,sp){
+        var span = $(sp);
+        span.replaceWith($('<span class="math">'+span.mathquill('latex')+'</span>'));
+      });
+      // .mathquill('latex')
+      //   .data('editing','false')
+      //   .attr('class','math')
+      //   .removeAttr('mathquill-block-id');
+      ngModel.$setViewValue(c.html());
+      c.remove();
     }
    }
  };
@@ -150,32 +191,35 @@ return {
   link: function(scope, element, attrs, ngModel) {
     if(!ngModel) return; // do nothing if no ng-model
     var width = element.width();
-    ngModel.$formatters = [function(){
+    // ngModel.$formatters = [function(){
 
-    }];
+    // }];
     ngModel.$render = function() {
       element.removeClass('stars1 stars2 stars3 stars4 stars5');
       element.addClass('stars'+ngModel.$viewValue);
     };
 
-    element.on('click',function(e){
-      var x = e.pageX - $(this).offset().left;
-      var n = Math.ceil(x/width*5);
-      ngModel.$setViewValue(n);
-      ngModel.$render();
-    });
+    if(!attrs.readonly)
+      element.on('click',function(e){
+        var x = e.pageX - $(this).offset().left;
+        var n = Math.ceil(x/width*5);
+        ngModel.$setViewValue(n);
+        ngModel.$render();
+      });
    }
  };
 })
-.directive('beforeChange', [function(){
-  // Runs during compile
+.directive('mathHtml', [function(){
   return {
     restrict: 'A',
-    link: function($scope, iElm, iAttrs, controller) {
-      var scope = $scope.$new();
-      iElm.change(function(e){
-        scope.$event = e;
-        scope.$eval(iAttrs.beforeChange);
+    link: function($scope, iElm, iAttrs){
+      $scope.$watch(iAttrs.mathHtml,function(value){
+        iElm.empty();
+        var c = $(value);
+        if(c.is('p'))
+          c.unwrap();
+        c.find('.math').mathquill();
+        iElm.append(c);
       });
     }
   };
