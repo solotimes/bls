@@ -32,8 +32,19 @@ app.controller('RecordingCtrl',['$scope','$http','paper',function(scope,http,pap
     scope.$broadcast('save-question');
   };
 
+  scope.saveQuestionAndNext = function(){
+    scope.goNext = true;
+    scope.saveQuestion();
+  };
+
   scope.$on('question-saved',function(){
     paper.save();
+    if(scope.goNext){
+      setTimeout(function(){
+        scope.nextQuestion();
+        scope.goNext = false;
+      },0);
+    }
   });
 
   scope.isLastQuestion = function(){

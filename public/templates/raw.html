@@ -14,10 +14,10 @@
 		<div class='clearfix'>
 			<div class='actions pull-right'>
 				<button class='btn btn-orange' ng-click='recapture()' ng-show='paper.readyFor(4)'>需要重拍</button>
-				<div class='assign' ng-hide='paper.Status!=0 || paper.needRecapture() '>
+				<div class='assign' ng-show='showAssgin &amp;&amp; !paper.readyFor(4)'>
 					<button class='btn btn-blue' ng-click='loadInputers()' ng-disabled='!!inputers'>分配录入</button>
-					<select ng-options="i.id as i.Name for i in inputers" ng-model='paper.AdminId' ng-show='!!inputers'></select>
-					<button class='btn btn-orange' ng-click='assign()' ng-show='paper.AdminId'>确定</button>
+					<select ng-options="i.id as i.Name for i in inputers" ng-model='adminId' ng-show='!!inputers'></select>
+					<button class='btn btn-orange' ng-click='assign()' ng-show='adminId'>确定</button>
 				</div>
 			</div>
 			<p>
@@ -30,7 +30,7 @@
 			第{{selectedPic+1}}面:
 			<button  class='btn btn-blue audio' audio-src='paper.pics[selectedPic].audio'>播放录音</button>
 		</div>
-		<ul class='pic-selectors' pics='paper.pics' index-var='selectedPic' show-checkbox='paper.Status == 0' checkbox-field='RecaptureMark' checkbox-label='重拍'>
+		<ul class='pic-selectors' pics='paper.pics' index-var='selectedPic' show-checkbox='paper.Status == 0 &amp;&amp; !paper.AdminId' checkbox-field='RecaptureMark' checkbox-label='重拍'>
 		</ul>
 	</div>
 	<ul class='pics'>

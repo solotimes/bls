@@ -310,7 +310,7 @@ lines.forEach(function(line,i){
 		}
 		return subnode;
 	},tree);
-	points.push(point);
+	points.push(point[0]);
 	deepNode.pointIds.push(i+1);
 });
 tree.points= points;

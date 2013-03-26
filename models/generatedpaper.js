@@ -7,10 +7,16 @@
 module.exports = function(sequelize, DataTypes)
 {
     return sequelize.define('GeneratedPaper', {
-        Name: {type:DataTypes.STRING},
-        AppliedTime: {type:DataTypes.DATE},
-        CreatedAt:{type:DataTypes.DATE},
-        Report:{type:DataTypes.TEXT},
-        Record:{type:DataTypes.STRING}
-    })
-}
+      Name: {type:DataTypes.STRING},
+      Status: {type:DataTypes.INTEGER, defaultValue: 0},
+      CreatedAt: {type:DataTypes.DATE, defaultValue: DataTypes.NOW},
+      RecordedAt: {type:DataTypes.DATE},
+      CodeName: {type:DataTypes.STRING},
+      AudioPath: {type:DataTypes.STRING},
+      QuestionsTotal: {type:DataTypes.INTEGER, defaultValue: 0},
+      CorrectRate: {type:DataTypes.INTEGER},
+      AppliedTime: {type:DataTypes.DATE},
+      Report:{type:DataTypes.TEXT},
+      Record:{type:DataTypes.STRING}
+    });
+};

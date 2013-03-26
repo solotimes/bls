@@ -16,7 +16,8 @@ var STATUS = {
 	'需重拍': 4,
   '错题未解答': 5,
   '完成解答': 6,
-  '已推送': 7
+  '已推送': 7,
+  '待完善': 8
 };
 
 module.exports = function(sequelize, DataTypes)
@@ -75,18 +76,11 @@ module.exports = function(sequelize, DataTypes)
           //   //状态5-7
           // }
         },
-        getFullQuestions: function(){
-          var models = require('../models');
-          return this.getQuestions(models.Question.getFullQuery());
-        },
         toJSON: function(){
             var values = this.values;
             values.customer = this.customer;
             values.pics = this.pics;
             values.assignedTo = this.assignedTo;
-            try{
-              values.Meta = JSON.parse(this.Meta);
-            }catch(e){}
             return values;
         }
       },

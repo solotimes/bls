@@ -42,6 +42,7 @@ module.exports = function(sequelize, DataTypes)
             }catch(e){}
             values.Wrong = this.Wrong;
             values.Order = this.Order;
+            values.knowledges = this.knowledges;
             return values;
         }
       },
@@ -52,15 +53,16 @@ module.exports = function(sequelize, DataTypes)
             order: Utils.addTicks('Order')
           };
         },
-        saveInstance: function(attrs,parentModel){
+        saveInstance: function (attrs,parentModel){
             var models = require('../models');
             var self = this; // Question
             try{
-              for(var k in attrs){
-                if('object' === typeof attrs[k]){
-                  attrs[k] = JSON.stringify(attrs[k]);
-                }
-              }
+                // [''].forEach(function(key){
+                //   if('object' === typeof attrs[k]){
+                //     attrs[k] = JSON.stringify(attrs[k]);
+                //   }
+              if(attrs.Choices)
+                attrs.Choices = JSON.stringify(attrs.Choices);
             }catch(e){}
             var association;
             var question,qg = models.sequelize.queryInterface.QueryGenerator;
@@ -68,6 +70,7 @@ module.exports = function(sequelize, DataTypes)
               question = q;
             });
             if(parentModel){
+              //保存各类试卷关联
               association = self.getAssociation(parentModel.__factory);
               var accessor = !!attrs._delete ? association.accessors.remove : association.accessors.add;
               p = p.then(function(){
@@ -91,6 +94,18 @@ module.exports = function(sequelize, DataTypes)
                     return Q.when(models.sequelize.query(sql));
                 });
               }
+            }
+            if(attrs.knowledges){
+              //保存知识点
+              p = p.then(function(){
+                console.log(typeof attrs.knowledges);
+                var ids = attrs.knowledges.map(function(k){
+                  return k.id;
+                });
+                return models.Knowledge.findAll({where:{id: ids}});
+              }).then(function(knowledges){
+                return question.setKnowledges(knowledges);
+              });
             }
             return p.then(function(){return question;});
           }

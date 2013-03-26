@@ -51,16 +51,22 @@ angular.module('paper.services', [])
 
   Paper.prototype.save = function(attrs){
     var self = this;
+    attrs = attrs || {};
+    delete attrs.Status;
     var saveObj = angular.copy(this);
-    if(attrs)
-      angular.extend(saveObj,attrs);
-    if(!attrs || !attrs.Status){
-      delete saveObj.Status;
-    }
-    if(this.Status !== 0 && this.Status !== 4 && this.Status !== 2 && !saveObj.RecordedAt){
+    angular.extend(saveObj,attrs);
+
+    //自动判断状态, 根据保存时设定的参数以及paper当前的状态
+    var changeTo = self.checkStatus(attrs,saveObj);
+    if(angular.isNumber(changeTo))
+      saveObj.Status = changeTo;
+    // console.log('changeTo:',changeTo);
+    if(saveObj.Status !== 0 && saveObj.Status !== 4 && saveObj.Status !== 2 && !saveObj.RecordedAt){
       saveObj.RecordedAt = new Date();
+      // console.log('createdAt:',saveObj.Status);
     }
     saveObj.CorrectRate = this.getCorrectRate();
+
     return http.put(this.$path,{instance: saveObj}).success(function(res){
       $.extend(true,self,res);
     });
@@ -76,6 +82,7 @@ angular.module('paper.services', [])
       if(this.questionsByType[i].length){
         _types.push({
           order: j,
+          value: i,
           long: _ChnNumbers[j] + '、' + _TypeNames[i],
           short: _TypeNames[i],
           questions: this.questionsByType[i]
@@ -96,7 +103,8 @@ angular.module('paper.services', [])
 
   Paper.prototype.newQuestion = function(attrs){
     attrs = attrs || {};
-    return  angular.extend({
+    console.log(attrs);
+    var res = angular.extend({
       Type: 0,// 0 选择题 1 填空题 2主观题
       knowledges: [], //知识点
       Body: "", //提干
@@ -108,12 +116,15 @@ angular.module('paper.services', [])
       Method: '',    //问法
       Wrong: false
     },attrs);
+    console.log(res);
+    return res;
   };
 
   Paper.prototype.savedQuestions = function (){
+    var self = this;
     if(!angular.isArray(this.questions)) return 0;
     return this.questions.filter(function(q){
-      return !angular.isUndefined(q.id);
+      return !angular.isUndefined(q.id) && !self.isBlank(q.Body);
     }).length;
   };
 
@@ -132,14 +143,14 @@ angular.module('paper.services', [])
 
   Paper.prototype.saveAllQuestions = function() {
     var self = this;
-    if(this.questions.length){
-      return http.post(this.$questionsPath,{instance:this.questions}).then(function(res){
+    if(self.questions.length){
+      return http.post(self.$questionsPath,{instance:self.questions}).then(function(res){
         var qs = res.data;
         if(!qs.length) qs = [qs];
         qs.forEach(function(q,i){
-          $.extend(true,this.questions[i],q);
+          $.extend(true,self.questions[i],q);
         });
-        this.reloadQuestions();
+        self.reloadQuestions();
       });
     }
     return Q.when();
@@ -253,6 +264,23 @@ angular.module('paper.services', [])
     return mark;
   };
 
+  /**
+  * 工具方法,检查变量是否为逻辑空值
+  */
+  var testElement = $('<div></div>');
+  Paper.prototype.isBlank = function(val){
+    try{
+      if(angular.isString(val)){
+        return testElement.html(val).text().trim().length === 0;
+      }else if(angular.isArray(val)){
+        return val.length === 0;
+      }
+      return !val;
+    }catch(e){
+      return false;
+    }
+  };
+
   Paper.prototype.isAllWrongQuestionsSolved = function(){
     var select = this.questions.filter(function(q){
       return q.Wrong && $(q.Solution||'').text().trim().length === 0;
@@ -260,32 +288,123 @@ angular.module('paper.services', [])
     return select.length === 0;
   };
 
-  Paper.prototype.readyFor = function(s){
+  //检查所有问题是否都已完善
+  Paper.prototype.isAllQuestionFinished = function(){
+    var self = this;
+    var select = this.questions.filter(function(q){
+      return !self.isQuestionFinished(q);
+    });
+    return select.length === 0;
+  };
+
+  Paper.prototype.isQuestionFinished = function(question){
+    var res =  !!question.id &&
+           !this.isBlank(question.Body) &&
+           !this.isBlank(question.Solution) &&
+           !this.isBlank(question.Condition) &&
+           !this.isBlank(question.Method) &&
+           !this.isBlank(question.Answer) &&
+           !this.isBlank(question.knowledges);
+    // console.log(question.Order,'Body',!this.isBlank(question.Body));
+    // console.log(question.Order,'Solution',!this.isBlank(question.Solution));
+    // console.log(question.Order,'Condition',!this.isBlank(question.Condition),question.Condition);
+    // console.log(question.Order,'Method',!this.isBlank(question.Method),question.Method);
+    // console.log(question.Order,'Answer',!this.isBlank(question.Answer),question.Answer);
+    // console.log(question.Order,'knowledges',!this.isBlank(question.knowledges));
+    // console.log('#########');
+    return res;
+  };
+
+  Paper.prototype.checkStatus = function(params){
+    for( var s = 0 ; s < 9 ;s ++){
+      if(!!this.readyFor(s,params))
+        return s;
+    }
+    return false;
+  };
+
+   // '未处理',0
+   //     =>  '需重拍',4
+   //     =>  '待标错题',1   =>  '完成解答',6
+   //     =>  '待录错题',2,  *=>  '错题未解答',5 => '待完善',8  =>  '完成解答',6
+   //                       *=>  '待录全卷',3  => '待完善',8  =>  '完成解答',6
+   // '已推送',7
+  Paper.prototype.readyFor = function(s,params){
+    var savedQuestions = this.savedQuestions();
+    var wrongQuestionsUnSolved = !this.isAllWrongQuestionsSolved();
+    var allQuestionFinished = this.isAllQuestionFinished();
+    var needRecapture = this.needRecapture();
+    params = params || {};
+    // console.log(angular.copy(params));
     switch(s){
+      // 待标错题
       case 1:
-        return (this.Status === 0 || this.Status == 2 && this.savedQuestions() === this.QuestionsTotal);
+        return (this.Status === 2 && params.copyed) &&
+                savedQuestions > 0 &&
+                savedQuestions === this.QuestionsTotal;
+      // 待录错题
       case 2:
-        return (this.Status === 0 && this.AdminId);
-      case 3:
-        return (this.Status === 1 || this.Status === 2 && this.savedQuestions()!==0);
-      case 4:
-        return (this.Status === 0 && this.needRecapture());
+        return (this.Status === 0 &&
+                (this.QuestionsTotal > 0 && savedQuestions < this.QuestionsTotal) &&
+                this.AdminId &&
+                !needRecapture);
+      // 错题未解答
       case 5:
-        return (this.Status === 1 || this.Status === 3 && !this.isAllWrongQuestionsSolved());
+        return ((this.Status === 2 && params.finishWrongRecord) &&
+                savedQuestions > 0 &&
+                wrongQuestionsUnSolved);
+      // 待录全卷
+      case 3:
+        return ((this.Status === 2 && params.finishWrongRecord) || this.Status === 5) &&
+                savedQuestions > 0 &&
+                savedQuestions < this.QuestionsTotal &&
+                !wrongQuestionsUnSolved &&
+                !allQuestionFinished;
+      // 需重拍
+      case 4:
+        return (this.Status === 0 && needRecapture);
+      // 完成解答
       case 6:
-        return (this.Status === 1 || this.Status === 3 || this.Status === 5 && this.isAllWrongQuestionsSolved());
+        // console.log(allQuestionFinished);
+        return (this.Status === 1 || this.Status === 3 ||
+                this.Status === 5 || this.Status === 8 ||
+                (this.Status === 2 && params.finishWrongRecord)) &&
+               allQuestionFinished;
+      // 待完善
+      case 8:
+        // console.log('finishWrongRecord:',params.finishWrongRecord);
+        return (this.Status === 3 || this.Status === 5 ||
+               (this.Status === 2 && params.finishWrongRecord)) &&
+              savedQuestions == this.QuestionsTotal &&
+              !allQuestionFinished;
+      //已推送
+      case 7:
+        return (this.Status === 3 || this.Status === 8 || this.Status === 6) && params.pushed;
+      default:
+        return false;
     }
   };
-  Paper.prototype.readyForStatus = function(/*status*/){
-    var statusList = arguments;
-    if(!statusList.length)
+
+  Paper.prototype.readyForEither = function(statusList,params){
+    if(!statusList || !statusList.length)
       return false;
     for(var i in statusList){
-      if(this.readyFor(statusList[i])){
+      if(this.readyFor(statusList[i],params)){
         return true;
       }
     }
     return false;
+  };
+
+  Paper.prototype.readyForAll = function(statusList,params) {
+    if(!statusList || !statusList.length)
+      return false;
+    for(var i in statusList){
+      if(!this.readyFor(statusList[i],params)){
+        return false;
+      }
+    }
+    return true;
   };
 
   Paper.prototype.changeStatus = function(status,force){
@@ -298,15 +417,7 @@ angular.module('paper.services', [])
   };
 
   Paper.prototype.finish = function() {
-    if(this.readyFor(5)){
-      if(window.confirm('有错题未解答,将试卷状态更改为"错题未解答"'))
-        return this.save({Status:5});
-    }else if(this.readyFor(6)){
-      if(window.confirm('全部错题都已解答, 将试卷状态更改为"完成解答."'))
-        return this.save({Status:6});
-    }else if(this.Status ===6 ){
-      this.save();
-    }
+    this.save();
   };
 
   Paper.prototype.GradeName = function(){
@@ -319,4 +430,31 @@ angular.module('paper.services', [])
   };
 
   return new Paper();
-}]);
+}])
+.factory('knowledgeTree', ['$http','$window','$q','$rootScope',function (http,window,Q,rootScope) {
+  // var knowledges;
+  function Tree(){
+    var self = this;
+    http.get('/knowledge-tree.json').success(function(data){
+      angular.copy(data, self);
+      http.get('/knowledges').success(function(data){
+        self.knowledges = data;
+      });
+    });
+  }
+
+  Tree.prototype.find = function(id){
+    if(!this.knowledges){
+      return;
+    }
+    var select = this.knowledges.filter(function(knowledge){
+      return knowledge.id == id;
+    });
+    if(select && select.length)
+      return select[0];
+    return;
+  };
+  rootScope.knowledgeTree = new Tree();
+  return rootScope.knowledgeTree;
+}])
+;

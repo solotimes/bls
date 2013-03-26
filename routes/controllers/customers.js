@@ -239,8 +239,6 @@ exports.batch = function(req,res){
   var ids = req.param('ids'),
     levelId= req.param('levelId');
   if(!ids || !levelId || ids.length === 0){
-    console.log(ids);
-    console.log(levelId);
     res.redirect('back');
   }
   else{

@@ -78,5 +78,8 @@ Knowledge.hasMany(Question);
 Knowledge.hasMany(Paper);
 Knowledge.hasMany(CustomerPaper);
 
+GeneratedPaper.belongsTo(CustomerPaper);
+GeneratedPaper.hasMany(Question);
+Question.hasMany(GeneratedPaper);
 GeneratedPaper.hasMany(GeneratedPaperResult);
 Question.hasMany(GeneratedPaperResult);

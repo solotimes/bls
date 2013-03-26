@@ -43,14 +43,15 @@
       <label>解题思路:</label>
       <div ng-model='question.Solution' contenteditable='true' class='more'/>
     </div>
-    <div  class='fields knowledge-points'>
+    <div  class='fields knowledge-points' ng-init='showKEditor=false'>
       <label class='blue'>归属知识点:</label>
-      <button class='btn-add' ng-click='addKnowLedgePoint()'>+ 添加</button>
-      <ul class='box'>
+      <button class='btn-add' ng-click='showKEditor = !showKEditor'>添加{{ { true:'∧',false:'∨'}[showKEditor] }}</button>
+      <div ng-include='"/templates/knowledge-editor.html"' slide-down='showKEditor'></div>
+      <ul class='box list'>
         <li ng-repeat='knowledge in question.knowledges'>
-          <span class='name'>{{knowledge.Name}}</span>
-          <span class='difficulty' ng-class='"difficulty-"+knowledge.difficulty'></span>
-          <button class='trash'></button>
+          <div class='name'>{{knowledge.Name}}
+            <button class='trash' ng-click='removeKnowledge(knowledge)'>x</button></div>
+          <div class='stars' ng-model='knowledge.Difficulty' readonly='true'></div>
         </li>
       </ul>
     </div>
@@ -63,6 +64,12 @@
     <div class='fields question-difficulty'>
       <label class='blue'>难易度:</label>
       <span class='stars stars-big' ng-model='question.Difficulty'></span>
+    </div>
+    <div class='fields question-description'>
+      <label class='blue'>备注:</label>
+      <input type="text" ng-model='question.Description'/>
+      <a ng-click='addDesc("压轴题")'>压轴题+</a>
+      <a ng-click='addDesc("中考题")'>中考题+</a>
     </div>
     <div class='fields question-mark' ng-class='{wrong: question.Wrong}'  ng-show='!modalMode'>
       <label class='blue'>用户回答:</label>

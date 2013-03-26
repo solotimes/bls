@@ -1,0 +1,20 @@
+<div class='box editor' ng-controller='KnowledgeCtrl'>
+	<ul class='root'>
+		<li ng-click='setLevel1(node)' ng-repeat='node in knowledgeTree.children'  ng-class='{highlight: (level1 == node) }'>
+			<span>{{node.name}}</span>
+		</li>
+	</ul>
+	<ul class='level1'>
+		<li ng-click='setLevel2(node)' class='knowledge-catalog' ng-repeat='node in level1.children' ng-class='{highlight: (level2 == node) }'>
+			<span>{{node.name}}</span>
+		</li>
+		<li  ng-click='select(kid)' class='knowledge' ng-repeat='kid in level1.pointIds' ng-hide='isKnowledgeAdded(kid)'>
+			<span ng-click='select(kid)'>{{knowledgeTree.find(kid).Name}}</span>
+		</li>
+	</ul>
+	<ul class='level2'>
+		<li  ng-click='select(kid)' class='knowledge' ng-repeat='kid in level2.pointIds' ng-hide='isKnowledgeAdded(kid)'>
+			<span>{{knowledgeTree.find(kid).Name}}</span>
+		</li>
+	</ul>
+</div>

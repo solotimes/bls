@@ -78,13 +78,15 @@ html,body{
   font-family: Microsoft YaHei;
 }
 
-.clearfix:after {
-  content: ".";
-  display: block;
-  clear: both;
-  visibility: hidden;
-  line-height: 0;
-  height: 0;
+.clearfix{
+    &:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+  };
 }
 
 .clearfix {
@@ -391,6 +393,9 @@ a,a:hover{
   background-color: #3ba4dd;
   color: #fff;
   text-align: center;
+  &.tag-orange{
+    background: rgb(253,106,0);
+  }
 }
 
 .content{
@@ -620,6 +625,9 @@ a,a:hover{
   }
   &.status-7{
     background: #33ccff;
+  }
+  &.status-8{
+    background: #009900;
   }
 }
 
@@ -924,8 +932,61 @@ a,a:hover{
     }
   }
   .knowledge-points{
-    ul{
-
+    .editor{
+      .hbox;
+      ul{
+        width: 33%;
+        height: 300px;
+        overflow: auto;
+      }
+      ul.level2 li{
+        margin-right: 0;
+      }
+      li{
+        background: #ebf1f2;
+        color: #656662;
+        margin: 2px 20px 2px 0;
+        padding: 0 15px 0 10px;
+        cursor: pointer;
+        position: relative;
+        &.highlight{
+          background: #a2d4e4;
+          color: #000;
+        }
+        &:after{
+          display: 'block';
+          content: '▶';
+          position: absolute;
+          top: 0px;
+          right: 2px;
+          color: #0055b0;
+          font-size: 12px;
+        }
+        &.knowledge{
+          background: #ef7f26;
+          color: white;
+          &:after{
+            display: 'block';
+            content: '+';
+            position: absolute;
+            top: 0px;
+            right: 2px;
+            color: white;
+          }
+        }
+      }
+    }
+    ul.list{
+      .clearfix;
+      li{
+        float:left;
+        color: #0456ad;
+        width: 50%;
+        margin-bottom: 10px;
+      }
+    }
+    .trash{
+      margin-left: 10px;
     }
   }
   .buttons-marking{
@@ -983,6 +1044,14 @@ a,a:hover{
       border: 1px solid rgb(253,106,0);
       background: lighten(rgb(253,106,0),40%)
     }
+    &.question-description input{
+      display: inline-block;
+      width: 250px;
+    }
+    label.blue:first-child{
+      min-width: 80px;
+      display: inline-block;
+    };
   }
   .choice{
     margin-top:10px;
@@ -1164,6 +1233,7 @@ a,a:hover{
   }
   .question{
     .field{
+      .clearfix;
       font-size: 14px;
       line-height: 30px;
       padding-left: 85px;
@@ -1175,6 +1245,10 @@ a,a:hover{
         position: absolute;
         left: 0;
         top: 2px;
+      }
+      .knowledge{
+        color:#0456ad;
+        float: left;
       }
       > div{
         font-size: 12px;

@@ -86,7 +86,7 @@ block content
                   when 1
                     a.action-1(href='/customer_papers/#{model.id}#marking',data-type='mark') 标错题
                   when 4
-                    a(href='/customer_papers/#{model.id}',data-type='view') 查看
+                    a(href='/customer_papers/#{model.id}#recording',data-type='view') 查看
                   default
                     a.action-3(href='/customer_papers/#{model.id}#recording',data-type='record') 录入
                 if currentUser.checkRoles(['分配员'])

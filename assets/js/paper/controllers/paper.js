@@ -24,6 +24,14 @@ app.controller('PaperCtrl',['$scope','$http' ,'paper','modal',function(scope,htt
 			paper.removeQuestion(question);
 		}
 	};
+	scope.addNewQuestion = function(attrs){
+		attrs = attrs || {};
+		attrs.Order = paper.QuestionsTotal;
+		paper.questions.push(paper.newQuestion(attrs));
+		paper.QuestionsTotal ++;
+		paper.reloadQuestions();
+		paper.save();
+	};
 	scope.moveUp = function(question){
 		paper.moveUpQuestion(question);
 	};

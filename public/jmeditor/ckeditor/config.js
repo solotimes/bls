@@ -41,4 +41,4 @@ CKEDITOR.on('dialogDefinition', function(e) {
       var x = $(window).width()*3/4 - this.getSize().width/2;
       this.move(x,0); // Top center
     };
-})
+});

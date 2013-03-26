@@ -40,13 +40,12 @@ app.get('/customer_papers/raw/:scope?',controllers.customer_papers.raw);
 app.get('/customer_papers/recorded/:scope?',controllers.customer_papers.recorded);
 var customer_papers = app.resource('customer_papers',controllers.customer_papers);
 customer_papers.map('delete','/',controllers.customer_papers.batchDestroy);
-customer_papers.map('get','/record',controllers.customer_papers.show);
-customer_papers.map('get','assign',controllers.customer_papers.assign);
 
 // app.get('/customer_papers/:customer_paper_id/questions.:format?',controllers.questions.index);
 var questions = app.resource('questions',controllers.questions);
 customer_papers.add(questions);
 
+var knowledges = app.resource('knowledges',controllers.knowledges);
 // app.get('/register', authorization.checkNotLogin);
 // app.get('/register', auth.register);
 // app.post('/register', authorization.checkNotLogin);

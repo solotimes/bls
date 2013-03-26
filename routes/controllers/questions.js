@@ -22,7 +22,7 @@ exports.index = {
   json: function(req,res,next){
     fetchParentModel(req);
     if(req.parentModel){
-      p = Q.when(paperModel.getQuestions(models.Question.getFullQuery()));
+      p = Q.when(paperModel.getFullQuestions());
     }else{
       p = Q.when(models.Question.all());
     }
@@ -54,14 +54,18 @@ exports.create = {
         if(!instance.length){
           instance = [instance];
         }
-        instance.reduce(function(p,q){
-          return p.then(function(res){
-            if(res)
-              questions.push(res);
-            return models.Question.saveInstance(q,req.parentModel);
+        instance.reduce(function(p,attrs){
+          return p.then(function(previous){
+            if(previous){
+              questions.push(previous);
+            }
+            return models.Question.saveInstance(attrs,req.parentModel);
           });
         },Q.resolve())
-        .then(function(){
+        .then(function(previous){
+          if(previous){
+            questions.push(previous);
+          }
           if(questions.length==1)
             res.send(questions[0]);
           else

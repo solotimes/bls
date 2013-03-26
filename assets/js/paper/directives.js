@@ -106,7 +106,9 @@ angular.module('paper.directives', [])
       3: '待录全卷',
       4: '需重拍',
       5: '错题未解答',
-      6: '完成解答'
+      6: '完成解答',
+      7: '已推送',
+      8: '待完善'
     };
 
     return function(scope,elm,attrs){
@@ -124,15 +126,26 @@ return {
   require: '?ngModel', // get a hold of NgModelController
   link: function(scope, element, attrs, ngModel) {
     if(!ngModel) return; // do nothing if no ng-model
-    // Specify how UI should be updated
     var editor = CKEDITOR.inline(element[0]);
+    function initMath(){
+      element.find('.math').mathquill('editable');
+    }
     ngModel.$render = function() {
       editor.setData(ngModel.$viewValue || '');
-      // element.html(ngModel.$viewValue);
-      setTimeout(function(){
-        element.find('.math').mathquill('editable');
-      },500);
+      if(editor.instanceReady)
+        initMath();
+      else
+        editor.once('instanceReady',initMath);
+      // },10);
+      // initMath();
     };
+    scope.$on('$destroy',function(){
+      editor.destroy();
+    });
+    // element.one('click',function(){
+    //   if(!editor)
+    //     editor = CKEDITOR.inline(element[0]);
+    // });
 
     // element.on('keyup','.math', function(e) {
     //   var code = (e.keyCode ? e.keyCode : e.which);
@@ -258,4 +271,15 @@ return {
       });
     }
     };
+}])
+.directive('slideDown', [function(){
+  return {
+    link: function($scope, iElm, iAttrs, controller) {
+
+      iElm.toggle($scope.$eval(iAttrs.slideDown));
+      $scope.$watch(iAttrs.slideDown,function(v){
+        return (v ? iElm.slideDown() : iElm.slideUp());
+      });
+    }
+  };
 }]);

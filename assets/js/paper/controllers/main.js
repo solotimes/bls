@@ -24,7 +24,19 @@ app.controller('MainCtrl',['$scope','$window','$http','$route','$location','$q',
       return '将丢失未保存的更改,您确定要退出本页?';
     }
   };
-
+  var testElement = $('<div></div>');
+  scope.$root.blank = function(val){
+      try{
+        if(angular.isString(val)){
+          return testElement.html(val).text().trim().length === 0;
+        }else if(angular.isArray(val)){
+          return val.length === 0;
+        }
+        return !val;
+      }catch(e){
+        return false;
+      }
+  };
   // $scope.$on(
   //     "$routeChangeSuccess",
   //     function( $currentRoute, $previousRoute ){
