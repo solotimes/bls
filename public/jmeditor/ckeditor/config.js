@@ -37,7 +37,11 @@ CKEDITOR.editorConfig = function( config ) {
 CKEDITOR.on('dialogDefinition', function(e) {
     var dialogName = e.data.name;
     var dialogDefinition = e.data.definition;
+    var oldFunc = dialogDefinition.onShow;
     dialogDefinition.onShow = function() {
+      if(oldFunc){
+        oldFunc.apply(this,arguments);
+      }
       var x = $(window).width()*3/4 - this.getSize().width/2;
       this.move(x,0); // Top center
     };
