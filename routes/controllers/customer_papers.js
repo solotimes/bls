@@ -9,7 +9,8 @@ exports.index = function(req, res){
   var to = req.redirectByRole([
     [['分配员'],'/customer_papers/raw/未处理'],
     // [['标错题'],'/customer_papers/scope/待标错题'],
-    [['录入员','推送'],'/customer_papers/raw/待录错题']
+    [['录入员'],'/customer_papers/raw/待录错题'],
+    [['老师','试题库管理员','推送'],'/customer_papers/recorded/']
   ]);
   res.redirect(to);
 };
@@ -48,12 +49,12 @@ exports.raw = function(req, res ,next){
   var q = (req.param('q') || '').trim();
   var by = (req.param('by')||'').trim();
   var scope = (req.param('scope')||'').trim();
-  // var condition = 'RecordedAt is NULL';
+  var condition = '`Status` in(0,1,2,3,4) ';//'RecordedAt is NULL';
   var where,searchParams={};
 
   if("undefined" !== typeof models.CustomerPaper[scope]){
     // console.log(models.CustomerPaper[scope]);
-    condition += ' AND `Status` = ' + models.CustomerPaper[scope];
+    condition += 'AND `Status` = ' + models.CustomerPaper[scope];
   }
   if(!req.currentUser.checkRoles(['分配员'])){
     condition = condition ? (condition + ' AND ') :  '';
@@ -89,7 +90,69 @@ exports.raw = function(req, res ,next){
 };
 
 exports.recorded = function(req,res){
+  res.locals.scopes = [
+    {
+      name: '全部',
+      roles: ['分配员','推送','老师','试题库管理员'],
+      value: ''
+    },
+    {
+      roles: ['老师','试题库管理员','分配员','录入员'],
+      value: '错题未解答'
+    },
+    {
+      roles: ['老师','试题库管理员','分配员','录入员','推送'],
+      value: '待完善'
+    },
+    {
+      roles: ['老师','试题库管理员','分配员','推送'],
+      value: '完成解答'
+    },
+    {
+      roles: ['老师','试题库管理员','分配员','推送'],
+      value: '已推送'
+    }
+  ];
 
+  var q = (req.param('q') || '').trim();
+  var by = (req.param('by')||'').trim();
+  var scope = (req.param('scope')||'').trim();
+  var condition = '`Status` in(5,6,7,8) ';//'RecordedAt is NULL';
+  var where,searchParams={};
+
+  if("undefined" !== typeof models.CustomerPaper[scope]){
+    // console.log(models.CustomerPaper[scope]);
+    condition += 'AND `Status` = ' + models.CustomerPaper[scope];
+  }
+  if(!req.currentUser.checkRoles(['分配员','老师','试题库管理员','推送'])){
+    condition = condition ? (condition + ' AND ') :  '';
+    condition += ('AdminId = '+req.currentUser.id);
+  }
+  if(q.length && by.length && (by == 'Name' || by == 'CodeName' || by == 'CreatedAt')){
+    if(condition)
+      condition += ' AND `CustomerPapers`.`'+by+"` LIKE ?";
+    searchParams.q=q;
+    searchParams.by=by;
+    where = [ condition, "%"+q+"%"];
+  }else{
+    where = condition;
+  }
+
+  models.CustomerPaper.pageAll({
+      where:where,
+      include: ['Customer','AssignedTo'],
+      addAttributes: ' `Levels`.`Name` as `lname` ,`Levels`.`Order` as `lorder` ',
+      join: ' LEFT OUTER JOIN `Levels` ON `Customers`.`LevelID`=`Levels`.`id` ',
+      order: ' `lorder` DESC ,`CreatedAt` '
+    },
+      req.param('page'),req.param('per'),
+  function(error,collection){
+    if(error){
+      logger.log(error);
+      return next(error);
+    }
+    res.render('customer_papers/recorded',{collection: extend(collection||[],searchParams)});
+  });
 };
 
 exports.show = {

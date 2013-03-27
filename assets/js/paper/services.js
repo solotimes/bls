@@ -49,6 +49,12 @@ angular.module('paper.services', [])
     this.reloadQuestions();
   };
 
+  Paper.prototype.types = {'增加练习':'增加练习',
+                            '月考':'月考',
+                            '期中':'期中',
+                            '期末':'期末',
+                            '初三中考模拟':'初三中考模拟',
+                            '中考真题':'中考真题'};
   Paper.prototype.save = function(attrs){
     var self = this;
     attrs = attrs || {};
@@ -103,7 +109,6 @@ angular.module('paper.services', [])
 
   Paper.prototype.newQuestion = function(attrs){
     attrs = attrs || {};
-    console.log(attrs);
     var res = angular.extend({
       Type: 0,// 0 选择题 1 填空题 2主观题
       knowledges: [], //知识点
@@ -114,9 +119,10 @@ angular.module('paper.services', [])
       Difficulty: 3, //难易度 1-5
       Condition: '', //条件
       Method: '',    //问法
-      Wrong: false
+      Wrong: false,
+      Answer: '',
+      Description: ''
     },attrs);
-    console.log(res);
     return res;
   };
 
