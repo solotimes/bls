@@ -47,20 +47,3 @@ customer_papers.add(questions);
 
 var knowledges = app.resource('knowledges',controllers.knowledges);
 var uploads = app.resource('uploads',controllers.uploads);
-// app.get('/register', authorization.checkNotLogin);
-// app.get('/register', auth.register);
-// app.post('/register', authorization.checkNotLogin);
-// app.post('/register', auth.registerPost);
-
-// app.get('/user', authorization.checkLogin);
-// app.get('/user', user.index);
-
-// app.get('/user/upload', authorization.checkLogin);
-// app.get('/user/upload', user.upload);
-// app.post('/user/upload', authorization.checkLogin);
-// app.post('/user/upload', user.uploadPost);
-
-// app.get('/user/uploadPaper', authorization.checkLogin);
-// app.get('/user/uploadPaper', user.uploadPaper);
-// app.post('/user/uploadPaper', authorization.checkLogin);
-// app.post('/user/uploadPaper', user.uploadPaperPost);
