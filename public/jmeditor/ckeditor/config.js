@@ -13,14 +13,14 @@ CKEDITOR.editorConfig = function( config ) {
     // { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
     // { name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
     // { name: 'links' },
-    { name: 'forms' },
-    { name: 'tools' },
+    // { name: 'forms' },
+    // { name: 'tools' },
     // { name: 'document',     groups: [ 'mode', 'document', 'doctools' ] },
-    { name: 'others' },
+    // { name: 'others' , groups: ['others','upload']},
     '/',
     { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
     // { name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align' ] },
-    { name: 'insert' }
+    { name: 'insert' ,groups: ['insert' , 'others']}
     //{ name: 'styles' },
     //{ name: 'colors' },
     // { name: 'about' }
@@ -28,8 +28,8 @@ CKEDITOR.editorConfig = function( config ) {
 
   // Remove some buttons, provided by the standard plugins, which we don't
   // need to have in the Standard(s) toolbar.
-  config.removeButtons = 'Underline,Subscript,Superscript,SpecialChar,Table,HorizontalRule';
-  config.extraPlugins = 'jme';
+  config.removeButtons = 'Underline,Subscript,Superscript,Table,HorizontalRule';
+  config.extraPlugins = 'upload,jme';
   config.dialog_backgroundCoverOpacity = 0;
   // config.enterMode = CKEDITOR.ENTER_BR;
 };

@@ -34,8 +34,10 @@
         },delay);
       }
     };
-    $.facebox.settings.opacity = 0.8;
-    $.facebox.settings.closeImage = '/img/closelabel.png';
-    $.facebox.settings.loadingImage = '/img/loading.gif';
+    if( $.facebox){
+      $.facebox.settings.opacity = 0.8;
+      $.facebox.settings.closeImage = '/img/closelabel.png';
+      $.facebox.settings.loadingImage = '/img/loading.gif';
+    }
   });
 })(window.jQuery);

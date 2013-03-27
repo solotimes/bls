@@ -46,6 +46,7 @@ var questions = app.resource('questions',controllers.questions);
 customer_papers.add(questions);
 
 var knowledges = app.resource('knowledges',controllers.knowledges);
+var uploads = app.resource('uploads',controllers.uploads);
 // app.get('/register', authorization.checkNotLogin);
 // app.get('/register', auth.register);
 // app.post('/register', authorization.checkNotLogin);

@@ -6,3 +6,4 @@ Guardfile
 test.js
 *.sh
 *.bz2
+/public/upload/*
