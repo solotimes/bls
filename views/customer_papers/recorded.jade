@@ -57,10 +57,10 @@ block content
               td= model.Name
               td
                 if model.CreatedAt
-                  = moment(model.CreatedAt).format('YYYY-MM-DD')
+                  = moment(model.CreatedAt).format('YYYY-MM-DD HH:mm')
               td
                 if model.RecordedAt
-                  = moment(model.RecordedAt).format('YYYY-MM-DD')
+                  = moment(model.RecordedAt).format('YYYY-MM-DD HH:mm')
               td
                 a(href='/customer_papers/#{model.id}',data-type='view') 查看
                 a(href='/customer_papers/#{model.id}#edit',data-type='edit') 修改

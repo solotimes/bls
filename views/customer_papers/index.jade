@@ -75,10 +75,10 @@ block content
               td= model.Name
               td
                 if model.CreatedAt
-                  = moment(model.CreatedAt).format('YYYY-MM-DD')
+                  = moment(model.CreatedAt).format('YYYY-MM-DD HH:mm')
               td
                 if model.RecordedAt
-                  = moment(model.RecordedAt).format('YYYY-MM-DD')
+                  = moment(model.RecordedAt).format('YYYY-MM-DD HH:mm')
               td
                 case model.Status
                   when 0
