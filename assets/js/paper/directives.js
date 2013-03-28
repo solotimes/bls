@@ -282,4 +282,63 @@ return {
       });
     }
   };
-}]);
+}])
+.directive('row',[function(){
+  function makeRow(elements){
+    var currentTallest = 0,
+         currentRowStart = 0,
+         rowDivs = [],
+         $el,
+         topPosition = 0;
+    elements.forEach(function(element) {
+       $el = $(element);
+       topPostion = $el.position().top;
+
+       if (currentRowStart != topPostion) {
+         // we just came to a new row.  Set all the heights on the completed row
+         for (currentDiv = 0 ; currentDiv < rowDivs.length ; currentDiv++) {
+           rowDivs[currentDiv].height(currentTallest);
+         }
+
+         // set the variables for the new row
+         rowDivs.length = 0; // empty the array
+         currentRowStart = topPostion;
+         currentTallest = $el.height();
+         rowDivs.push($el);
+
+       } else {
+         // another div on the current row.  Add it to the list and check if it's taller
+         rowDivs.push($el);
+         currentTallest = (currentTallest < $el.height()) ? ($el.height()) : (currentTallest);
+      }
+
+      // do the last row
+      for (currentDiv = 0 ; currentDiv < rowDivs.length ; currentDiv++) {
+        rowDivs[currentDiv].height(currentTallest);
+      }
+    });
+  }
+  return {
+    restrict: 'A',
+    link: function($scope, iElm, iAttrs, controller){
+      iElm.resize(function(){
+        var cols = parseInt(iAttrs.cols,10);
+        var row;
+        iElm.children().each(function(i,child){
+          if(i%cols === 0){
+            if(row)
+              makeRow(row);
+            row = [];
+          }
+          row.push(child);
+        });
+        if(row && row.length)
+          makeRow(row);
+      });
+      $scope.$on('$destroy',function(){
+        iElm.unbind('resize');
+      });
+    }
+  };
+}])
+;

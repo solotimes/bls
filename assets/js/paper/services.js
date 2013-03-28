@@ -43,6 +43,8 @@ angular.module('paper.services', [])
     this.GradeId = this.GradeId || (this.customer && this.customer.GradeId);
     this.questions = window.questions || [];
     this.$grades = window.grades;
+    if(!this.id)
+      this.Status = 3;
     this.refresh();
     this.reloadQuestions();
   };

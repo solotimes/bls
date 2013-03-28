@@ -1217,15 +1217,32 @@ a,a:hover{
     }
   }
   ol.choices{
-    list-style: upper-alpha inside;
+    // list-style: upper-alpha inside;
+    display: table;
+    width: 100%;
+    counter-reset: num;
     li{
-      padding-left: 0;
       .border-box;
-      float:left;
-      min-width: 25%;
+      display: table-cell;
+      vertical-align: middle;
+      padding-left: 0;
+      // float:left;
+      width: 23%;
+      margin: 0;
+      .choice-body{
+        display: table-cell;
+        vertical-align: middle;
+      }
       &.correct{
         border: 1px solid #adcd3c;
         background: #f2fddb;
+      }
+      &::before{
+        vertical-align: middle;
+        counter-increment: num;
+        content: counter(num, upper-alpha) ".";
+        display: table-cell;
+        width: 15px;
       }
     }
     &:after{content:".";display:block;height:0;clear:both;visibility:hidden}
