@@ -42,6 +42,10 @@ var customer_papers = app.resource('customer_papers',controllers.customer_papers
 customer_papers.map('delete','/',controllers.customer_papers.batchDestroy);
 customer_papers.map('post','dump',controllers.customer_papers.dump);
 
+app.get('/papers/scope/:scope?',controllers.papers.scope);
+var papers = app.resource('papers',controllers.papers);
+papers.map('delete','/',controllers.papers.batchDestroy);
+
 // app.get('/customer_papers/:customer_paper_id/questions.:format?',controllers.questions.index);
 var questions = app.resource('questions',controllers.questions);
 customer_papers.add(questions);

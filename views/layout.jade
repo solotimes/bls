@@ -40,8 +40,8 @@ html.no-js
               a(href='#') 扩展练习考卷
             li(class= /^\/admins|\/customers|\/levels/.test(req.url) ? 'current' : '')
               a(href='/customers') 会员管理
-            li
-              a(href='#') 试卷模板管理
+            li(class=/^\/papers/.test(req.url) ? 'current' : '')
+              a(href='/papers') 试卷模板管理
             li
               a(href='#') 题目库管理
             li
