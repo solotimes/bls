@@ -46,5 +46,8 @@ app.controller('PaperCtrl',['$scope','$http' ,'paper','modal',function(scope,htt
 			paper.save();
 		});
 	};
+	scope.dump = function(){
+		paper.dump();
+	};
 	// scope.$watch('paper.getQuestionsGroupByTypes()',function(v){console.log(v);},true);
 }]);

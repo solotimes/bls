@@ -36,12 +36,12 @@ function seed(){
         }));
         chainer.add(qi.addColumn('PapersQuestions','Order',Sequelize.INTEGER));
         chainer.add(qi.addColumn('PapersQuestions','Number',Sequelize.STRING));
-        chainer.add(qi.addColumn('GeneratedPaper','Wrong',{
+        chainer.add(qi.addColumn('GeneratedPapersQuestions','Wrong',{
           type: Sequelize.BOOLEAN,
           defaultValue: false
         }));
-        chainer.add(qi.addColumn('GeneratedPaper','Order',Sequelize.INTEGER));
-        chainer.add(qi.addColumn('GeneratedPaper','Number',Sequelize.STRING));
+        chainer.add(qi.addColumn('GeneratedPapersQuestions','Order',Sequelize.INTEGER));
+        chainer.add(qi.addColumn('GeneratedPapersQuestions','Number',Sequelize.STRING));
         chainer.run().done(fn);
       },
       Grades:function(fn){

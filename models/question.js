@@ -61,7 +61,7 @@ module.exports = function(sequelize, DataTypes)
                 //   if('object' === typeof attrs[k]){
                 //     attrs[k] = JSON.stringify(attrs[k]);
                 //   }
-              if(attrs.Choices)
+              if(Utils._.isArray(attrs.Choices))
                 attrs.Choices = JSON.stringify(attrs.Choices);
             }catch(e){}
             var association;

@@ -14,8 +14,9 @@ module.exports = function(sequelize, DataTypes)
         CodeName: {type:DataTypes.STRING},
         AudioPath: {type:DataTypes.STRING},
         QuestionsTotal: {type:DataTypes.INTEGER, defaultValue: 0},
-        //试卷类型 增加练习,月考,期中,期末,初三中考模拟,中考真题
+        //试卷类型 0 增加练习, 1月考, 2期中, 3期末, 4 初三中考模拟, 5中考真题
         Type: {type:DataTypes.INTEGER},
-        CorrectRate: {type:DataTypes.INTEGER}
+        //0客户上传 1后台录入
+        Source: {type:DataTypes.INTEGER}
     });
 };

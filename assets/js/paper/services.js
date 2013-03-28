@@ -39,22 +39,33 @@ angular.module('paper.services', [])
 .factory('paper', ['$http','$window','$q',function (http,window,Q) {
   Paper = function(){
     angular.copy(window.paper,this);
-    this.$type = 'CustomerPaper';
+    this.$type = window.paperType || 'CustomerPaper';
     this.GradeId = this.GradeId || (this.customer && this.customer.GradeId);
     this.questions = window.questions || [];
-    this.$path = '/customer_papers/'+this.id;
-    this.$questionsPath = this.$path + '/questions';
     this.$grades = window.grades;
-
+    this.refresh();
     this.reloadQuestions();
   };
 
-  Paper.prototype.types = {'增加练习':'增加练习',
-                            '月考':'月考',
-                            '期中':'期中',
-                            '期末':'期末',
-                            '初三中考模拟':'初三中考模拟',
-                            '中考真题':'中考真题'};
+  var Type2Path = {
+    CustomerPaper: '/customer_papers/',
+    Paper: '/papers/',
+    GeneratedPaper: '/generated_papers/'
+  };
+
+  Paper.prototype.refresh = function(){
+    this.$path = Type2Path[this.$type] + (this.id || '');
+    this.$questionsPath =  !!this.id ? (this.$path + '/questions') : '/questions';
+  };
+
+  Paper.prototype.types = {
+                            '增加练习': 0,
+                            '月考': 1,
+                            '期中': 2,
+                            '期末': 3,
+                            '初三中考模拟': 4,
+                            '中考真题': 5
+                          };
   Paper.prototype.save = function(attrs){
     var self = this;
     attrs = attrs || {};
@@ -73,9 +84,23 @@ angular.module('paper.services', [])
     }
     saveObj.CorrectRate = this.getCorrectRate();
 
-    return http.put(this.$path,{instance: saveObj}).success(function(res){
+    var method = !!this.id ? 'put' : 'post';
+    return http[method](this.$path,{instance: saveObj}).success(function(res){
       $.extend(true,self,res);
+      self.refresh();
     });
+  };
+
+  Paper.prototype.dump = function(){
+    if(this.dumpable()){
+      return http.post(this.$path+'/dump').success(angular.bind(this,function(res){
+        this.PaperId = res.id;
+      }));
+    }
+  };
+
+  Paper.prototype.dumpable = function(){
+    return this.$type == 'CustomerPaper' && !this.PaperId && (this.Status == 6 || this.Status == 8);
   };
 
   var _ChnNumbers='一二三四五';
@@ -177,11 +202,7 @@ angular.module('paper.services', [])
     }else{
       p = Q.when();
     }
-    // self.questions.forEach(function(q,i){
-      // console.log(i,q.id,q.Order);
-    // });
-    // self.questions.splice(question.Order,1);
-    // console.log('del',question.id,question.Order,question);
+
     return p.then(function(){
       self.QuestionsTotal--;
       self.save();

@@ -213,6 +213,30 @@ exports.update = function(req, res ,next){
   }
 };
 
+function errorhandler(req,res,next){
+  return function(error){
+    if(error){
+      logger.log(error);
+      next(error);
+    }
+  };
+}
+
+function doDump(format){
+  return function(req,res,next){
+    req.customer_paper.dump().then(function(paper){
+      if(format == 'json')
+        return res.send(paper);
+      res.redirect('back');
+    }).fail(errorhandler(req,res,next));
+  };
+}
+
+exports.dump = {
+  html: doDump(),
+  json: doDump('json')
+};
+
 exports.destroy = function(req, res ,next){
   req.customer_paper.destroy().done(function(err){
     if(err){

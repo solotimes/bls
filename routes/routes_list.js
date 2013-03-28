@@ -40,6 +40,7 @@ app.get('/customer_papers/raw/:scope?',controllers.customer_papers.raw);
 app.get('/customer_papers/recorded/:scope?',controllers.customer_papers.recorded);
 var customer_papers = app.resource('customer_papers',controllers.customer_papers);
 customer_papers.map('delete','/',controllers.customer_papers.batchDestroy);
+customer_papers.map('post','dump',controllers.customer_papers.dump);
 
 // app.get('/customer_papers/:customer_paper_id/questions.:format?',controllers.questions.index);
 var questions = app.resource('questions',controllers.questions);

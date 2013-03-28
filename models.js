@@ -60,16 +60,13 @@ Question.hasMany(CustomerPaper);
 CustomerPaperPic.belongsTo(CustomerPaper,{as: 'Paper'});
 CustomerPaper.belongsTo(Admin,{as: 'AssignedTo'});
 Paper.hasMany(Question);
+Paper.hasOne(CustomerPaper);
 Question.hasMany(Paper);
 
 Admin.hasMany(AdminRole,{as: 'Roles'});
 Admin.hasMany(CustomerPaper,{as: 'AssignedPapers'});
 AdminRole.hasMany(Admin);
 AdminLog.belongsTo(Admin);
-
-// Grade.hasMany(KnowledgeCategory);
-// KnowledgeCategory.hasMany(KnowledgeCategory);
-// KnowledgeCategory.hasMany(Knowledge);
 
 Question.hasMany(Knowledge);
 CustomerPaper.hasMany(Knowledge);

@@ -8,6 +8,7 @@
 var extend = require('extend');
 var Sequelize = require("sequelize");
 var Q = require('q');
+var moment = require('moment');
 var STATUS = {
 	'未处理': 0,
 	'待标错题': 1,
@@ -82,6 +83,38 @@ module.exports = function(sequelize, DataTypes)
             values.pics = this.pics;
             values.assignedTo = this.assignedTo;
             return values;
+        },
+        //导出到试卷库
+        dump: function(){
+          var self = this;
+          var models = require('../models');
+          var attrs = extend({},this.values);
+          delete attrs.CreatedAt;
+          delete attrs.id;
+          attrs.RecordedAt = moment().format("YYYY-MM-DD HH:mm:ss");
+          attrs.CodeName = moment().format('YYYYMDD-X');
+          attrs.Source = 0;
+          attrs.Status = (this.Status == 6) ? 6 : 8;
+          var paper,questions;
+          return Q.when(models.Paper.create(attrs)).then(function(p){
+            paper = p;
+            return self.getFullQuestions();
+          }).then(function(qs){
+            questions = qs;
+            // questions.push(null); //增加reduce操作需要的结束元素
+            return questions.reduce(function(p,question){
+              return p.then(function(previous){
+                return models.Question.saveInstance({
+                  id: question.id, //只需要复制id和Order 到paper
+                  Order: question.Order
+                },paper);
+              });
+            },Q.resolve());
+          }).then(function(){
+            return self.setPaper(paper);
+          }).then(function(){
+            return paper;
+          });
         }
       },
       classMethods: extend({},
