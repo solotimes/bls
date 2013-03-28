@@ -2,7 +2,10 @@ app.controller('MainCtrl',['$scope','$window','$http','$route','$location','$q',
   scope.window = window;
   scope.$root.grades = window.grades;
   scope.$root.paper = paper;
-  scope.$root.rootPath = '/customer_papers';
+  if(paper.$type == 'CustomerPaper')
+    scope.$root.rootPath = '/customer_papers';
+  else if(paper.$type == 'Paper')
+    scope.$root.rootPath = '/papers';
   // scope.$root.paper = window.paper;
   // scope.$root.paper_type = 'CustomerPaper';
   // scope.$root.orgStatus = scope.$eval('paper.Status');
@@ -37,6 +40,8 @@ app.controller('MainCtrl',['$scope','$window','$http','$route','$location','$q',
         return false;
       }
   };
+  if(!paper.id)
+    location.path('recording');
   // $scope.$on(
   //     "$routeChangeSuccess",
   //     function( $currentRoute, $previousRoute ){

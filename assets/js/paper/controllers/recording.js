@@ -1,15 +1,19 @@
 app.controller('RecordingCtrl',['$scope','$http','paper',function(scope,http,paper){
 
   scope.initPaper = function(){
-    if(paper.QuestionsTotal > 0){
-      paper.save().success(function(){
-        paper.reloadQuestions();
-        scope.question = paper.questions[0];
-        scope.subview = 'question';
-      });
-    }else{
-      alert('请设定题目总数');
+    if( angular.isUndefined(paper.QuestionsTotal) || paper.QuestionsTotal <= 0 ){
+      return alert('请设定题目总数');
     }
+    if(paper.isBlank(paper.Name)){
+      return alert('请设定试卷标题');
+    }
+    if(!paper.GradeId)
+      return alert('请设定试卷年级');
+    paper.reloadQuestions();
+    paper.save().success(function(){
+      scope.question = paper.questions[0];
+      scope.subview = 'question';
+    });
   };
 
   scope.$watch('paper.questions',function(questions){

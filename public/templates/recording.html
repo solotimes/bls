@@ -5,7 +5,7 @@
 			<input type='text' ng-model="paper.Name"/>
 		</div>
 		<div class='underline gray'>
-			<div class='actions pull-right'>
+			<div class='actions pull-right' ng-show='!!paper.id'>
 				<button class='btn btn-blue' ng-bind="{true:'修改录音',false:'上传录音'}[!!paper.audio]"></button>
 				<button class='audio btn btn-orange' audio-src='paper.audio' ng-show='!!paper.audio'></button>
 			</div>
@@ -19,7 +19,7 @@
 			<span>试卷ID: {{paper.CodeName}}</span>
 			<span>试卷状态: </span>
 			<span paper-status='paper.Status'></span>
-			<span>试卷来源: {{'会员上传'}}</span>
+			<span>试卷来源: {{ {true:'录入',false:'会员上传'}[paper.Source==1] }}</span>
 		</div>
 	</div>
 	<div ng-switch='subview'>
@@ -39,10 +39,10 @@
 			  <a class='btn btn-orange' ng-hide='isLastQuestion()' ng-click='saveQuestionAndNext()'>保存并下一题</a>
 			</div>
 		</div>
-		<div ng-switch-when='init' class='buttons' ng-show='paper.Status == 0 &amp;&amp; !!paper.AdminId'>
+		<div ng-switch-when='init' class='buttons' ng-show='!paper.id || paper.Status == 0 &amp;&amp; !!paper.AdminId'>
 			<!-- 初始化面板 -->
 			 <a ng-click='initPaper()' class='btn btn-orange big'>创建新卷子</a>
-			 <a ng-click='searchTemplates()' class='btn btn-blue big'>搜索试卷库</a>
+			 <a ng-show='' ng-click='searchTemplates()' class='btn btn-blue big'>搜索试卷库</a>
 		</div>
 	</div>
 </div>

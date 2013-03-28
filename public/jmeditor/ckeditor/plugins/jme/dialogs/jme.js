@@ -33,7 +33,7 @@ CKEDITOR.dialog.add( 'jmeDialog', function( editor ) {
             // var latex = temp.mathquill('latex');
             // console.log(latex);
             // temp.mathquill('revert');
-            editor.insertHtml('&nbsp;&nbsp;<span class="math">'+latex+'</span>&nbsp;&nbsp;');
+            editor.insertHtml('&nbsp;<span class="math">'+latex+'</span>&nbsp;');
             $(editor.element.$).trigger('insertMath');
             // $("#jme-math",iframe).mathquill('latex','');
             // var mathHTML = '<span class="mathquill-rendered-math" style="font-size:' + JMEditor.defaultFontSize + ';" >' + $("#jme-math",iframe).html() + '</span><span>&nbsp;</span>';

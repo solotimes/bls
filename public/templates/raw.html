@@ -12,7 +12,7 @@
 			</p>
 		</div>
 		<div class='clearfix'>
-			<div class='actions pull-right'>
+			<div class='actions pull-right' ng-show='paper.$type == "CustomerPaper"'>
 				<button class='btn btn-orange' ng-click='recapture()' ng-show='paper.readyFor(4)'>需要重拍</button>
 				<div class='assign' ng-show='showAssgin &amp;&amp; !paper.readyFor(4)'>
 					<button class='btn btn-blue' ng-click='loadInputers()' ng-disabled='!!inputers'>分配录入</button>
@@ -21,19 +21,19 @@
 				</div>
 			</div>
 			<p>
-				<span class='field'>录入:  {{paper.assignedTo.Name}}</span>
+				<span class='field' ng-show='paper.$type == "CustomerPaper"'>录入:  {{paper.assignedTo.Name}}</span>
 				<span class='field'>{{paper.RecordedAt | date:'yyyy-MM-dd'}}</span>
 				<span class='field'>最后编辑: {{paper.lastlog.Name}} {{paper.lastlog.CreatedAt | date:'yyyy-MM-dd HH:mm'}}</span>
 			</p>
 		</div>
-		<div class='record'  ng-show='paper.pics[selectedPic].AudioPath'>
+		<div class='record' ng-show='paper.pics' ng-show='paper.pics[selectedPic].AudioPath'>
 			第{{selectedPic+1}}面:
 			<button  class='btn btn-blue audio' audio-src='paper.pics[selectedPic].audio'>播放录音</button>
 		</div>
 		<ul class='pic-selectors' pics='paper.pics' index-var='selectedPic' show-checkbox='paper.Status == 0 &amp;&amp; !paper.AdminId' checkbox-field='RecaptureMark' checkbox-label='重拍'>
 		</ul>
 	</div>
-	<ul class='pics'>
+	<ul class='pics' ng-show='paper.pics'>
 		<li show-overlay='pic.RecaptureMark' ng-show="selectedPic == $index" ng-repeat="pic in paper.pics" src='{{pic.image}}'>
 			<div class='iviewer' src='{{pic.image}}'></div>
 		</li>

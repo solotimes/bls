@@ -180,7 +180,7 @@ exports.show = {
   json: function(req,res,next){
     var paper = req.customer_paper;
     if(paper)
-      res.send(paper.toJson());
+      send(paper);
     else
       res.send(404);
   }

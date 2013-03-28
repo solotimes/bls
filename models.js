@@ -61,6 +61,7 @@ CustomerPaperPic.belongsTo(CustomerPaper,{as: 'Paper'});
 CustomerPaper.belongsTo(Admin,{as: 'AssignedTo'});
 Paper.hasMany(Question);
 Paper.hasOne(CustomerPaper);
+Paper.belongsTo(Grade);
 Question.hasMany(Paper);
 
 Admin.hasMany(AdminRole,{as: 'Roles'});

@@ -73,8 +73,12 @@ block content
                 if model.RecordedAt
                   = moment(model.RecordedAt).format('YYYY-MM-DD HH:mm')
               td
-                a(href='/papers/#{model.id}#view',data-type='view') 查看
-                a(href='/papers/#{model.id}#edit',data-type='edit') 修改
+                if model.Status == 3
+                  a(href='/papers/#{model.id}#recording',data-type='edit') 录入
+                  a(style='visibility:hidden') 占位
+                else
+                  a(href='/papers/#{model.id}#view',data-type='view') 查看
+                  a(href='/papers/#{model.id}#edit',data-type='edit') 修改
                 a(data-type='delete', href='/papers/#{model.id}' , data-method='delete' , data-confirm='确定删除本记录?' , rel="nofollow") 删除
     .pagination
       != paginate(collection)

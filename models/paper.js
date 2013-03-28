@@ -41,11 +41,43 @@ module.exports = function(sequelize, DataTypes)
           },
           toJSON: function(){
               var values = this.values;
-              // values.pics = this.pics; //取paper.pics
+              values.pics = this.pics; //取paper.pics
               return values;
           }
         },
-        classMethods: extend({},
+        classMethods: extend({
+            fetch: function(id){
+              var paper;
+              return Q.when(this.find({where:{id:id}}))
+              .then(function(p){
+                paper = p;
+                return p.getCustomerPaper();
+              })
+              .then(function(cp){
+                if(cp)
+                  return cp.getPics();
+              })
+              .then(function(pics){
+                if(pics)
+                  paper.pics = pics;
+                return paper;
+              });
+            },
+            saveInstance: function(instance,attrs){
+              var self=this;
+              if(!instance){
+                attrs.CodeName = moment().format('YYYYMDD-X');
+                instance = self.build(attrs);
+              }else{
+                instance.setAttributes(attrs);
+              }
+              return Q.when(instance.save())
+                      .then(function(p){
+                        //reload
+                        return self.fetch(p.id);
+                      });
+            }
+          },
           STATUS
           )
       });

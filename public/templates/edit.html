@@ -6,9 +6,9 @@
 		</div>
 		<span paper-status="paper.Status"></span>
 		<span class='gray'>卷子ID: {{paper.id}}</span>
-		<span class='gray'>录入: {{paper.assignedTo.Name}} {{paper.RecoredAt |  date:'yyyy-MM-dd' }}</span>
+		<span class='gray'  ng-show='paper.$type == "CustomerPaper"' >录入: {{paper.assignedTo.Name}} {{paper.RecoredAt |  date:'yyyy-MM-dd' }}</span>
 		<span class='gray'>最后修改: </span>
-		<h2 class="correct-rate blue">正确率{{paper.CorrectRate}}%</h2>
+		<h2 class="correct-rate blue"  ng-show='paper.$type == "CustomerPaper"' >正确率{{paper.CorrectRate}}%</h2>
 	</div>
 	<form name='paper-form'>
 		<div class="paper-content">
@@ -16,7 +16,9 @@
 			<label>年级:</label>
 			<select ng-options='grade.id as grade.Name for grade in grades' ng-model='paper.GradeId'></select>
 			<label>性质:</label>
-			<select></select>
+			<select ng-options='value as key for (key,value) in paper.types' ng-model='paper.Type'>
+				<option value="">---试卷类型---</option>
+			</select>
 			<label>试卷标题</label>
 			<input type="text" ng-model='paper.Name'>
 			<!-- end-edit-mode -->
