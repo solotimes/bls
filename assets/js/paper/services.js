@@ -36,7 +36,7 @@ angular.module('paper.services', [])
 
 //试卷相关操作
 
-.factory('paper', ['$http','$window','$q',function (http,window,Q) {
+.factory('paper', ['$http','$window','$q','$rootScope',function (http,window,Q,rootScope) {
   Paper = function(){
     angular.copy(window.paper,this);
     this.$type = window.paperType || 'CustomerPaper';
@@ -150,7 +150,8 @@ angular.module('paper.services', [])
       Method: '',    //问法
       Wrong: false,
       Answer: '',
-      Description: ''
+      Description: '',
+      Status: 0
     },attrs);
     return res;
   };
@@ -163,6 +164,16 @@ angular.module('paper.services', [])
     }).length;
   };
 
+  Paper.prototype.updateQuestionStatus = function(question){
+    if(this.isQuestionFinished(question))
+      question.Status = 6;
+    else if(!this.isBlank(question.Solution))
+      question.Status = 8;
+    else
+      question.Status = 5;
+    // console.log('Status:',question.Status);
+  };
+
   Paper.prototype.saveQuestion = function(indexOrQuestion) {
     var question;
     if(angular.isNumber(indexOrQuestion)){
@@ -170,6 +181,7 @@ angular.module('paper.services', [])
     }else{
       question = indexOrQuestion;
     }
+    this.updateQuestionStatus(question);
     return http.post(this.$questionsPath,{instance:question}).then(function(res){
       var q = res.data;
       $.extend(true,question,q);
@@ -179,6 +191,9 @@ angular.module('paper.services', [])
   Paper.prototype.saveAllQuestions = function() {
     var self = this;
     if(self.questions.length){
+      questions.forEach(function(question){
+        self.updateQuestionStatus(question);
+      });
       return http.post(self.$questionsPath,{instance:self.questions}).then(function(res){
         var qs = res.data;
         if(!qs.length) qs = [qs];
@@ -460,7 +475,18 @@ angular.module('paper.services', [])
     }
   };
 
-  return new Paper();
+  var paper = new Paper();
+  rootScope.paper = paper;
+
+  // rootScope.$watch('paper.questions',function(questions){
+  //   if(angular.isArray(questions))
+  //     questions.forEach(function(question){
+  //       if(paper.isQuestionFinished(question)
+
+  //     });
+  // });
+
+  return paper;
 }])
 .factory('knowledgeTree', ['$http','$window','$q','$rootScope',function (http,window,Q,rootScope) {
   // var knowledges;

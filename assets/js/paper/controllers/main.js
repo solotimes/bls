@@ -1,7 +1,6 @@
 app.controller('MainCtrl',['$scope','$window','$http','$route','$location','$q','paper',function(scope,window,http,route,location,Q,paper){
   scope.window = window;
   scope.$root.grades = window.grades;
-  scope.$root.paper = paper;
   if(paper.$type == 'CustomerPaper')
     scope.$root.rootPath = '/customer_papers';
   else if(paper.$type == 'Paper')
@@ -29,16 +28,16 @@ app.controller('MainCtrl',['$scope','$window','$http','$route','$location','$q',
   };
   var testElement = $('<div></div>');
   scope.$root.blank = function(val){
-      try{
-        if(angular.isString(val)){
-          return testElement.html(val).text().trim().length === 0;
-        }else if(angular.isArray(val)){
-          return val.length === 0;
-        }
-        return !val;
-      }catch(e){
-        return false;
+    try{
+      if(angular.isString(val)){
+        return testElement.html(val).text().trim().length === 0;
+      }else if(angular.isArray(val)){
+        return val.length === 0;
       }
+      return !val;
+    }catch(e){
+      return false;
+    }
   };
   if(!paper.id)
     location.path('recording');

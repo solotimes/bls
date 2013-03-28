@@ -98,6 +98,20 @@ angular.module('paper.directives', [])
       }
     };
  }])
+ .directive('questionStatus',function(){
+    var STATUS = {
+      5: '未解答',
+      6: '完成解答',
+      8: '待完善'
+    };
+
+    return function(scope,elm,attrs){
+      scope.$watch(attrs.paperStatus,function(value){
+        elm.html(STATUS[value]);
+        elm.attr('class','status status-'+value);
+      });
+    };
+ })
  .directive('paperStatus',function(){
     var STATUS = {
       0: '未处理',
@@ -108,15 +122,15 @@ angular.module('paper.directives', [])
       5: '错题未解答',
       6: '完成解答',
       7: '已推送',
-      8: '待完善'
+      8: '待完善',
+      9: '待上传主观',
+      10: '待批改'
     };
 
     return function(scope,elm,attrs){
       scope.$watch(attrs.paperStatus,function(value){
         elm.html(STATUS[value]);
         elm.attr('class','status status-'+value);
-        window.elm = elm;
-        // angular.element(document).after(elm);
       });
     };
  })

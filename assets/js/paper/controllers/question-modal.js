@@ -8,12 +8,11 @@ app.controller('QuestionModalCtrl',['$scope','$http','paper',function(scope,http
 		scope.mode = mode;
 	};
 	scope.save = function(){
-		paper.saveQuestion(scope.question).then(function(){
-			scope.$broadcast('question-saved');
-			scope.mode = 0;
-			// scope.$emit('ok');
-		});
+		scope.$broadcast('save-question');
 	};
+	scope.$on('question-saved',function(){
+		scope.mode = 0;
+	});
 	scope.cancel = function(){
 		scope.$emit('cancel');
 	};

@@ -19,6 +19,52 @@ function fetchParentModel(req){
 }
 
 exports.index = {
+  html: function(req,res,next){
+    res.locals.scopes = [
+      {
+        name: '全部',
+        value: ''
+      },
+      {
+        value: '未解答'
+      },
+      {
+        value: '待完善'
+      },
+      {
+        value: '完成解答'
+      }
+    ];
+    var q = (req.param('q') || '').trim();
+    var by = (req.param('by')||'').trim();
+    var scope = (req.param('scope')||'').trim();
+    var condition = '`Status` in(5,6,8) ';
+    var where,searchParams={};
+    if("undefined" !== typeof models.Question[scope]){
+      condition += 'AND `Status` = ' + models.Question[scope];
+    }
+    if(q.length && by.length && (by == 'CreatedAt')){
+      if(condition)
+        condition += ' AND `Papers`.`'+by+"` LIKE ?";
+      searchParams.q=q;
+      searchParams.by=by;
+      where = [ condition, "%"+q+"%"];
+    }else{
+      where = condition;
+    }
+    models.Question.pageAll({
+        where:where,
+        order: '`CreatedAt` DESC'
+      },
+    req.param('page'),req.param('per'),
+    function(error,collection){
+      if(error){
+        logger.log(error);
+        return next(error);
+      }
+      res.render('questions/index',{collection: extend(collection||[],searchParams)});
+    });
+  },
   json: function(req,res,next){
     fetchParentModel(req);
     if(req.parentModel){

@@ -7,7 +7,12 @@
 var Q = require('q');
 var Sequelize = require('sequelize');
 var Utils = Sequelize.Utils;
-
+var extend = require('extend');
+var STATUS = {
+  '未解答': 5,
+  '完成解答': 6,
+  '待完善': 8
+};
 module.exports = function(sequelize, DataTypes)
 {
     return sequelize.define('Question', {
@@ -15,7 +20,8 @@ module.exports = function(sequelize, DataTypes)
         Body: {type:DataTypes.TEXT},
         //提干内容缩略 用于搜索
         Excerpt: {type:DataTypes.STRING},
-        CreatedAt: {type:DataTypes.DATE},
+        UpdatedAt: {type:DataTypes.DATE ,defaultValue: DataTypes.NOW},
+        CreatedAt: {type:DataTypes.DATE ,defaultValue: DataTypes.NOW},
         // Tags: {type:DataTypes.STRING},
         //类型  0 选择题 1 填空题 2主观题
         Type: {type:DataTypes.INTEGER},
@@ -32,9 +38,20 @@ module.exports = function(sequelize, DataTypes)
         //问法
         Method: {type: DataTypes.STRING},
         //备注信息
-        Description: {type: DataTypes.STRING}
+        Description: {type: DataTypes.STRING},
+        //状态 5未解答 8待完善 6完成解答
+        Status: {type: DataTypes.INTEGER, defaltValue: 5}
     },{
       instanceMethods:{
+        statusText: function(){
+          if(undefined === typeof this.Status)
+            return '';
+          for(var text in STATUS){
+            if(STATUS[text] === this.Status)
+              return text;
+          }
+          return '';
+        },
         toJSON: function(){
             var values = this.values;
             try{
@@ -46,7 +63,7 @@ module.exports = function(sequelize, DataTypes)
             return values;
         }
       },
-      classMethods: {
+      classMethods: extend({
         getFullQuery: function(){
           return {
             attributes: Utils._.keys(this.attributes).concat(['Wrong','Order']),
@@ -64,6 +81,7 @@ module.exports = function(sequelize, DataTypes)
               if(Utils._.isArray(attrs.Choices))
                 attrs.Choices = JSON.stringify(attrs.Choices);
             }catch(e){}
+            attrs.UpdatedAt = (new Date());
             var association;
             var question,qg = models.sequelize.queryInterface.QueryGenerator;
             var p = Q.when(self.upsert(attrs)).then(function(q){
@@ -98,7 +116,6 @@ module.exports = function(sequelize, DataTypes)
             if(attrs.knowledges){
               //保存知识点
               p = p.then(function(){
-                console.log(typeof attrs.knowledges);
                 var ids = attrs.knowledges.map(function(k){
                   return k.id;
                 });
@@ -109,6 +126,6 @@ module.exports = function(sequelize, DataTypes)
             }
             return p.then(function(){return question;});
           }
-        }
+        },STATUS)
       });
 };
