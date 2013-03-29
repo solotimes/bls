@@ -21,7 +21,7 @@
 					<div ng-switch-when='2' math-html='question.Answer'></div>
 				</div>
 				<div class="underline-dashed field">
-					<span class="tag" ng-class="{'tag-orange': blank(question.knowledges)}">知识点</span>
+					<span class="tag" ng-class="{'tag-orange': paper.isBlank(question.knowledges)}">知识点</span>
 					<span class='knowledge' ng-repeat='knowledge in question.knowledges'>
 					  <span class='name'>{{knowledge.Name}}</span>
 					  <span class='stars' ng-model='knowledge.Difficulty' readonly='true'></span>
@@ -32,19 +32,19 @@
 					<span class='stars' ng-model='question.Difficulty' readonly='true'></span>
 				</div>
 				<div class="underline-dashed field">
-					<span class="tag" ng-class="{'tag-orange': blank(question.Solution)}">解题思路</span>
+					<span class="tag" ng-class="{'tag-orange': paper.isBlank(question.Solution)}">解题思路</span>
 					<div math-html='question.Solution'></div>
 				</div>
 				<div class="underline-dashed field">
-					<span class="tag"  ng-class="{'tag-orange' : blank(question.Condition)}">条件</span>
+					<span class="tag"  ng-class="{'tag-orange' : paper.isBlank(question.Condition)}">条件</span>
 					<div>{{question.Condition}}</div>
 				</div>
 				<div class="underline-dashed field">
-					<span class="tag"  ng-class="{'tag-orange' : blank(question.Method)}">问法</span>
+					<span class="tag"  ng-class="{'tag-orange' : paper.isBlank(question.Method)}">问法</span>
 					<div>{{question.Method}}</div>
 				</div>
 				<div class="underline-dashed field">
-					<span class="tag"  ng-class="{'tag-orange' : blank(question.Description)}">备注</span>
+					<span class="tag"  ng-class="{'tag-orange' : paper.isBlank(question.Description)}">备注</span>
 					<div>{{question.Description}}</div>
 				</div>
 			</div>

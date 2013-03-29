@@ -106,7 +106,7 @@ angular.module('paper.directives', [])
     };
 
     return function(scope,elm,attrs){
-      scope.$watch(attrs.paperStatus,function(value){
+      scope.$watch(attrs.questionStatus,function(value){
         elm.html(STATUS[value]);
         elm.attr('class','status status-'+value);
       });

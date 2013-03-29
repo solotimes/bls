@@ -22,32 +22,33 @@ html.no-js
       !=css('token-input')
   body(class=(locals.bodyClass || []))
     .wrapper
-      .header
-        .pull-right.corner
-          span #{currentUser.Name} 您好!
-          a.btn.btn-grey(href='#') 账号管理
-          a.btn.btn-orange(href='/logout') 退出
-        .brand
-          img(src='/img/admin-logo.png')
-          | 学之云 后台管理
-        .navbar
-          ul
-            li(class=/^\/customer_papers\/(raw|\d+)/.test(req.url) ? 'current' : '')
-              a(href='/customer_papers') 上传试卷管理
-            li(class=/^\/customer_papers\/recorded/.test(req.url) ? 'current' : '')
-              a(href='/customer_papers/recorded') 用户试卷管理
-            li
-              a(href='#') 扩展练习考卷
-            li(class= /^\/admins|\/customers|\/levels/.test(req.url) ? 'current' : '')
-              a(href='/customers') 会员管理
-            li(class=/^\/papers/.test(req.url) ? 'current' : '')
-              a(href='/papers') 试卷模板管理
-            li
-              a(href='#') 题目库管理
-            li
-              a(href='#') 搜索统计
-            li
-              a(href='#') 系统设置
+      block header
+        .header
+          .pull-right.corner
+            span #{currentUser.Name} 您好!
+            a.btn.btn-grey(href='#') 账号管理
+            a.btn.btn-orange(href='/logout') 退出
+          .brand
+            img(src='/img/admin-logo.png')
+            | 学之云 后台管理
+          .navbar
+            ul
+              li(class=/^\/customer_papers\/(raw|\d+)/.test(req.url) ? 'current' : '')
+                a(href='/customer_papers') 上传试卷管理
+              li(class=/^\/customer_papers\/recorded/.test(req.url) ? 'current' : '')
+                a(href='/customer_papers/recorded') 用户试卷管理
+              li
+                a(href='#') 扩展练习考卷
+              li(class= /^\/admins|\/customers|\/levels/.test(req.url) ? 'current' : '')
+                a(href='/customers') 会员管理
+              li(class=/^\/papers/.test(req.url) ? 'current' : '')
+                a(href='/papers') 试卷模板管理
+              li(class=/^\/questions/.test(req.url) ? 'current' : '')
+                a(href='/questions') 题目库管理
+              li
+                a(href='#') 搜索统计
+              li
+                a(href='#') 系统设置
       block container
         .container
           .sidebar

@@ -85,6 +85,7 @@ exports.index = {
 
 exports.show = {
   html: function(req,res,next){
+    res.render('questions/show',{instance: req.question});
   },
   json: function(req,res,next){
   }
@@ -124,13 +125,30 @@ exports.create = {
 };
 
 exports.destroy = function(req, res ,next){
-  res.send(200);
+  req.question.updateAttributes({Status: 0}).done(function(){
+    res.redirect('back');
+  });
 };
 
 exports.batchDestroy = function(req,res){
-  res.send(200);
+  var ids = req.param('ids');
+  if(!ids || ids.length === 0){
+    res.redirect('back');
+  }
+  else{
+    models.Question.findAll({where:{id: ids}}).success(function(collection){
+      var chainer = new Sequelize.Utils.QueryChainer();
+      collection.forEach(function(m) {
+          chainer.add(m.updateAttributes({Status: 0}));
+      });
+      return chainer.run().success(function(){
+        req.flash('success','删除成功!');
+        res.redirect('back');
+      });
+    });
+  }
 };
 
 exports.load = function(req, id, fn){
-  findPaperAndCustomer(req,id,fn);
+  models.Question.find(id).done(fn);
 };

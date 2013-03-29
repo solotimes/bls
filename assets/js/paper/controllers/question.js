@@ -14,7 +14,7 @@ app.controller('QuestionCtrl',['$scope','$http','$routeParams','$location','pape
       return window.alert('提干未填写');
     paper.saveQuestion(scope.question).then(function(){
       scope.qform.$setPristine();
-      scope.$emit('question-saved');
+      scope.$emit('question-saved',scope.question);
     });
   });
 
