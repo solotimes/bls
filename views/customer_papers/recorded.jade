@@ -66,7 +66,7 @@ block content
                 a(href='/customer_papers/#{model.id}#edit',data-type='edit') 修改
                 if model.Status==6 || model.Status==8 || model.Status==7
                   if !model.PaperId
-                    a(href='/customer_papers/#{model.id}/dump',data-type='dump',data-method='post') 存入库
+                    a(href='/customer_papers/#{model.id}/dump',data-type='dump',data-method='post',data-confirm='你确定要将本试卷导入试卷库?') 存入库
                   else
                     span.gray 已入库
                 else
