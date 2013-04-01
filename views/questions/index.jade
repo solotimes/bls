@@ -82,4 +82,4 @@ block content
                 a(data-tyep='edit',ng-click='edit(question)') 修改
                 a(data-type='delete', href='/questions/{{question.id}}' , data-method='delete' , data-confirm='确定隐藏本记录?' , rel="nofollow") 隐藏
     .pagination
-      != paginate(collection)
+      != paginate(collection,{action: '/questions'})
