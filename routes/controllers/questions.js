@@ -144,6 +144,39 @@ exports.destroy = function(req, res ,next){
   });
 };
 
+exports.statistics = function(req,res,next){
+  // 试卷库出现次数 上传试卷出现数 用户错误率 用户错误次数
+  var id = req.question.id;
+  var sqls = [];
+  // 试卷库出现数 pcount
+  sqls.push(Utils.format(['SELECT count(*) as pcount from PapersQuestions where `QuestionId`= ?',id]));
+  // 上传试卷出现数 ccount
+  sqls.push(Utils.format(['SELECT count(*) as ccount from CustomerPapersQuestions where`QuestionId`= ?',id]));
+  // 用户错误次数 wcount
+  sqls.push(Utils.format(['SELECT count(*) as wcount from CustomerPapersQuestions where`QuestionId`= ? AND Wrong = 1',id]));
+  var statistics = {};
+  Q.all(sqls.map(function(sql){
+    return Q.when(models.sequelize.query(sql));
+  }))
+  .then(function(results){
+    var statistics = {};
+    results.reduce(function(statistics,result){
+      return extend(statistics,result[0]);
+    },statistics);
+    statistics.wrate = Math.round(100* statistics.wcount / statistics.ccount);
+    res.send(statistics);
+  })
+  .fail(function(error){
+    logger.log(error);
+    next(error);
+  });
+  // Q.when(models.sequelize.query(sql))
+  // .then(function(result){
+  //   statistics.ccount = result.count;
+  //   return Q.when(models.)
+  // });
+};
+
 exports.batchDestroy = function(req,res){
   var ids = req.param('ids');
   if(!ids || ids.length === 0){

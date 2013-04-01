@@ -47,7 +47,8 @@ app.controller('PaperCtrl',['$scope','$http' ,'paper','modal',function(scope,htt
 		});
 	};
 	scope.dump = function(){
-		paper.dump();
+		if(confirm('是否存入试卷库? (本操作不可撤销)'))
+			paper.dump();
 	};
 	// scope.$watch('paper.getQuestionsGroupByTypes()',function(v){console.log(v);},true);
 }]);

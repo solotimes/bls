@@ -54,6 +54,7 @@ papers.add(app.resource('questions',controllers.questions));
 app.get('/questions/scope/:scope?',controllers.questions.index.html);
 var questions = app.resource('questions',controllers.questions);
 questions.map('delete','/',controllers.questions.batchDestroy);
+questions.map('get','statistics',controllers.questions.statistics);
 
 var knowledges = app.resource('knowledges',controllers.knowledges);
 var uploads = app.resource('uploads',controllers.uploads);

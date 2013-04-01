@@ -528,18 +528,19 @@ angular.module('paper.services', [])
   };
 
   Paper.prototype.searchQuestions = function(keywords){
-    return http.get('/questions?q='+keywords);
+    return http.get('/questions?q='+keywords).then(function(res){
+      return res.data;
+    });
+  };
+
+  Paper.prototype.getQuestionStatistics = function(question){
+    return http.get('/questions/'+question.id+'/statistics').then(function(res){
+      question.statistics = res.data;
+      return res.data;
+    });
   };
   var paper = new Paper(window.paper,window.paperType,window.questions,window.grades);
   rootScope.paper = paper;
-
-  // rootScope.$watch('paper.questions',function(questions){
-  //   if(angular.isArray(questions))
-  //     questions.forEach(function(question){
-  //       if(paper.isQuestionFinished(question)
-
-  //     });
-  // });
 
   return paper;
 }])

@@ -22,7 +22,8 @@ app.controller('RecordingCtrl',['$scope','$http','paper','$location',function(sc
   scope.$watch('paper.questions',function(questions){
     scope.questionsWithLabels = questions.map(function(q,i){
       var typeStr = q.Excerpt.length ? '['+paper.questionTypes[q.Type]+']' : '';
-      var label = (i+1)+'.'+typeStr+(q.Excerpt.length ? q.Excerpt : '--未录入--');
+      var wrongStr = q.Wrong ? '[错题]' : '';
+      var label = (i+1)+'.'+typeStr+(q.Excerpt.length ? q.Excerpt : '--未录入--') +wrongStr;
       return {
         label: label,
         question: q,

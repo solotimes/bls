@@ -367,8 +367,8 @@ return {
         if(!list){
           subscope = scope.$new();
           list = $(
-          '<ul class="sug-list" ng-show="showList && questions.data.length">'+
-            '<li ng-repeat="question in questions.data" '+
+          '<ul class="sug-list" ng-show="showList && questions.length">'+
+            '<li ng-repeat="question in questions" '+
             'ng-click="selectQuestion(question)">'+
               '<span>{{paper.questionTypes[question.Type]}} {{question.id}}:</span>'+
               '<div math-html="question.Body"/>'+

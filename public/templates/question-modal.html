@@ -7,6 +7,12 @@
 		<span class='gray'>题目ID：  {{question.id}}</span>
 		<span class='gray'>{{questionTypes[question.Type]}}</span>
 	</div>
+	<div class='question-statistics' ng-show='!!question.statistics'>
+	  <span>试卷库出现次数: {{question.statistics.pcount}}</span>
+	  <span>上传试卷出现次数: {{question.statistics.ccount}}</span>
+	  <span>用户错误次数: {{question.statistics.wcount}}</span>
+	  <span>用户错误率: {{question.statistics.wrate}}%</span>
+	</div>
 	<div ng-switch='mode'>
 		<div ng-switch-when='0'>
 			<!-- 查看 -->

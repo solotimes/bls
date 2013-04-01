@@ -2,6 +2,9 @@ app.controller('QuestionModalCtrl',['$scope','$http','paper',function(scope,http
   if(!scope.question){
     scope.question = window.question || paper.newQuestion();
   }
+  if(!!scope.question.id){
+    paper.getQuestionStatistics(scope.question);
+  }
   scope.questionTypes = ['填空题','选择题','主观题'];
   scope.modalMode = true;
   if(angular.isUndefined(scope.mode))
@@ -19,4 +22,5 @@ app.controller('QuestionModalCtrl',['$scope','$http','paper',function(scope,http
   scope.cancel = function(){
     scope.$emit('cancel');
   };
+
 }]);
