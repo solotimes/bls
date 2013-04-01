@@ -67,10 +67,24 @@ exports.index = {
   },
   json: function(req,res,next){
     fetchParentModel(req);
+    var keywords = (req.param('q') || '').trim();
     if(!!req.parentModel){
       p = Q.when(req.parentModel.getFullQuestions());
+    }else if(keywords.length){
+      p = Q.when(models.Question.findAll({
+            include: ['Knowledge'],
+            where: ['`Status` in (5,6,8) AND `Excerpt` LIKE ?', "%"+keywords+"%" ],
+            limit: 50
+          })).then(function(quesions){
+            // 删除空的knowledge 记录
+            quesions.forEach(function(question){
+              if(question.knowledges && question.knowledges.length && !question.knowledges[0].id)
+                delete question.knowledges;
+            });
+            return quesions;
+          });
     }else{
-      p = Q.when(models.Question.all());
+      return res.send([]);
     }
     p.then(function(quesions){
       res.send(quesions);

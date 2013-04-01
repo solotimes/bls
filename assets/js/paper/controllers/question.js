@@ -48,6 +48,13 @@ app.controller('QuestionCtrl',['$scope','$http','$routeParams','$location','pape
     scope.question.Excerpt = temp.text().substring(0,20);
     temp.remove();
   });
+
+  scope.setQuestion = function(question){
+    var attrs = angular.copy(question);
+    delete attrs.CreatedAt;
+    delete attrs.UpdatedAt;
+    angular.copy(attrs,scope.question);
+  };
 }]);
 
 app.controller('MultipleChoiceCtrl',['$scope',function(scope){

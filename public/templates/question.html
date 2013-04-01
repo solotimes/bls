@@ -14,7 +14,7 @@
     </div>
     <div class='fields question-body'>
       <label class='gray'>提干: </label>
-      <div ng-model='question.Body' contenteditable='true'/>
+      <div ng-model='question.Body' contenteditable='true' enable-question-filter='!question.CreatedAt' on-switch-question='setQuestion($question)'/>
     </div>
     <div class='fields question-answers'>
       <div ng-switch='question.Type'>

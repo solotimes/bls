@@ -355,4 +355,70 @@ return {
     }
   };
 }])
-;
+.directive('enableQuestionFilter', ['paper','$compile', function(paper,compile){
+  // Runs during compile
+
+  return {
+    restrict: 'A',
+    // scope: true,
+    link: function(scope, iElm, iAttrs, controller) {
+      var list,subscope;
+      function enable(){
+        if(!list){
+          subscope = scope.$new();
+          list = $(
+          '<ul class="sug-list" ng-show="showList && questions.data.length">'+
+            '<li ng-repeat="question in questions.data" '+
+            'ng-click="selectQuestion(question)">'+
+              '<span>{{paper.questionTypes[question.Type]}} {{question.id}}:</span>'+
+              '<div math-html="question.Body"/>'+
+            '</li></ul>').appendTo('body');
+          compile(list[0])(subscope);
+          iElm.on('blur',function(){
+            subscope.showList = false;
+          });
+          iElm.on('focus',function(){
+            subscope.showList = true;
+          });
+          subscope.showList = false;
+          subscope.selectQuestion = function(question){
+            subscope.$question = question;
+            if(angular.isDefined(iAttrs.onSwitchQuestion))
+              subscope.$eval(iAttrs.onSwitchQuestion);
+          };
+        }
+        iElm.on('keyup',onChange);
+      }
+      function disable(){
+        if(subscope){
+          subscope.showList = false;
+          delete subscope.questions;
+        }
+        iElm.off('keyup',onChange);
+      }
+      function onChange(){
+        if(!subscope)
+          return;
+        subscope.showList = true;
+        var keywords = iElm.text().trim();
+        if(keywords.length)
+          subscope.questions = paper.searchQuestions(keywords);
+        // var pos = iElm.getCareXY();
+        // console.log(pos);
+        var pos = iElm.offset();
+        list.css({
+          left:pos.left,
+          top:pos.top+iElm.height()+10,
+          width: iElm.outerWidth() -2
+        });
+      }
+      if(angular.isDefined(iAttrs.enableQuestionFilter))
+        scope.$watch(iAttrs.enableQuestionFilter,function(value){
+          if(value)
+            enable();
+          else
+            disable();
+        });
+    }
+  };
+}]);

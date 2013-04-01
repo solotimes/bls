@@ -1328,3 +1328,29 @@ a,a:hover{
     }
   }
 }
+
+.sug-list{
+  display: none;
+  position: absolute;
+  overflow: auto;
+  list-style: none;
+  background: #fff;
+  display: block;
+  max-height: 300px;
+  border: 1px solid #000;
+  li{
+    border-bottom: 1px solid #ccc;
+    display: block;
+    position: relative;
+    padding-left: 70px;
+    > span{
+      position: absolute;
+      left: 0;
+      top: 2px;
+      color: #aaa;
+    }
+  }
+  li:hover{
+    background: #0088cc;
+  }
+}

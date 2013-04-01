@@ -28,7 +28,8 @@ angular.module('paper.services', [])
       return response;
 
     }, function (response) {
-      window.showSpinner('fail');
+      if(method != 'GET')
+        window.showSpinner('fail');
       return $q.reject(response);
     });
   };
@@ -69,6 +70,11 @@ angular.module('paper.services', [])
                             '期末': 3,
                             '初三中考模拟': 4,
                             '中考真题': 5
+                          };
+  Paper.prototype.questionTypes = {
+                            0: '选择题',
+                            1: '填空题',
+                            2: '主观题'
                           };
   Paper.prototype.save = function(attrs,events){
     var self = this;
@@ -115,14 +121,8 @@ angular.module('paper.services', [])
   };
 
   Paper.prototype.importPaper = function(paper){
-    var d = Q.defer();
     var self = this;
-    window.setTimeout(function(){
-      rootScope.$apply(function(){
-        d.resolve(paper);
-      });
-    },0);
-    return d.promise
+    return Q.when(paper)
     .then(function(paper){
       if(!paper.questions)
         return self.loadPaper(paper);
@@ -527,6 +527,9 @@ angular.module('paper.services', [])
       return {success:angular.noop};
   };
 
+  Paper.prototype.searchQuestions = function(keywords){
+    return http.get('/questions?q='+keywords);
+  };
   var paper = new Paper(window.paper,window.paperType,window.questions,window.grades);
   rootScope.paper = paper;
 
