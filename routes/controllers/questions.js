@@ -10,7 +10,7 @@ function fetchParentModel(req){
   var parentModels = ['customer_paper','paper'];
   var p;
   for(var i in parentModels){
-    if( (req.parentModel = req[parentModels[i]]) ){
+    if( !!(req.parentModel = req[parentModels[i]]) ){
       break;
     }
   }
@@ -67,8 +67,8 @@ exports.index = {
   },
   json: function(req,res,next){
     fetchParentModel(req);
-    if(req.parentModel){
-      p = Q.when(paperModel.getFullQuestions());
+    if(!!req.parentModel){
+      p = Q.when(req.parentModel.getFullQuestions());
     }else{
       p = Q.when(models.Question.all());
     }

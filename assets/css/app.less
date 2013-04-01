@@ -450,6 +450,12 @@ a,a:hover{
 .span50px{
   width: 50px;
 }
+.span60px{
+  width: 60px;
+}
+.span70px{
+  width: 70px;
+}
 .span100px{
   width: 100px;
 }
@@ -466,22 +472,76 @@ a,a:hover{
   width: 20%;
 }
 .span40{
-  width: 30%;
+  width: 40%;
 }
 .span50{
-  width: 30%;
+  width: 50%;
 }
 .span60{
-  width: 30%;
+  width: 60%;
 }
 .span70{
-  width: 30%;
+  width: 70%;
 }
 .span80{
-  width: 30%;
+  width: 80%;
 }
 .center{
   text-align: center;
+}
+.data-table{
+  width: 100%;
+  line-height: 25px;
+  text-align: center;
+  thead{
+    background: #595959;
+    color: white;
+  }
+  tbody{
+    tr{
+      -webkit-transition: background-color 300ms linear;
+      -moz-transition: background-color 300ms linear;
+      -o-transition: background-color 300ms linear;
+      -ms-transition: background-color 300ms linear;
+      transition: background-color 300ms linear;
+    }
+    tr.even{
+      background: #f2f2f2;
+    }
+    tr:hover,tr.selected{
+      background: darken(#f2f2f2,20%);
+    }
+    tr.highlight{
+      color: #c00000;
+    }
+    span.gray{
+      padding: 0 10px;
+      color: gray;
+    }
+    td .math-html{
+      max-height: 30px;
+      overflow: hidden;
+    }
+    a{
+      padding: 0 10px;
+      color: #c00000;
+      &[data-type=view]{
+        color: #2f75b5;
+      }
+      &[data-type=assign]{
+        color: #c65911;
+      }
+      &[data-type=mark],&[data-type=dump]{
+        color: #548235;
+      }
+      &[data-type=record]{
+        color: #2f75b5;
+      }
+    }
+  }
+  input{
+    vertical-align: middle;
+  }
 }
 .main{
   margin-top: 5px;
@@ -491,58 +551,7 @@ a,a:hover{
     }
   }
   table{
-    width: 100%;
-    line-height: 25px;
-    text-align: center;
-    thead{
-      background: #595959;
-      color: white;
-    }
-    tbody{
-      tr{
-        -webkit-transition: background-color 300ms linear;
-        -moz-transition: background-color 300ms linear;
-        -o-transition: background-color 300ms linear;
-        -ms-transition: background-color 300ms linear;
-        transition: background-color 300ms linear;
-      }
-      tr.even{
-        background: #f2f2f2;
-      }
-      tr:hover,tr.selected{
-        background: darken(#f2f2f2,20%);
-      }
-      tr.highlight{
-        color: #c00000;
-      }
-      span.gray{
-        padding: 0 10px;
-        color: gray;
-      }
-      td .math-html{
-        max-height: 30px;
-        overflow: hidden;
-      }
-      a{
-        padding: 0 10px;
-        color: #c00000;
-        &[data-type=view]{
-          color: #2f75b5;
-        }
-        &[data-type=assign]{
-          color: #c65911;
-        }
-        &[data-type=mark],&[data-type=dump]{
-          color: #548235;
-        }
-        &[data-type=record]{
-          color: #2f75b5;
-        }
-      }
-    }
-    input{
-      vertical-align: middle;
-    }
+    .data-table;
   }
   .form{
     .form-header{
@@ -834,6 +843,9 @@ a,a:hover{
   }
   &.box-dashed{
     border-style: dashed;
+  }
+  &.box-search{
+    margin-top: 0;
   }
 }
 
@@ -1282,6 +1294,31 @@ a,a:hover{
       > div{
         font-size: 12px;
       }
+    }
+  }
+  .paper-search{
+    .field{
+      .hbox;
+      // height: 40px;
+      line-height: 40px;
+      label{
+        display: inline-block;
+      }
+      label.left{
+        width: 120px;
+      }
+      label.middle{
+        padding: 0 10px 0 20px;
+        width: 30px;
+      }
+      input,select{
+        .hbox;
+        .box-flex;
+        margin: 10px 0;
+      }
+    }
+    .data-table{
+      margin-top: 40px;
     }
   }
 }

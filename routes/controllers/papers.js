@@ -1,5 +1,6 @@
 var models = require('../../models'),
     Sequelize = require('sequelize'),
+    Utils = Sequelize.Utils,
     utility = require('../logics/utility'),
     extend = require('extend'),
     Q = require('q'),
@@ -12,6 +13,35 @@ exports.index = function(req, res){
   //   [['老师','试题库管理员','推送'],'/papers/recorded/']
   // ]);
   res.redirect('/papers/scope');
+};
+
+exports.filter = function(req, res ,next){
+  var params = req.param('searchParams');
+  var include = ['Question'];
+  var conditions = {},where = [];
+  conditions['Papers.Status'] = [6,8];
+  if(Utils._.isNumber(params.GradeId)){
+    conditions['Papers.GradeId']=params.GradeId;
+  }
+  if(Utils._.isNumber(params.Order)){
+    conditions['PapersQuestions.Order'] = params.Order;
+  }
+  conditions = models.sequelize.queryInterface.QueryGenerator.hashToWhereConditions(conditions);
+  where.push(conditions);
+  if(params.Name){
+    where.push(Utils.format(['`Papers`.`Name` LIKE ? ' ,'%'+params.Name+'%']));
+  }
+  if(params.Body){
+    where.push(Utils.format(['`Questions`.`Excerpt` LIKE ? ' ,'%'+params.Body+'%']));
+  }
+  Q.when(models.Paper.findAll({
+    where: where.join(' AND '),
+    include: include,
+    limit: 200
+  }))
+  .then(function(papers){
+    res.send(papers);
+  });
 };
 
 exports.scope = function(req, res ,next){

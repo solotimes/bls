@@ -12,7 +12,7 @@
 			<label>年级:</label>
 			<select ng-options='grade.id as grade.Name for grade in grades' ng-model='paper.GradeId'></select>
 			<label>总题数: </label>
-			<input class='input-s' type='text' ng-model="paper.QuestionsTotal" ng-disabled='paper.questions.length > 0'/>
+			<input class='input-s' type='number' min="0" ng-model="paper.QuestionsTotal" ng-disabled='paper.questions.length > 0'/>
 			<span>题</span>
 		</div>
 		<div class='gray'>
@@ -21,6 +21,10 @@
 			<span paper-status='paper.Status'></span>
 			<span>试卷来源: {{ {true:'录入',false:'会员上传'}[paper.Source==1] }}</span>
 		</div>
+	</div>
+	<div class="buttons" ng-show='!paper.id || paper.Status == 0 &amp;&amp; !!paper.AdminId'>
+		<a ng-click='initPaper()' class='btn btn-orange big'>创建新卷子</a>
+		<a ng-show='paper.$type=="CustomerPaper"' ng-click='subview="search";searchStyle={height:"42px"}' class='btn btn-blue big' ng-style='searchStyle'>搜索试卷库</a>
 	</div>
 	<div ng-switch='subview'>
 		<div ng-switch-when='question'>
@@ -33,16 +37,12 @@
 			<div class='buttons'>
 			  <a class='btn' href='/customer_papers/'>退出</a>
 			  <a class='btn btn-blue' ng-show='[5,6,8,7].indexOf(paper.Status) > -1' ng-click='paper.save()'>保存试卷</a>
-			  <a class='btn btn-green' ng-show='paper.Status == 2 &amp;&amp; paper.savedQuestions() > 0' ng-click='paper.save({finishWrongRecord:true})'>完成错题录入</a>
+			  <a class='btn btn-green' ng-show='paper.readyForAny([3,5,6,8],{finishWrongRecord: true}) &amp;&amp; paper.Status==2' ng-click='paper.save(null,{finishWrongRecord: true})'>完成错题录入</a>
 			  <a class='btn' ng-hide='isLastQuestion()' ng-click='nextQuestion()'>下一题</a>
 			  <a class='btn btn-orange' ng-click='saveQuestion()'>保存</a>
 			  <a class='btn btn-orange' ng-hide='isLastQuestion()' ng-click='saveQuestionAndNext()'>保存并下一题</a>
 			</div>
 		</div>
-		<div ng-switch-when='init' class='buttons' ng-show='!paper.id || paper.Status == 0 &amp;&amp; !!paper.AdminId'>
-			<!-- 初始化面板 -->
-			 <a ng-click='initPaper()' class='btn btn-orange big'>创建新卷子</a>
-			 <a ng-show='' ng-click='searchTemplates()' class='btn btn-blue big'>搜索试卷库</a>
-		</div>
+		<div ng-switch-when='search' ng-include='"/templates/papers-search.html"' />
 	</div>
 </div>

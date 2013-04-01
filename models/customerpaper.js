@@ -64,18 +64,6 @@ module.exports = function(sequelize, DataTypes)
           });
 
           return p;
-          // if(!this.RecordedAt && !attrs.RecordedAt){
-          //   //状态0-4
-          //   if(attrs.Recapture){
-          //     attrs.Status = STATUS['需重拍'];
-          //   }else if(this.AdminId){
-
-          //   }
-          //   //   attrs.Status = ;
-          //   // }
-          // }else{
-          //   //状态5-7
-          // }
         },
         toJSON: function(){
             var values = this.values;

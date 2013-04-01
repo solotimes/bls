@@ -25,9 +25,9 @@ append head
 
 block content
   .toolbar
-    a.btn.btn-green.btn-round(href='#' , data-type='add') 录入
-    if currentUser.checkRoles(['分配员'])
-      a.btn.btn-green.btn-round(href='#' , data-type='batch') 分配录入员
+    //- a.btn.btn-green.btn-round(href='#' , data-type='add') 录入
+    //- if currentUser.checkRoles(['分配员'])
+      //- a.btn.btn-green.btn-round(href='#' , data-type='batch') 分配录入员
     a.btn.btn-green.btn-round(href='#' , data-type='refresh') 刷新
     if currentUser.checkRoles(['分配员'])
       a.btn.btn-green.btn-round(href='#' , data-type='delete-selected') 删除

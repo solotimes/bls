@@ -39,7 +39,7 @@ app.controller('MainCtrl',['$scope','$window','$http','$route','$location','$q',
       return false;
     }
   };
-  if(!paper.id)
+  if(!paper.id || paper.Status === 0)
     location.path('recording');
   // $scope.$on(
   //     "$routeChangeSuccess",

@@ -1,6 +1,6 @@
 <div class="inner view">
 	<div class="paper-info underline-dashed">
-		<div class="buttons pull-right">
+		<div  ng-hide='readonly' class="buttons pull-right">
 			<a href='{{rootPath}}' class="btn">关闭</a>
 			<a href='#/edit' class="btn btn-orange">编辑考卷</a>
 			<button class="btn btn-cyan" ng-click='paper.dump()' ng-show='paper.dumpable()'>存入试卷库</button>
@@ -37,7 +37,7 @@
 					<a ng-click="viewQuestion(question)" ng-show='isFinished(question)'>查看解答,知识点</a>
 					<span class='missing' ng-show='missingKnowledges(question)'>缺少知识点</span>
 					<span class='missing' ng-show='missingSolution(question)'>缺少解答</span>
-					<button class="btn btn-orange" ng-click='editQuestion(question)'>修改</button>
+					<button class="btn btn-orange" ng-hide='readonly' ng-click='editQuestion(question)'>修改</button>
 				</div>
 			</li>
 		</ol>

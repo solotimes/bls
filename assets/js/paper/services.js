@@ -37,12 +37,12 @@ angular.module('paper.services', [])
 //试卷相关操作
 
 .factory('paper', ['$http','$window','$q','$rootScope',function (http,window,Q,rootScope) {
-  Paper = function(){
-    angular.copy(window.paper,this);
-    this.$type = window.paperType || 'CustomerPaper';
+  Paper = function(attrs,type,questions,grades){
+    angular.copy(attrs,this);
+    this.$type = type || 'CustomerPaper';
     this.GradeId = this.GradeId || (this.customer && this.customer.GradeId);
-    this.questions = window.questions || [];
-    this.$grades = window.grades;
+    this.questions = questions || [];
+    this.$grades = grades;
     if(!this.id){
       this.Status = 3;
       this.Source = 1;
@@ -70,7 +70,7 @@ angular.module('paper.services', [])
                             '初三中考模拟': 4,
                             '中考真题': 5
                           };
-  Paper.prototype.save = function(attrs){
+  Paper.prototype.save = function(attrs,events){
     var self = this;
     attrs = attrs || {};
     delete attrs.Status;
@@ -78,7 +78,7 @@ angular.module('paper.services', [])
     angular.extend(saveObj,attrs);
 
     //自动判断状态, 根据保存时设定的参数以及paper当前的状态
-    var changeTo = self.checkStatus(attrs,saveObj);
+    var changeTo = self.checkStatus(events);
     if(angular.isNumber(changeTo))
       saveObj.Status = changeTo;
     // console.log('changeTo:',changeTo);
@@ -105,6 +105,46 @@ angular.module('paper.services', [])
 
   Paper.prototype.dumpable = function(){
     return this.$type == 'CustomerPaper' && !this.PaperId && (this.Status == 6 || this.Status == 8);
+  };
+
+  Paper.prototype.loadPaper = function(paper){
+    return http.get('/papers/'+paper.id+'/questions')
+    .then(function(res){
+        return new Paper(paper,'Paper',res.data);
+    });
+  };
+
+  Paper.prototype.importPaper = function(paper){
+    var d = Q.defer();
+    var self = this;
+    window.setTimeout(function(){
+      rootScope.$apply(function(){
+        d.resolve(paper);
+      });
+    },0);
+    return d.promise
+    .then(function(paper){
+      if(!paper.questions)
+        return self.loadPaper(paper);
+      return paper;
+    })
+    .then(function(paper){
+      self.questions = paper.questions;
+      self.Name = paper.Name;
+      self.GradeId = paper.GradeId;
+      self.QuestionsTotal = paper.QuestionsTotal;
+      self.Type = paper.Type;
+      self.Source = paper.Source;
+      self.AudioPath = paper.AudioPath;
+      self.Status = 1;
+      return self.save();
+    })
+    .then(function(){
+      return self.saveAllQuestions();
+    });
+    // .then(function(){
+    //   return self.save();
+    // });
   };
 
   var _ChnNumbers='一二三四五';
@@ -320,6 +360,8 @@ angular.module('paper.services', [])
         return testElement.html(val).text().trim().length === 0;
       }else if(angular.isArray(val)){
         return val.length === 0;
+      }else if(angular.isNumber(val)){
+        return isNaN(val);
       }
       return !val;
     }catch(e){
@@ -361,9 +403,9 @@ angular.module('paper.services', [])
     return res;
   };
 
-  Paper.prototype.checkStatus = function(params){
+  Paper.prototype.checkStatus = function(events){
     for( var s = 0 ; s < 9 ;s ++){
-      if(!!this.readyFor(s,params))
+      if(!!this.readyFor(s,events))
         return s;
     }
     return false;
@@ -375,17 +417,16 @@ angular.module('paper.services', [])
    //     =>  '待录错题',2,  *=>  '错题未解答',5 => '待完善',8  =>  '完成解答',6
    //                       *=>  '待录全卷',3  => '待完善',8  =>  '完成解答',6
    // '已推送',7
-  Paper.prototype.readyFor = function(s,params){
+  Paper.prototype.readyFor = function(s,events){
     var savedQuestions = this.savedQuestions();
     var wrongQuestionsUnSolved = !this.isAllWrongQuestionsSolved();
     var allQuestionFinished = this.isAllQuestionFinished();
     var needRecapture = this.needRecapture();
-    params = params || {};
-    // console.log(angular.copy(params));
+    events = events || {};
     switch(s){
       // 待标错题
       case 1:
-        return (this.Status === 2 && params.copyed) &&
+        return (this.Status === 2 && events.imported) &&
                 savedQuestions > 0 &&
                 savedQuestions === this.QuestionsTotal;
       // 待录错题
@@ -396,70 +437,62 @@ angular.module('paper.services', [])
                 !needRecapture);
       // 错题未解答
       case 5:
-        return ((this.Status === 2 && params.finishWrongRecord) &&
-                savedQuestions > 0 &&
-                wrongQuestionsUnSolved);
+        return ((this.Status === 1 && events.finishMarking) ||
+                (this.Status === 2 && events.finishWrongRecord)) &&
+                savedQuestions > 0 && wrongQuestionsUnSolved;
       // 待录全卷
       case 3:
-        return ((this.Status === 2 && params.finishWrongRecord) || this.Status === 5) &&
+        return ((this.Status === 2 && events.finishWrongRecord) || this.Status === 5) &&
                 savedQuestions > 0 &&
                 savedQuestions < this.QuestionsTotal &&
-                !wrongQuestionsUnSolved &&
-                !allQuestionFinished;
+                !wrongQuestionsUnSolved && !allQuestionFinished;
       // 需重拍
       case 4:
         return (this.Status === 0 && needRecapture);
       // 完成解答
       case 6:
         // console.log(allQuestionFinished);
-        return (this.Status === 1 || this.Status === 3 ||
+        return (this.Status === 3 ||
+                (this.Status === 1 && events.finishMarking) ||
                 this.Status === 5 || this.Status === 8 ||
-                (this.Status === 2 && params.finishWrongRecord)) &&
+                (this.Status === 2 && events.finishWrongRecord)) &&
                allQuestionFinished;
       // 待完善
       case 8:
-        // console.log('finishWrongRecord:',params.finishWrongRecord);
+        // console.log('finishWrongRecord:',events.finishWrongRecord);
         return (this.Status === 3 || this.Status === 5 ||
-               (this.Status === 2 && params.finishWrongRecord)) &&
+              (this.Status === 1 && events.finishMarking) ||
+               (this.Status === 2 && events.finishWrongRecord)) &&
               savedQuestions == this.QuestionsTotal &&
               !allQuestionFinished;
       //已推送
       case 7:
-        return (this.Status === 3 || this.Status === 8 || this.Status === 6) && params.pushed;
+        return (this.Status === 3 || this.Status === 8 || this.Status === 6) && events.pushed;
       default:
         return false;
     }
   };
 
-  Paper.prototype.readyForEither = function(statusList,params){
+  Paper.prototype.readyForAny = function(statusList,events){
     if(!statusList || !statusList.length)
       return false;
     for(var i in statusList){
-      if(this.readyFor(statusList[i],params)){
+      if(this.readyFor(statusList[i],events)){
         return true;
       }
     }
     return false;
   };
 
-  Paper.prototype.readyForAll = function(statusList,params) {
+  Paper.prototype.readyForAll = function(statusList,events) {
     if(!statusList || !statusList.length)
       return false;
     for(var i in statusList){
-      if(!this.readyFor(statusList[i],params)){
+      if(!this.readyFor(statusList[i],events)){
         return false;
       }
     }
     return true;
-  };
-
-  Paper.prototype.changeStatus = function(status,force){
-    var deferred = Q.defer();
-    if(force || this.readyFor(status)){
-      return this.save({Status: status});
-    }
-    window.setTimeout(function(){deferred.reject('无法改变到指定状态');},0);
-    return deferred.promise;
   };
 
   Paper.prototype.finish = function() {
@@ -475,7 +508,26 @@ angular.module('paper.services', [])
     }
   };
 
-  var paper = new Paper();
+  Paper.prototype.search = function(params){
+    params = angular.extend({},params);
+    var empty = true;
+    for(var k in params){
+      if(this.isBlank(params[k])){
+        delete params[k];
+      }else{
+        empty = false;
+      }
+    }
+    if(params.Order){
+      params.Order--;
+    }
+    if(!empty)
+      return http.post('/papers/filter',{searchParams: params});
+    else
+      return {success:angular.noop};
+  };
+
+  var paper = new Paper(window.paper,window.paperType,window.questions,window.grades);
   rootScope.paper = paper;
 
   // rootScope.$watch('paper.questions',function(questions){

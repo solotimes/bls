@@ -22,13 +22,7 @@ app.controller('MarkingCtrl',['$scope','$http' ,'paper',function(scope,http,pape
 	scope.mark = function(){
 		paper.saveAllQuestions().then(function(){
 			scope.markingForm.$setPristine();
-			if(paper.readyFor(6) || paper.Status == 6){
-				paper.save({Status:6});
-			}else if(paper.readyFor(5)){
-				paper.save({Status:5});
-			}else{
-				paper.save({Status:3});
-			}
+			paper.save(null,{finishMarking:true});
 		});
 	};
 }]);

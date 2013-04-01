@@ -1,4 +1,4 @@
-app.controller('RecordingCtrl',['$scope','$http','paper',function(scope,http,paper){
+app.controller('RecordingCtrl',['$scope','$http','paper','$location',function(scope,http,paper,location){
 
   scope.initPaper = function(){
     if( angular.isUndefined(paper.QuestionsTotal) || paper.QuestionsTotal <= 0 ){
@@ -9,12 +9,15 @@ app.controller('RecordingCtrl',['$scope','$http','paper',function(scope,http,pap
     }
     if(!paper.GradeId)
       return alert('请设定试卷年级');
+    paper.questions = [];
     paper.reloadQuestions();
-    paper.save().success(function(){
-      scope.question = paper.questions[0];
-      scope.subview = 'question';
-    });
+    paper.save().success(_beginRecording);
   };
+
+  function _beginRecording(){
+    scope.question = paper.questions[0];
+    scope.subview = 'question';
+  }
 
   scope.$watch('paper.questions',function(questions){
     scope.questionsWithLabels = questions.map(function(q,i){
@@ -25,6 +28,10 @@ app.controller('RecordingCtrl',['$scope','$http','paper',function(scope,http,pap
       };
     });
   },true);
+
+  scope.$on('paper-imported',function(){
+    location.path('/marking');
+  });
 
   scope.nextQuestion = function(){
     if(!scope.isLastQuestion()){
@@ -39,6 +46,10 @@ app.controller('RecordingCtrl',['$scope','$http','paper',function(scope,http,pap
   scope.saveQuestionAndNext = function(){
     scope.goNext = true;
     scope.saveQuestion();
+  };
+
+  scope.searchPapers = function(){
+    scope.subview = 'search';
   };
 
   scope.$on('question-saved',function(){
@@ -87,4 +98,28 @@ app.controller('RecordingCtrl',['$scope','$http','paper',function(scope,http,pap
 
   if(paper.questions.length)
     scope.question = paper.questions[0];
+}]);
+
+app.controller('PaperSearchCtrl',['$scope','$http','paper',function(scope,http,paper){
+  scope.subview = 'filter';
+  scope.readonly = true;
+  scope.searchParams = {};
+  scope.search = function(){
+    paper.search(scope.searchParams).success(function(papers){
+      scope.papers = papers;
+    });
+  };
+  scope.preview = function(p){
+    paper.loadPaper(p).then(function(p){
+      scope.subview = 'preview';
+      scope.paper = p;
+    });
+  };
+  scope.import = function(p){
+    if(!confirm('确定要选定并导入本试卷? (本操作不可撤销)'))
+      return;
+    paper.importPaper(p).then(function(){
+      scope.$emit('paper-imported');
+    });
+  };
 }]);
