@@ -20,6 +20,7 @@ app.controller('MarkingCtrl',['$scope','$http' ,'paper',function(scope,http,pape
 		}
 	});
 	scope.mark = function(){
+		if(confirm('是否确定完成错题标记? (本操作不可撤销)'))
 		paper.saveAllQuestions().then(function(){
 			scope.markingForm.$setPristine();
 			paper.save(null,{finishMarking:true});
