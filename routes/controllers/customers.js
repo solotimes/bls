@@ -4,6 +4,7 @@ var models = require('../../models'),
     extend = require('extend'),
     iconv = require('iconv-lite'),
     moment = require('moment'),
+    Q = require('q'),
     async = require('async');
 
 function parseBoolean(value){
@@ -163,6 +164,13 @@ exports.create = function(req, res){
 
 exports.show = function(req, res){
   res.render('customers/show',{instance:req.customer});
+};
+
+exports.records = function(req, res){
+  Q.when(req.customer.getCustomerPapers())
+  .then(function(customerPapers){
+    res.render('customers/records',{instance:req.customer,customerPapers:customerPapers});
+  });
 };
 
 exports.edit = function(req, res){

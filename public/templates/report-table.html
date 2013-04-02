@@ -1,0 +1,26 @@
+<table>
+	<thead>
+		<tr>
+			<th>类别1</th>
+			<th>类别2/知识点</th>
+			<th>知识点</th>
+			<th class='span50px'>错误率</th>
+			<th class='span50px'>错误数量</th>
+			<th class='span200px center'>错题ID</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat='row in rows'>
+			<td>{{row[0]}}</td>
+			<td>{{row[1]}}</td>
+			<td>{{row[2]}}</td>
+			<td class='orange center'>{{row[3]}}%</td>
+			<td class='orange center'>{{row[4]}}</td>
+			<td>
+				<a ng-click='viewQuestion(question)' class="question" ng-repeat="question in row[5]" ng-show='question.Wrong'>
+					{{paper.questionTypes[question.Type]}}{{question.id}}
+				</a>
+			</td>
+		</tr>
+	</tbody>
+</table>

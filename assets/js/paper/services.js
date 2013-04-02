@@ -539,6 +539,15 @@ angular.module('paper.services', [])
       return res.data;
     });
   };
+
+  Paper.prototype.getQuestionsByKid = function(kid){
+    return this.questions.filter(function(question){
+      return (!!question.knowledges &&
+        question.knowledges.some(function(k){
+          return k.id === kid;
+        }));
+    });
+  };
   var paper = new Paper(window.paper,window.paperType,window.questions,window.grades);
   rootScope.paper = paper;
 
@@ -548,13 +557,29 @@ angular.module('paper.services', [])
   // var knowledges;
   function Tree(){
     var self = this;
-    http.get('/knowledge-tree.json').success(function(data){
-      angular.copy(data, self);
-      http.get('/knowledges').success(function(data){
-        self.knowledges = data;
-      });
-    });
+    this.loaded = false;
+    this.load();
   }
+
+  Tree.prototype.load = function(){
+    var self = this;
+    return Q.when().then(function(){
+      if(this.loaded)
+        return this;
+      else
+        return Q.all([
+          http.get('/knowledge-tree.json').then(function(res){
+            angular.extend(self,res.data);
+          }),
+          http.get('/knowledges').then(function(res){
+            self.knowledges = res.data;
+          })])
+          .then(function(){
+            self.loaded = true;
+            return this;
+          });
+    });
+  };
 
   Tree.prototype.find = function(id){
     if(!this.knowledges){
@@ -566,6 +591,39 @@ angular.module('paper.services', [])
     if(select && select.length)
       return select[0];
     return;
+  };
+
+  /*
+  * 生成特定知识点的平面表, 若ids为空表示生成所有知识点的平面表
+  */
+  Tree.prototype.flatten = function(ids){
+    if(!this.knowledges){
+      return;
+    }
+    var rows = [];
+    function scanKnowledge(path,kid){
+      if(!ids || ids.indexOf(kid)!= -1){
+        var row = {};
+        for(var i in path){
+          row[i] = path[i];
+        }
+        row.knowledge = this.find(kid);
+        row[path.length] = row.knowledge.Name;
+        rows.push(row);
+      }
+    }
+    function scanNode(path,node){
+      path = angular.copy(path);
+      path.push(node.name);
+      if(node.children){
+        node.children.forEach(angular.bind(this,scanNode,path));
+      }
+      if(node.pointIds){
+        node.pointIds.forEach(angular.bind(this,scanKnowledge,path));
+      }
+    }
+    this.children.forEach(angular.bind(this,scanNode,[]));
+    return rows;
   };
   rootScope.knowledgeTree = new Tree();
   return rootScope.knowledgeTree;

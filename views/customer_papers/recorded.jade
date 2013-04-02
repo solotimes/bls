@@ -62,6 +62,10 @@ block content
                 if model.RecordedAt
                   = moment(model.RecordedAt).format('YYYY-MM-DD HH:mm')
               td
+                if model.Status == 6 || models.Status == 7
+                  a(href='/customer_papers/#{model.id}#report',data-type='report',target='_blank') 报告
+                else
+                  a.hidden 占位
                 a(href='/customer_papers/#{model.id}',data-type='view') 查看
                 a(href='/customer_papers/#{model.id}#edit',data-type='edit') 修改
                 if model.Status==6 || model.Status==8 || model.Status==7

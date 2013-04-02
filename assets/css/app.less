@@ -93,6 +93,14 @@ html,body{
   // display: inline-block;
 }
 
+.hidden{
+  visibility: hidden;
+}
+
+.center{
+  text-align: center;
+}
+
 html[xmlns] .clearfix {
   display: block;
 }
@@ -456,8 +464,14 @@ a,a:hover{
 .span70px{
   width: 70px;
 }
+.span75px{
+  width: 75px;
+}
 .span100px{
   width: 100px;
+}
+.span200px{
+  width: 200px;
 }
 .span05{
   width: 5%;
@@ -537,6 +551,9 @@ a,a:hover{
       &[data-type=record]{
         color: #2f75b5;
       }
+      &[data-type=report]{
+        color: #548235;
+      }
     }
   }
   input{
@@ -552,6 +569,9 @@ a,a:hover{
   }
   table{
     .data-table;
+    a{
+      text-decoration: underline;
+    }
   }
   .form{
     .form-header{
@@ -1334,6 +1354,38 @@ a,a:hover{
     }
     .data-table{
       margin-top: 40px;
+    }
+  }
+}
+
+.customer_records{
+  .info{
+    padding-left: 30px;
+    .orange;
+    font-size: 16px;
+    span{
+      margin-right: 20px;
+    }
+    margin-bottom: 20px;
+  }
+}
+
+.report{
+  table{
+    text-align: left;
+    border: 1px solid #d9d9d9;
+    color: #595959;
+    font-size: 12px;
+    th{
+      background: #2f75b5;
+      color: #fff;
+    }
+    td{
+      border: 1px solid #d9d9d9;
+      padding-right:5px;
+    }
+    a.question{
+      margin-right: 5px;
     }
   }
 }

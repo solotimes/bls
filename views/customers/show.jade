@@ -8,7 +8,9 @@ block content
           li.tab.current
             a(href='/customers/#{instance.id}')会员信息
           li.tab
-            a(href='#')记录
+            a(href='/customers/#{instance.id}/records')上传记录
+          li.tab
+            a(href='/customers/#{instance.id}/report')错误报告
       include ../flash
       .field.gray
         span.label

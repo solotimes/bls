@@ -1,0 +1,13 @@
+<div class="inner view report" ng-controller='CustomerPaperReportCtrl'>
+	<div class="paper-info underline-dashed">
+		<div  ng-hide='readonly' class="buttons pull-right">
+			<a href='{{rootPath}}' class="btn">关闭</a>
+		</div>
+		<span paper-status="paper.Status"></span>
+		<span class='gray'>卷子ID: {{paper.id}}</span>
+		<span class='gray' ng-show='paper.$type == "CustomerPaper"'>录入: {{paper.assignedTo.Name}} {{paper.RecoredAt |  date:'yyyy-MM-dd' }}</span>
+		<span class='gray'>最后修改: </span>
+		<h2 class="correct-rate blue"  ng-show='paper.$type == "CustomerPaper"'>正确率{{paper.CorrectRate}}%</h2>
+	</div>
+	<div class="paper-report" ng-include="'/templates/report-table.html'"/>
+</div>
