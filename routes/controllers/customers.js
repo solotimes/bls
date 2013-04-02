@@ -166,10 +166,43 @@ exports.show = function(req, res){
   res.render('customers/show',{instance:req.customer});
 };
 
-exports.records = function(req, res){
+exports.records = function(req, res, next){
   Q.when(req.customer.getCustomerPapers())
   .then(function(customerPapers){
     res.render('customers/records',{instance:req.customer,customerPapers:customerPapers});
+  })
+  .fail(function(error){
+    logger.log(error);
+    next(error);
+  });
+};
+
+exports.report = function(req, res){
+  var report;
+  var sql = "SELECT `KnowledgesQuestions`.`KnowledgeId` as `kid` ," +
+            "sum(case when `Wrong` = 1  then 1 else 0 end) as `wcount`,"+
+            "count(`Questions`.`id`) as `qcount` "+
+            "FROM CustomerPapers,CustomerPapersQuestions,Questions,`KnowledgesQuestions` "+
+            "where `CustomerPapers`.`CustomerId`= "+ req.customer.id +
+            " AND `CustomerPapersQuestions`.`CustomerPaperId` = `CustomerPapers`.`id` AND `CustomerPapersQuestions`.`QuestionId` = `Questions`.`id` AND `KnowledgesQuestions`.`QuestionId` = `Questions`.`id` GROUP BY `kid`";
+  Q.when(models.sequelize.query(sql))
+  .then(function(results){
+    report = results;
+    var kids = results.map(function(row){return row.kid;});
+    return Q.when(models.Question.findAll({where:
+    {
+      'KnowledgesQuestions.KnowledgeId': kids,
+      'CustomerPapersQuestions.Wrong': 1,
+      'CustomerPapers.CustomerId': req.customer.id
+    },
+      include: ['Knowledge','CustomerPaper']}));
+  })
+  .then(function(questions){
+    res.render('customers/report',{instance: req.customer,questions:questions,report:report});
+  })
+  .fail(function(error){
+    logger.log(error);
+    next(error);
   });
 };
 

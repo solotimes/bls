@@ -1,0 +1,24 @@
+extends index
+
+append head
+  link(rel="stylesheet",href="/jmeditor/mathquill-0.9.1/mathquill.css")
+  !=css('facebox')
+  !=js('papers')
+  !=css('jquery.iviewer')
+  !=css('facebox')
+  script(src='/jmeditor/JMEditor.js')
+  script
+    window.report = !{JSON.stringify(report)};
+    window.questions = !{JSON.stringify(questions)};
+block content
+  .main.customer_records.customer_report(ng-app='Paper', ng-controller='CustomerReportCtrl')
+    .form
+      .form-header
+        ul.tabs
+          li.tab
+            a(href='/customers/#{instance.id}')会员信息
+          li.tab
+            a(href='/customers/#{instance.id}/records')上传记录
+          li.tab.current
+            a(href='/customers/#{instance.id}/report')错误报告
+      div.report(ng-include="'/templates/report-table.html'")

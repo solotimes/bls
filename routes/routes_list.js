@@ -35,6 +35,7 @@ customers.map('delete','/',controllers.customers.batchDestroy);
 customers.map('put','toggle_enabled',controllers.customers.toggleEnabled);
 customers.map('put','/',controllers.customers.batch);
 customers.map('get','records',controllers.customers.records);
+customers.map('get','report',controllers.customers.report);
 var levels = app.resource('levels',controllers.levels);
 
 app.get('/customer_papers/raw/:scope?',controllers.customer_papers.raw);

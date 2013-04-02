@@ -49,7 +49,8 @@ angular.module('paper.services', [])
       this.Source = 1;
     }
     this.refresh();
-    this.reloadQuestions();
+    if(this.id)
+      this.reloadQuestions();
   };
 
   var Type2Path = {
@@ -548,6 +549,7 @@ angular.module('paper.services', [])
         }));
     });
   };
+
   var paper = new Paper(window.paper,window.paperType,window.questions,window.grades);
   rootScope.paper = paper;
 
