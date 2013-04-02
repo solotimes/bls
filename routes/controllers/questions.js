@@ -62,7 +62,25 @@ exports.index = {
         logger.log(error);
         return next(error);
       }
-      res.render('questions/index',{collection: extend(collection||[],searchParams)});
+      var ids = collection.map(function(q){return q.id;});
+      //查询知识点
+      Q.when(models.Question.findAll({
+        include: ['Knowledge'],
+        where: {id:ids}
+      })).then(function(qWithKs){
+        //合并两次查询
+        collection.forEach(function(q){
+          var select = qWithKs.filter(function(qk){return qk.id === q.id;});
+          if(!!select && select.length && select[0].knowledges[0].id){
+            q.knowledges = select[0].knowledges;
+          }
+        });
+        res.render('questions/index',{collection: extend(collection||[],searchParams)});
+      })
+      .fail(function(err){
+        logger.log(err);
+        res.send(err);
+      });
     });
   },
   json: function(req,res,next){

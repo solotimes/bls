@@ -53,12 +53,14 @@ block content
               th.span25px
                 input(type='checkbox',data-type='select-all')
               th.span50px 编号
-              th 状态
-              th.span50px 条件
-              th.span50px 问法
+              th.span50px 状态
+              th.span30px 条件
+              th.span30px 问法
+              th.span40px 类型
+              th.span30px 复合
               th 提干
-              td.span10 修改时间
-              td.span10 录入时间
+              td.span130px 修改时间
+              td.span130px 录入时间
               th.span20 操作
           tbody
             tr(ng-repeat='question in questions',ng-class-even='"even"')
@@ -71,6 +73,9 @@ block content
                 span.red(ng-show='paper.isBlank(question.Condition)') 未填
               td
                 span.red(ng-show='paper.isBlank(question.Method)') 未填
+              td {{ paper.questionTypes[question.Type]}}
+              td
+                span.orange(ng-show='question.knowledges.length > 1') 复
               td
                 div.math-html(math-html='question.Body')
               td
