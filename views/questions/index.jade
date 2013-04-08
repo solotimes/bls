@@ -33,7 +33,7 @@ append head
 
 block content
   .app(ng-app='Paper', ng-controller='QuestionListCtrl')
-    .toolbar
+    .toolbar.questions
       a.btn.btn-green.btn-round(data-type='add', ng-click='addNew()') 添加
       a.btn.btn-green.btn-round(href='#' , data-type='refresh') 刷新
       a.btn.btn-green.btn-round(href='#' , data-type='delete-selected') 隐藏
