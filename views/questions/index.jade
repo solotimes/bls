@@ -39,6 +39,9 @@ block content
       a.btn.btn-green.btn-round(href='#' , data-type='delete-selected') 隐藏
       form(method='get',name='filter-form',action=req.path).question-filter
         .row
+          label.gray 编号
+          input.large(type='text',name='ids',value=collection.ids)
+        .row
           label.gray 提干
           input(type='text',name='Excerpt',value=collection.Excerpt)
           label.gray 备注

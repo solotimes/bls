@@ -40,6 +40,14 @@ exports.index = {
     query.where = '`Status` in(5,6,8) ';
     query.order = '`CreatedAt` DESC';
 
+    req.fetchParam('ids',function(str){
+      searchParams['ids'] = str.split(',');
+      var ids = searchParams['ids'].map(function(id) {
+            return Utils.escape(id);
+          });
+      query.where += 'AND `Questions`.`id` IN ( '+ ids.join(',') +') ';
+    });
+
     req.fetchParams(['Excerpt','Description'],function(name,value){
       searchParams[name] = value;
       query.where += Utils.format(['AND `Questions`.`'+name+'` LIKE ? ','%' + value + '%']);
