@@ -4,7 +4,15 @@ var models = require('../../models'),
     extend = require('extend');
     async = require('async');
 exports.index = function(req, res ,next){
-  models.Knowledge.all().success(function(knowledges){
+  var query;
+  var q = (req.param('q') || '').trim();
+  if(q.length)
+    query = models.Knowledge.findAll({
+      where: ['Name LIKE ?','%'+q+'%']
+    });
+  else
+    query = models.Knowledge.all();
+  query.success(function(knowledges){
     res.send(knowledges);
   }).fail(function(err){
     logger.log(err);

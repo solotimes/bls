@@ -89,7 +89,7 @@ exports.raw = function(req, res ,next){
 
 };
 
-exports.recorded = function(req,res){
+exports.recorded = function(req,res,next){
   res.locals.scopes = [
     {
       name: '全部',

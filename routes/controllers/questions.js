@@ -35,28 +35,40 @@ exports.index = {
         value: '完成解答'
       }
     ];
-    var q = (req.param('q') || '').trim();
-    var by = (req.param('by')||'').trim();
-    var scope = (req.param('scope')||'').trim();
-    var condition = '`Status` in(5,6,8) ';
-    var where,searchParams={};
-    if("undefined" !== typeof models.Question[scope]){
-      condition += 'AND `Status` = ' + models.Question[scope];
-    }
-    if(q.length && by.length && (by == 'CreatedAt')){
-      if(condition)
-        condition += ' AND `Papers`.`'+by+"` LIKE ?";
-      searchParams.q=q;
-      searchParams.by=by;
-      where = [ condition, "%"+q+"%"];
-    }else{
-      where = condition;
-    }
-    models.Question.pageAll({
-        where:where,
-        order: '`CreatedAt` DESC'
-      },
-    req.param('page'),req.param('per'),
+
+    var query={},searchParams={};
+    query.where = '`Status` in(5,6,8) ';
+    query.order = '`CreatedAt` DESC';
+
+    req.fetchParams(['Excerpt','Description'],function(name,value){
+      searchParams[name] = value;
+      query.where += Utils.format(['AND `Questions`.`'+name+'` LIKE ? ','%' + value + '%']);
+    });
+
+    req.fetchParams(['Condition','Method','Difficulty'],function(name,value){
+      searchParams[name] = value;
+      query.where += Utils.format(['AND `Questions`.`'+name+'` = ? ',value]);
+    });
+
+    req.fetchParam('KnowledgeIds',function(str){
+      var kids = str.split(',').map(function(kid) {
+            return Utils.escape(kid);
+          });
+      searchParams['KnowledgeIds'] = str.split(',');
+      query.countJoin = "LEFT OUTER JOIN `KnowledgesQuestions` on `QuestionId` = `Questions`.`id`";
+      query.include = ['Knowledge'];
+      query.where += 'AND `KnowledgeId` IN ( '+ kids.join(',') +') ';
+      query.countAttributes = ['DISTINCT `Questions`.`id`'];
+      // query.attributes = Utils._.keys(models.Question.attributes).concat([['Questions.id','qid']]);
+      query.group = '`Questions`.`id`';
+    });
+
+    req.fetchParam('scope',function(scope){
+      if("undefined" !==typeof models.Question[scope])
+      query.where += 'AND `Status` = ' + models.Question[scope];
+    });
+
+    models.Question.pageAll(query,req.param('page'),req.param('per'),
     function(error,collection){
       if(error){
         logger.log(error);
@@ -75,7 +87,7 @@ exports.index = {
             q.knowledges = select[0].knowledges;
           }
         });
-        res.render('questions/index',{collection: extend(collection||[],searchParams)});
+        res.render('questions/index',{collection: extend(collection||[],searchParams,{searchParams: searchParams})});
       })
       .fail(function(err){
         logger.log(err);

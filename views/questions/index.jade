@@ -37,13 +37,53 @@ block content
       a.btn.btn-green.btn-round(data-type='add', ng-click='addNew()') 添加
       a.btn.btn-green.btn-round(href='#' , data-type='refresh') 刷新
       a.btn.btn-green.btn-round(href='#' , data-type='delete-selected') 隐藏
-      //- form(method='get').search
-      //-   select(name='by')
-      //-     option(value='Name',selected=collection.by=='Name') 试卷标题
-      //-     option(value='CodeName' ,selected=collection.by=='CodeName') 试卷编号
-      //-     option(value='CreatedAt' ,selected=collection.by=='CreatedAt') 上传日期
-      //-   input(name='q',value='#{collection.q||''}')
-      //-   button(type='submit').btn.btn-blue 搜索
+      form(method='get',name='filter-form',action=req.path).question-filter
+        .row
+          label.gray 提干
+          input(type='text',name='Excerpt',value=collection.Excerpt)
+          label.gray 备注
+          input(type='text',name='Description',value=collection.Description)
+        .row
+          label.gray 条件
+          select(name='Condition')
+            option(value='',selected= !collection.Condition) 全部
+            option(value='1',selected= collection.Condition == 1) 1
+            option(value='2',selected= collection.Condition == 2) 2
+          label.gray 问法
+          select(name='Method')
+            option(value='',selected= !collection.Method) 全部
+            option(value='1',selected= collection.Method == 1) 1
+            option(value='2',selected= collection.Method == 2) 2
+          label.gray 难度
+          select(name='Difficulty')
+            option(value='',selected= !collection.Difficulty) 全部
+            option(value='1',selected= (collection.Difficulty == 1)) 1
+            option(value='2',selected= (collection.Difficulty == 2)) 2
+            option(value='3',selected= (collection.Difficulty == 3)) 3
+            option(value='4',selected= (collection.Difficulty == 4)) 4
+            option(value='5',selected= (collection.Difficulty == 5)) 5
+        .row.top
+          label.gray 知识点
+          button(type='submit').pull-right.btn.btn-blue 搜索
+          input(type='text',name='KnowledgeIds',value='')
+          if collection.KnowledgeIds
+            :qejs(models=models,ids=collection.KnowledgeIds)
+              <script>
+                <% models.Knowledge.findAll({where: {id:ids} }) -> knowledges %>
+                  window.preloadKnowledges = <%-JSON.stringify(knowledges)%>;
+                <% <- -%>
+              </script>
+          script
+            $('input[name="KnowledgeIds"]').tokenInput('/knowledges',{
+                prePopulate: window.preloadKnowledges,
+                theme: 'facebook',
+                hintText: '请输入知识点进行搜索...',
+                noResultsText: '结果为空',
+                searchingText: '搜索中',
+                propertyToSearch: 'Name'
+              });
+      .pull-left.count
+        共 #{collection.pageVars.total} 题
     .main
       form#select(method='post' ,action='/questions')
         input(type='hidden',name='_method',value='delete')
@@ -87,4 +127,4 @@ block content
                 a(data-tyep='edit',ng-click='edit(question)') 修改
                 a(data-type='delete', href='/questions/{{question.id}}' , data-method='delete' , data-confirm='确定隐藏本记录?' , rel="nofollow") 隐藏
     .pagination
-      != paginate(collection,{action: '/questions'})
+      != paginate(collection,{action: req.path, params: collection.searchParams})

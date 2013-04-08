@@ -61,7 +61,8 @@ form(action= !instance.isNewRecord ? '/customers/#{instance.id}' : '/customers',
           theme: 'facebook',
           hintText: '请输入用户名或姓名进行搜索...',
           noResultsText: '结果为空',
-          searchingText: '搜索中'
+          searchingText: '搜索中',
+          preventDuplicates: true
         });
   .field
     span.label 学校:
