@@ -1,7 +1,7 @@
 <div class="inner view report">
 	<div class="paper-info underline-dashed">
 		<div  ng-hide='readonly' class="buttons pull-right">
-			<a href='{{rootPath}}' class="btn">关闭</a>
+			<a ng-click='window.close()' class="btn">关闭</a>
 		</div>
 		<span paper-status="paper.Status"></span>
 		<span class='gray'>卷子ID: {{paper.id}}</span>
