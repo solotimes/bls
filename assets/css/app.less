@@ -214,10 +214,12 @@ a,a:hover{
   float: right;
 }
 
-.header{
-  // position: absolute;
-  // z-index: 10;
-  // top: 0;
+.fluid .header{
+  height: 50px;
+  overflow: hidden;
+  .corner{
+    display: none;
+  }
 }
 
 .header .brand{
@@ -731,6 +733,12 @@ a,a:hover{
   &.status-8{
     background: #009900;
   }
+  &.status-9{
+    background: #ff9900;
+  }
+  &.status-10{
+    background: #cc0066;
+  }
 }
 
 .pagination{
@@ -803,7 +811,7 @@ a,a:hover{
   }
   .leftpart{
     position: fixed;
-    top:88px;
+    top:50px;
     bottom: 0;
   }
   .rightpart{

@@ -66,8 +66,8 @@ block content
                   a(href='/customer_papers/#{model.id}#report',data-type='report',target='_blank') 报告
                 else
                   a.hidden 占位
-                a(href='/customer_papers/#{model.id}',data-type='view') 查看
-                a(href='/customer_papers/#{model.id}#edit',data-type='edit') 修改
+                a(href='/customer_papers/#{model.id}',data-type='view',target='_blank') 查看
+                a(href='/customer_papers/#{model.id}#edit',data-type='edit',target='_blank') 修改
                 if model.Status==6 || model.Status==8 || model.Status==7
                   if !model.PaperId
                     a(href='/customer_papers/#{model.id}/dump',data-type='dump',data-method='post',data-confirm='你确定要将本试卷导入试卷库?') 存入库

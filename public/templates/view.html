@@ -1,7 +1,7 @@
 <div class="inner view">
 	<div class="paper-info underline-dashed">
 		<div  ng-hide='readonly' class="buttons pull-right">
-			<a href='{{rootPath}}' class="btn">关闭</a>
+			<a ng-click='window.close()' class="btn">关闭</a>
 			<a href='#/edit' class="btn btn-orange">编辑考卷</a>
 			<button class="btn btn-cyan" ng-click='dump()' ng-show='paper.dumpable()'>存入试卷库</button>
 			<button class="btn btn-cyan" ng-show='!!paper.PaperId'>已入库</button>
