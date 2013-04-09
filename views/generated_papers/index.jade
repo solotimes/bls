@@ -1,0 +1,81 @@
+extends ../layout
+
+block sidebar
+  h1 扩展练习考卷
+  ul.sidenav
+    each scope in scopes
+      if currentUser.checkRoles(scope.roles)
+        li(class= (req.param('scope')||'') == scope.value ? 'current' : '')
+          a(href='/generated_papers/scope/#{scope.value}')=scope.name || scope.value
+
+append head
+  script
+    $(function(){
+      $(document).on('click','a[data-type=delete-selected]',function(e){
+        e.preventDefault();
+        if(!$('input[name="ids[]"]:checked').length){
+          return false;
+        }
+        if(window.confirm('确定删除选中的记录?')){
+          $('form#select input[name=_method]').val('delete');
+          $('form#select').submit();
+        }
+      })
+    });
+
+block content
+  .toolbar
+    a.btn.btn-green.btn-round(href='#' , data-type='refresh') 刷新
+    form(method='get').search
+      select(name='by')
+        option(value='Name',selected=collection.by=='Name') 试卷标题
+        option(value='CodeName' ,selected=collection.by=='CodeName') 试卷编号
+        option(value='CreatedAt' ,selected=collection.by=='CreatedAt') 生成日期
+      input(name='q',value='#{collection.q||''}')
+      button(type='submit').btn.btn-blue 搜索
+  .main
+    form#select(method='post' ,action='/customer_papers')
+      input(type='hidden',name='_method',value='delete')
+      table
+        thead
+          tr
+            th.span25px
+              input(type='checkbox',data-type='select-all')
+            th 编号
+            th 状态
+            th 会员名
+            th 会员类别
+            th 试卷标题
+            th 申请时间
+            th 批改时间
+            th.span20 操作
+        tbody
+          each model, i in collection
+            - var cls = [(i % 2 == 0) ? 'odd' : 'even']
+            - cls.push(model.lorder === 4 ? ' highlight' : null)
+            tr(class=cls)
+              td
+                input(type='checkbox',value=model.id,data-type='select',name='ids[]')
+              td= model.CodeName
+              td
+                span.status(class='status-#{model.Status}')=model.statusText()
+              td= model.customer.Name
+              td= model.lname
+              td= model.Name
+              td
+                if model.AppliedTime
+                  = moment(model.AppliedTime).format('YYYY-MM-DD HH:mm')
+              td
+                if model.RecordedAt
+                  = moment(model.RecordedAt).format('YYYY-MM-DD HH:mm')
+              td
+                a.action-0(href='/generated_papers/#{model.id}',data-type='view',target='_blank') 查看
+                if model.Status == 10
+                  a(href='/generated_papers/#{model.id}',data-type='correcting',target='_blank') 批改
+                else if model.Status == 6
+                  a(href='/generated_papers/#{model.id}',data-type='edit',target='_blank') 修改
+                else
+                  a(data-type='disabled') 修改
+                a(data-type='delete', href='/generated_papers/#{model.id}' , data-method='delete' , data-confirm='确定删除本记录?' , rel="nofollow") 删除
+    .pagination
+      != paginate(collection)

@@ -1,0 +1,58 @@
+<div class="inner view" ng-controller='CorrectingCtrl'>
+	<div class="paper-info underline-dashed">
+		<div class="buttons pull-right">
+			<button ng-click='window.close()' class="btn">关闭</button>
+			<button class="btn btn-orange" ng-click='save()'>保存</button>
+			<button class='btn hidden'>站位站位</button>
+			<button class="btn btn-cyan">推送用户</button>
+		</div>
+		<span paper-status="paper.Status"></span>
+		<span class='blue large'>扩展</span>
+		<span class='gray'>卷子ID: {{paper.id}}</span>
+		<span class='gray'>生成: {{paper.CreatedAt | date:'yyyy-MM-dd'}}</span>
+		<h2 class="correct-rate blue"  ng-show='paper.$type == "CustomerPaper"' >正确率{{paper.CorrectRate}}%</h2>
+		<div ng-show='!!wrongKnowledges.$total' class='wrong-knowledges'>
+			<span class="orange" >错题:</span>
+			<span ng-repeat='(kname,wrong) in wrongKnowledges' class='gray'>
+				{{kname}}:
+				<span class='orange'>{{wrong.percentage}}%</span>
+			</span>
+		</div>
+	</div>
+	<form name='paper-form'>
+		<div class='paper-title'>
+			<h1 class="center"> &nbsp; &nbsp; <b>{{paper.Name}}</b></h1>
+		</div>
+		<div ng-repeat='(kname,questions) in paper.getQuestionsGroupByKnowledges()' class="question-section">
+			<h2 class='blue kname'>知识点{{$index+1}}: &nbsp;&nbsp; {{kname}}</h2>
+			<ol>
+				<li class="question box" ng-repeat='question in questions' ng-class='{wrong:question.Wrong}'>
+					<span math-html='question.Body' class='question-body'></span>
+					<div class="box box-dashed" ng-switch='question.Type'>
+						<ol class="choices" ng-switch-when='0'>
+							<!-- 选择题 -->
+							<li ng-repeat='choice in question.Choices' ng-class='{correct:$index==(question.Answer.charCodeAt(0)-65)}'>
+								<div math-html='choice.body' class="choice-body"></div>
+							</li>
+						</ol>
+						<div ng-switch-when='1' math-html='question.Answer'></div>
+						<div ng-switch-when='2' math-html='question.Answer'></div>
+					</div>
+					<div class='actions'>
+						<div class='pull-right'>
+							<label class='wrong'>
+								<input type="checkbox" ng-model='question.Wrong' ng-checked='!!question.Wrong' ng-change='questionStateChange()'>
+								回答错误
+							</label>
+						</div>
+						<a ng-click="viewQuestion(question)" >查看解答,知识点</a>
+					</div>
+				</li>
+			</ol>
+		</div>
+		<div class='pull-right'>
+			<button class="btn btn-orange" ng-click='save()'>保存修改</button>
+			<button class="btn" ng-click='window.close()'>关闭</button>
+		</div>
+	</form>
+</div>

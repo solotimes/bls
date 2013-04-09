@@ -617,6 +617,12 @@ a,a:hover{
       &[data-type=report]{
         color: #548235;
       }
+      &[data-type=correcting]{
+        color: #ff9900;
+      }
+      &[data-type=disabled]{
+        color: #bfbfbf;
+      }
     }
   }
   input{
@@ -1035,6 +1041,9 @@ a,a:hover{
     font-size: 16px;
     display: block;
     margin: 0 10px;
+    &.kname{
+      line-height: 50px;
+    }
   }
   .selector{
     .hbox;
@@ -1304,6 +1313,14 @@ a,a:hover{
         .box-flex;
         margin: 10px;
       }
+    }
+    .wrong-knowledges{
+      clear: both;
+      font-size: 14px;
+    }
+    .paper-title{
+      padding-top: 20px;
+      padding-bottom: 30px;
     }
     h1{
       font-size: 20px;

@@ -155,18 +155,43 @@ angular.module('paper.services', [])
     if(_types) return _types;
     _types = [ ];
     for(var i = 0,j = 0; i< 3; i++){
-      if(this.questionsByType[i].length){
+      if(this.$questionsByType[i].length){
         _types.push({
           order: j,
           value: i,
           long: _ChnNumbers[j] + '、' + _TypeNames[i],
           short: _TypeNames[i],
-          questions: this.questionsByType[i]
+          questions: this.$questionsByType[i]
         });
         j++;
       }
     }
     return _types;
+  };
+
+  Paper.prototype.getQuestionsGroupByKnowledges = function(){
+    return this.$questionsByKnowledges;
+  };
+
+  Paper.prototype.getKnowledgesOfWrongQuestions = function(){
+    if(!this.questions)
+      return ;
+    var knowledges = {$total:0};
+    this.questions.forEach(function(question){
+      if(question.Wrong && !!question.knowledges){
+        var kname = question.knowledges[0].Name;
+        knowledges[kname] = knowledges[kname] || {questions:[]};
+        knowledges[kname].questions.push(question);
+        knowledges.$total++;
+      }
+    });
+    for( var kname in knowledges){
+      if(kname == '$total')
+        continue;
+      var percentage = Math.round(100 * knowledges[kname].questions.length / knowledges.$total);
+      knowledges[kname].percentage = percentage;
+    }
+    return knowledges;
   };
 
   Paper.prototype.getCorrectRate = function(){
@@ -322,21 +347,29 @@ angular.module('paper.services', [])
   };
 
   Paper.prototype.reloadQuestions = function(){
-    this.questionsByType=[[],[],[]];
+    this.$questionsByType = [[],[],[]];
+    this.$questionsByKnowledges = {};
     // if(this.QuestionsTotal > this.questions.length){
       // 生成空题
-      var questions = [];
-      for(var i = 0,j=0; i < this.QuestionsTotal ; i++){
-        if(j >= this.questions.length || i < this.questions[j].Order){
-          questions.push(this.newQuestion({Order:i}));
-        }else{
-          questions.push(this.questions[j++]);
-        }
-        // if(!questions[i]._delete)
-        this.questionsByType[questions[i].Type].push(questions[i]);
+    var questions = [];
+    for(var i = 0,j=0; i < this.QuestionsTotal ; i++){
+      if(j >= this.questions.length || i < this.questions[j].Order){
+        questions.push(this.newQuestion({Order:i}));
+      }else{
+        questions.push(this.questions[j++]);
       }
-      this.questions = questions;
-      _types = null;
+      // if(!questions[i]._delete)
+      this.$questionsByType[questions[i].Type].push(questions[i]);
+      if(questions[i].knowledges && questions[i].knowledges.length){
+        var kname = questions[i].knowledges[0].Name;
+        var group = this.$questionsByKnowledges[kname] || [];
+        group.push(questions[i]);
+        this.$questionsByKnowledges[kname] = group;
+      }
+
+    }
+    this.questions = questions;
+    _types = null;
     // }
   };
   Paper.prototype.needRecapture = function() {
@@ -456,6 +489,7 @@ angular.module('paper.services', [])
         return (this.Status === 3 ||
                 (this.Status === 1 && events.finishMarking) ||
                 this.Status === 5 || this.Status === 8 ||
+                (this.Status === 10 && events.finishCorrecting) ||
                 (this.Status === 2 && events.finishWrongRecord)) &&
                allQuestionFinished;
       // 待完善

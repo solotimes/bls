@@ -49,10 +49,13 @@ var papers = app.resource('papers',controllers.papers);
 papers.map('delete','/',controllers.papers.batchDestroy);
 papers.map('post','/filter',controllers.papers.filter);
 
+app.get('/generated_papers/scope/:scope?',controllers.generated_papers.scope);
+var generated_papers = app.resource('generated_papers',controllers.generated_papers);
+
 // app.get('/customer_papers/:customer_paper_id/questions.:format?',controllers.questions.index);
 customer_papers.add(app.resource('questions',controllers.questions));
 papers.add(app.resource('questions',controllers.questions));
-
+generated_papers.add(app.resource('questions',controllers.questions));
 app.get('/questions/scope/:scope?',controllers.questions.index.html);
 var questions = app.resource('questions',controllers.questions);
 questions.map('delete','/',controllers.questions.batchDestroy);

@@ -7,7 +7,7 @@ var models = require('../../models'),
     Utils = Sequelize.Utils;
 
 function fetchParentModel(req){
-  var parentModels = ['customer_paper','paper'];
+  var parentModels = ['customer_paper','paper','generated_paper'];
   var p;
   for(var i in parentModels){
     if( !!(req.parentModel = req[parentModels[i]]) ){
