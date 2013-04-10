@@ -645,6 +645,8 @@ angular.module('paper.services', [])
         }
         row.knowledge = this.find(kid);
         row[path.length] = row.knowledge.Name;
+        if(path.length == 1)
+          row[2] = row.knowledge.Name;
         rows.push(row);
       }
     }
