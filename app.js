@@ -10,7 +10,7 @@ var config = require('./config');
 //         password:config.db.pass,
 //         database:config.db.name
 //     });
-var captcha = require('./lib/captcha');
+// var captcha = require('./lib/captcha');
 var authentication = require('./lib/authentication');
 // var MySQLStore = require('connect-mysql')(express);
 var flashify = require('flashify');
@@ -43,7 +43,7 @@ app.configure(function(){
       cookie:{path:'/', httpOnly: true, maxAge: 365*24*60*60*1000}
       // store: new MySQLStore({client:mysql})
   }));
-  app.use(captcha({ url: '/captcha.jpg'}));
+  // app.use(captcha({ url: '/captcha.jpg'}));
   app.use(flashify);
   app.use(require('connect-assets')());
   app.use(express.static(path.join(__dirname, 'public')));

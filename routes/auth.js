@@ -17,7 +17,7 @@ function loginPost(req, res)
 {
     var username = req.param('username');
     var password = req.param('password');
-    if(req.session.captcha != req.param('captcha').trim().toLowerCase()){
+    if(!!req.session.captcha && req.session.captcha != req.param('captcha').trim().toLowerCase()){
         res.flash('error','验证码错误');
         res.render('auth/login');
         console.log('验证码错误:' + req.session.captcha);
