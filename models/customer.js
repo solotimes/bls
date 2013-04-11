@@ -54,7 +54,19 @@ module.exports = function(sequelize, DataTypes)
         LastLoginTime: {type:DataTypes.DATE},
         Enabled: {type:DataTypes.BOOLEAN, defaultValue: true},
         Gender: {type:DataTypes.BOOLEAN},
-        Birthday: {type:DataTypes.DATE}
+        Birthday: {type:DataTypes.DATE},
+        MaxPaper: {type:DataTypes.INTEGER},//最大上传
+        BeginDate: {type:DataTypes.DATE}, //起始日期
+        ExpireDate: {type:DataTypes.DATE}, //过期日期
+        StudentNumber: {type:DataTypes.STRING}, //学号
+        Dob: {type:DataTypes.DATE},//出生年月
+        SchoolType: {type:DataTypes.INTEGER}, //学校类型 0 公立 1私立
+        EnrollTime: {type:DataTypes.DATE}, //入学时间
+        Mobile: {type:DataTypes.STRING}, //手机号码
+        Address: {type:DataTypes.STRING}, //地址
+        ZipCode: {type:DataTypes.STRING}, //邮编
+        Amount: {Type:DataTypes.FLOAT}, //储值金额
+        Comment: {type:DataTypes.TEXT} //备注
     },{
           instanceMethods: {
             roleText: function(){

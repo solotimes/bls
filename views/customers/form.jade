@@ -17,6 +17,14 @@ form(action= !instance.isNewRecord ? '/customers/#{instance.id}' : '/customers',
           <% }) -%>
         <% <- -%>
   .field
+    span.label 有效期:
+    input.datepicker(type = 'text',value = moment(instance.BeginDate).format('YYYY-MM-DD'),name='instance[BeginDate]')
+    |-
+    input.datepicker(type = 'text',value = moment(instance.ExpireDate).format('YYYY-MM-DD'),name='instance[ExpireDate]')
+  .field
+    span.label 最大上传卷子数:
+    input(type = 'number',value=instance.MaxPaper,min='1',name='instance[MaxPaper]')
+  .field
     span.label 姓名:
     input(type='text',name='instance[Name]',value=instance.Name)
   .field
@@ -77,11 +85,61 @@ form(action= !instance.isNewRecord ? '/customers/#{instance.id}' : '/customers',
           <% }) -%>
         <% <- -%>
   .field
+    span.label 入学时间:
+    input.yearpicker(type='text',readonly,value= moment(instance.EnrollTime).format('YYYY年'))
+    input(type='hidden',name='instance[EnrollTime]',value= moment(instance.EnrollTime).format('YYYY-MM-DD'))
+  .field
     span.label 班级:
     input(type='text',name='instance[Class]',value=instance.Class)
+  .field
+    span.label 学号:
+    input(type='text',name='instance[StudentNumber]',value=instance.StudentNumber)
+  .field
+    span.label 出生年月:
+    input.datepicker(type='text',name='instance[Dob]',value=moment(instance.Dob).format('YYYY-MM-DD'))
+  .field
+    span.label 手机号码:
+    input(type='text',name='instance[Mobile]',value=instance.Mobile)
+  .field
+    span.label 家庭住址:
+    input(type='text',name='instance[Address]',value=instance.Address)
+  .field
+    span.label 邮编:
+    input(type='text',name='instance[ZipCode]',value=instance.ZipCode)
+  .field
+    span.label 充值金额:
+    input(type='number',name='instance[Amount]',value=instance.Amount,min=0,placeholder='0.0',step='0.01')
+  .field
+    span.label 备注:
+    textarea(name='instance[Comment]',value=instance.Comment,rows=5)
   .actions
     a.btn(href='javasctip:history.go(-1)') 取消
     if !instance.isNewRecord
       button(type="submit").btn.btn-orange 更新
     else
       button(type="submit").btn.btn-orange 添加
+  script
+    $('.datepicker').datepicker();
+    $('.yearpicker').each(function(){
+      var next = $(this).next();
+      $(this).datepicker({
+        changeYear: true,
+        dateFormat: 'yy年',
+        altField: next,
+        altFormat: 'yy-01-01',
+        onClose: function(dateText, inst) {
+          var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+          $(this).datepicker('setDate', new Date(year, 1, 1));
+          var rule = $(this).data(rule);
+          setTimeout(function(){
+            document.styleSheets[0].deleteRule(0);
+          },200);
+        },
+        onChangeMonthYear: function(){
+          $(this).datepicker('hide');
+        },
+        beforeShow : function(input, inst) {
+          document.styleSheets[0].addRule('.ui-datepicker-calendar','display:none !important',0);
+        }
+      });
+    });

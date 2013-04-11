@@ -19,8 +19,15 @@ block content
           =instance.id
         span(style='margin-left:20px') 注册时间 #{moment(instance.CreatedAt).format('YYYY-MM-DD HH:mm')}
       .field
-        span.label 会员类别
+        span.label 会员类别:
         span=instance.levelText()
+      .field
+        span.label 有效期:
+        span=moment(instance.BeginDate).format('YYYY-MM-DD')
+        |至
+        span=moment(instance.ExpireDate).format('YYYY-MM-DD')
+        span.label 最大上传卷子数:
+        span=instance.MaxPaper
       .field
         span.label 姓名:
         span=instance.Name
@@ -51,10 +58,37 @@ block content
         span.label 学校:
         span=instance.School
       .field
+        span.label 学校类型:
+        span=instance.SchoolType ? '私立': '公立'
+      .field
         span.label 年级:
         span=instance.gradeText()
       .field
+        span.label 入学时间:
+        span=moment(instance.EnrollTime).format('YYYY年')
+      .field
         span.label 班级:
         span=instance.Class
+      .field
+        span.label 学号:
+        span=instance.StudentNumber
+      .field
+        span.label 出生年月:
+        span=moment(instance.Dob).format('YYYY-MM-DD')
+      .field
+        span.label 手机号码:
+        span=instance.Mobile
+      .field
+        span.label 家庭住址:
+        span=instance.Address
+      .field
+        span.label 邮编:
+        span=instance.ZipCode
+      .field
+        span.label 充值金额:
+        span #{instance.Amount}元
+      .field
+        span.label 备注:
+        span= instance.Comment
       .actions
         a(href='/customers/#{instance.id}/edit').btn.btn-orange 修改

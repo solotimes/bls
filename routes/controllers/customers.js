@@ -116,6 +116,8 @@ function doLoadRelated(instance,fn){
 function doSetRelated(fn,model,relateds){
   if(relateds && relateds.length){
     model.setRelated(relateds).done(fn);
+  }else{
+    fn();
   }
 }
 

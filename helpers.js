@@ -26,7 +26,12 @@ var RequestHelpers = {
 module.exports = function(app){
   app.locals = app.locals || [];
   extend(app.locals,{
-    moment: moment,
+    moment: function(date){
+      if(!Utils._.isDate(date) || date == 'Invalid Date')
+        return {format:function(){}};
+      else
+        return moment(date);
+    },
     models: models,
     paginate: pagination.helper,
     utils: Utils
