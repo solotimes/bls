@@ -41,7 +41,7 @@ append head
     });
 
 block content
-  .toolbar
+  .toolbar.customers
     a.btn.btn-green.btn-round(href='/customers/new' , data-type='add') 添加
     a.relative.btn.btn-green.btn-round(href='#' , data-type='batch-selected')
       |批量编辑
@@ -57,15 +57,49 @@ block content
       button.btn.btn-blue 应用
     a.btn.btn-green.btn-round(href='#' , data-type='refresh') 刷新
     a.btn.btn-green.btn-round(href='#' , data-type='delete-selected') 删除
-    a.btn.btn-green.btn-round(href='/customers.csv' , data-type='export') 导出
-    form(method='get').search
-      select(name='by')
-        option(value='UserName',selected= collection.by=='UserName') 用户名
-        option(value='Email' ,selected=collection.by=='Email') 邮箱
-        option(value='Name' ,selected=collection.by=='Name') 姓名
-        option(value='School ',selected=collection.by=='School') 学校
-      input(name='q',value=collection.q)
-      button(type='submit').btn.btn-blue 搜索
+    //- a.btn.btn-green.btn-round(href='/customers.csv' , data-type='export') 导出
+    form(method='get',name='filter-form',action=req.path).customer-filter
+      .row
+        label.gray 姓名
+        input(type='text',name='Name',value=collection.Name)
+        label.gray 性别
+        select(name='Gender')
+          option(value='',selected= utils._.isUndefined(collection.Gender))全部
+          option(value='1',selected= collection.Gender == 1)男
+          option(value='0',selected= collection.Gender == 0)女
+        label.gray 学校
+        input(type='text',name='School',value=collection.School)
+        a.btn.btn-green.pull-right(href='/customers.csv' , data-type='export') 导出
+      .row
+        label.gray 类别
+        select(name='CustomerRoleId')
+          option(value='',selected= !collection.CustomerRoleId) 全部
+          :qejs(collection=collection, models=models)
+            <% models.CustomerRole.findAll() -> roles %>
+              <% roles.forEach(function(role){ -%>
+                <option value="<%= role.id %>" <%= role.id == collection.CustomerRoleId ? 'selected' : '' %>><%= role.Name %></option>
+              <% }) -%>
+            <% <- -%>
+        label.gray.large 是否过期
+        select(name='Valid')
+          option(value='',selected= utils._.isUndefined(collection.Expired)) 全部
+          option(value='1',selected= collection.Valid==1) 有效
+          option(value='0',selected= collection.Valid==0) 过期
+        label.gray 年级
+        select(name='GradeId')
+          option(value='',selected= !collection.GradeId) 全部
+          :qejs(models=models,collection=collection)
+            <% models.Grade.findAll() -> grades %>
+              <% grades.forEach(function(grade){ -%>
+                <option value="<%= grade.id %>" <%= grade.id == collection.GradeId ? 'selected' : '' %>><%= grade.Name %></option>
+              <% }) -%>
+            <% <- -%>
+        label.gray 类型
+        select(name='SchoolType')
+          option(value='',selected= !!collection.SchoolType)全部
+          option(value='0',selected= collection.SchoolType==0)公立
+          option(value='1',selected= collection.SchoolType==1)私立
+        button(type='submit').pull-right.btn.btn-blue 搜索
   .main
     form#selects(method='post')
       input(type='hidden',name='_method',value='delete')
@@ -84,6 +118,7 @@ block content
             th 性别
             th 学校
             th 年级
+            th 到期时间
             th 最后登陆时间
             th.span20 操作
         tbody
@@ -100,9 +135,8 @@ block content
               td= model.Gender ? '男' : '女'
               td= model.School
               td= model.gradeText()
-              td
-                if model.LoginTime
-                  = moment(model.LoginTime).format('YYYY-MM-DD hh:mm:ss')
+              td= moment(model.ExpireDate).format('YYYY-MM-DD')
+              td= moment(model.LoginTime).format('YYYY-MM-DD hh:mm:ss')
               td
                 a(href='/customers/#{model.id}', data-type='view') 查看
                 a(data-type='delete', href='/customers/#{model.id}' , data-method='delete' , data-confirm='确定删除本记录?' , rel="nofollow") 删除
@@ -113,4 +147,4 @@ block content
                   else
                     |启用
     .pagination
-      != paginate(collection)
+      != paginate(collection,{action: req.path, params: collection.searchParams})

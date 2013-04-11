@@ -437,18 +437,22 @@ a,a:hover{
       margin-top: 30px;
       padding-left: 10px;
     }
-    &.questions{
+    &.questions,&.customers{
       margin-bottom: 15px;
       padding-bottom: 15px;
     }
   }
-  .question-filter{
+
+  .filter{
     height: auto;
     padding-left: 50px;
     border-left: 1px solid #ccc;
     width: 650px;
     float: right;
     font-size: 12px;
+    a{
+      padding: 0;
+    }
     .row{
       line-height: 30px;
       &.top{
@@ -479,6 +483,19 @@ a,a:hover{
       &.large{
         width: 396px;
       }
+    }
+  }
+  .question-filter{
+    .filter;
+  }
+  .customer-filter{
+    .filter;
+    width: 580px;
+    input{
+      width: 90px;
+    }
+    label.large{
+      min-width: 70px;
     }
   }
   .search{

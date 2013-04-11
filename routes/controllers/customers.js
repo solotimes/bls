@@ -1,5 +1,6 @@
 var models = require('../../models'),
     Sequelize = require('sequelize'),
+    Utils = Sequelize.Utils,
     utility = require('../logics/utility'),
     extend = require('extend'),
     iconv = require('iconv-lite'),
@@ -35,20 +36,37 @@ function dataParse(instance){
 
 exports.index = {
   html: function(req, res){
-    var q = (req.param('q') || '').trim();
-    var by = (req.param('by')||'').trim();
-    var where,searchParams={};
-    if(q.length && by.length && (by == 'UserName' || by == 'Email' || by == 'School' || by == 'Name')){
-      where = [ "Customers."+by+" LIKE ?", "%"+q+"%"];
-      searchParams.q=q;
-      searchParams.by=by;
-    }
+    var query={},searchParams={};
+    query.where = [];
+    query.order = '`CreatedAt` DESC';
+    query.include = ['Level','Grade','Role'];
 
-    models.Customer.pageAll({where:where,include:['Level','Grade','Role']},req.param('page'),req.param('per'),function(error,collection){
+    req.fetchParams(['Name','School'],function(name,value){
+      searchParams[name] = value;
+      query.where.push(Utils.format(['`Customers`.`'+name+'` LIKE ? ','%' + value + '%']));
+    });
+
+    req.fetchParams(['CustomerRoleId','GradeId','SchoolType','Gender'],function(name,value){
+      searchParams[name] = value;
+      query.where.push(Utils.format(['`Customers`.`'+name+'` = ? ',value]));
+    });
+
+    req.fetchParam('Valid',function(isValid){
+      searchParams['Valid'] = isValid;
+      if(isValid == 1){
+        query.where.push(Utils.format(['`Customers`.`ExpireDate` > ? ',moment().format('YYYY-MM-DD')]));
+      }else{
+        query.where.push(Utils.format(['`Customers`.`ExpireDate` < ? ',moment().format('YYYY-MM-DD')]));
+      }
+    });
+
+    query.where = query.where.join(' AND ');
+
+    models.Customer.pageAll(query,req.param('page'),req.param('per'),function(error,collection){
       if(error){
         return res.send(500,error);
       }
-        res.render('customers/index',{collection: extend(collection,searchParams)});
+        res.render('customers/index',{collection: extend(collection,searchParams,{searchParams: searchParams})});
     });
   },
   csv: function(req,res){
