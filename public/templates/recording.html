@@ -6,7 +6,7 @@
 		</div>
 		<div class='underline gray'>
 			<div class='actions pull-right' ng-show='!!paper.id'>
-				<button class='btn btn-blue' ng-bind="{true:'修改录音',false:'上传录音'}[!!paper.audio]"></button>
+				<button class='btn btn-blue' file-upload='paper.AudioPath' create-label='上传录音' modify-label='修改录音' ></button>
 				<button class='audio btn btn-orange' audio-src='paper.audio' ng-show='!!paper.audio'></button>
 			</div>
 			<label>年级:</label>

@@ -6,12 +6,13 @@
 			<button class="btn btn-cyan" ng-click='dump()' ng-show='paper.dumpable()'>存入试卷库</button>
 			<button class="btn btn-cyan" ng-show='!!paper.PaperId'>已入库</button>
 			<button class="btn btn-blue">推送用户</button>
-			<button class="btn btn-orange">解答录音</button>
+			<button class='btn btn-blue' file-upload='paper.AudioPath' create-label='上传录音' modify-label='修改录音' ></button>
+			<button class='audio btn btn-orange' audio-src='paper.audio' ng-show='!!paper.audio' playLabel='解答录音'></button>
 		</div>
 		<span paper-status="paper.Status"></span>
 		<span class='gray'>卷子ID: {{paper.id}}</span>
 		<span class='gray' ng-show='paper.$type == "CustomerPaper"'>录入: {{paper.assignedTo.Name}} {{paper.RecoredAt |  date:'yyyy-MM-dd' }}</span>
-		<span class='gray'>最后修改: </span>
+		<!-- <span class='gray'>最后修改: </span> -->
 		<h2 class="correct-rate blue"  ng-show='paper.$type == "CustomerPaper"'>正确率{{paper.CorrectRate}}%</h2>
 	</div>
 	<div class="paper-content">

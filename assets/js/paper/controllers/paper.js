@@ -1,4 +1,4 @@
-app.controller('PaperCtrl',['$scope','$http' ,'paper','modal',function(scope,http,paper,modal){
+app.controller('PaperCtrl',['$scope','$http' ,'paper','modal','$location',function(scope,http,paper,modal,location){
 	scope.$on('unload',function(e){
 		// if(scope.markingForm.$dirty){
 			// e.preventDefault();
@@ -24,6 +24,9 @@ app.controller('PaperCtrl',['$scope','$http' ,'paper','modal',function(scope,htt
 			paper.removeQuestion(question);
 		}
 	};
+	scope.$on('file-uploaded',function(){
+    paper.save();
+  });
 	scope.addNewQuestion = function(attrs){
 		attrs = attrs || {};
 		attrs.Order = paper.QuestionsTotal;
@@ -44,6 +47,7 @@ app.controller('PaperCtrl',['$scope','$http' ,'paper','modal',function(scope,htt
 	scope.save = function(){
 		paper.saveAllQuestions().then(function(){
 			paper.save();
+			location.path('/');
 		});
 	};
 	scope.dump = function(){

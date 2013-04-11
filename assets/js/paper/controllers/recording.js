@@ -36,6 +36,10 @@ app.controller('RecordingCtrl',['$scope','$http','paper','$location',function(sc
     location.path('/marking');
   });
 
+  scope.$on('file-uploaded',function(){
+    paper.save();
+  });
+
   scope.nextQuestion = function(){
     if(!scope.isLastQuestion()){
       scope.question = paper.questions[scope.question.Order+1];

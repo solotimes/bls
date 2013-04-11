@@ -70,6 +70,7 @@ module.exports = function(sequelize, DataTypes)
             values.customer = this.customer;
             values.pics = this.pics;
             values.assignedTo = this.assignedTo;
+            values.audio = this.AudioPath ? (config.uploadPath + this.AudioPath) : null;
             return values;
         },
         //导出到试卷库

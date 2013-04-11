@@ -421,4 +421,47 @@ return {
         });
     }
   };
+}])
+.directive('fileUpload', ['$parse', function($parse){
+  // Runs during compile
+  return {
+    restrict: 'A',
+    replace: true,
+    transclude: 'element',
+    template: '<span class="file-uploader"><input type="file" name="file" class="file" /><span class="label"/></span>',
+    link: function(scope, iElm, attrs) {
+      attrs.createLabel = attrs.createLabel || '上传';
+      attrs.modifyLabel = attrs.modifyLabel || '修改';
+      attrs.url = attrs.url || '/uploads';
+      attrs.prefix = attrs.prefix || '/upload/';
+      var getter = $parse(attrs.fileUpload);
+      var setter = getter.assign;
+      var label = iElm.find('.label');
+          file=iElm.find('.file');
+      scope.$watch(attrs.fileUpload,function(value){
+        if(value && value.length)
+          label.text(attrs.modifyLabel);
+        else
+          label.text(attrs.createLabel);
+      });
+
+      file.fileupload({
+              dataType: 'text',
+              url: attrs.url,
+              add: function(e,data){
+                label.text('上传中..');
+                file.hide();
+                data.submit();
+              },
+              done: function(e, data) {
+                file.show();
+                var path = (data.result || '').replace(attrs.prefix,'');
+                scope.$apply(function(){
+                  setter(scope,path);
+                });
+                scope.$emit('file-uploaded',path);
+              }
+          });
+    }
+  };
 }]);
