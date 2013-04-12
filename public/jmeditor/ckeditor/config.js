@@ -32,6 +32,17 @@ CKEDITOR.editorConfig = function( config ) {
   config.extraPlugins = 'upload,jme';
   config.dialog_backgroundCoverOpacity = 0;
   // config.enterMode = CKEDITOR.ENTER_BR;
+  CKEDITOR.config.specialChars =
+   [
+     '×','+','-','÷','≤','≥','∞',"≈",'≠','±',
+     '∠','∟','⊥','⦿','∥','△','□',
+     '∽','≌','□','%','‰','‱',
+     'ɑ','β','θ','ɣ','ω','λ','π',
+     '①','②','③','④','⑤','⑥','⑦','⑧','⑨',
+     '∵','∴','※','℃',
+      "¥", "←",'→','↑', '↓',"⇔", "⇑","⇓","⇒",
+      '⎨','⎬','⎧','⎣','⎦','⎫'
+   ];
 };
 
 CKEDITOR.on('dialogDefinition', function(e) {
