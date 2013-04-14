@@ -1,0 +1,107 @@
+extends ../layout
+append head
+  link(rel="stylesheet",href="/jmeditor/mathquill-0.9.1/mathquill.css")
+  !=css('facebox')
+  !=js('papers')
+  script(src='/jmeditor/JMEditor.js')
+  script
+    window.report = !{JSON.stringify(report)};
+block sidebar
+  h1 搜索统计
+  ul.sidenav
+    li
+      a(href='/statistics/report1') 学生错题目知识点综合统计
+    li
+      a(href='/statistics/report2') 学校年级错题统计
+    li.current
+      a(href='/statistics/report3') 错题用户名单统计
+    li
+      a(href='/statistics/report4') 错题知识点用户名单统计
+    li
+      a(href='/statistics/report5') 卷子知识点题目分布
+block content
+  .report-form.report1
+    h1 错题用户名单统计:
+    form(method='get',action=req.path).box
+      .row
+        label
+          span.orange.star *
+          span.hidden 填
+          |题目:
+        input(type='text',name='id',value='')
+        script
+          $('input[name="id"]').tokenInput('/questions.json',{
+              prePopulate: window.report.question && [window.report.question],
+              theme: 'facebook',
+              hintText: '请输入提干进行搜索...',
+              noResultsText: '结果为空',
+              searchingText: '搜索中',
+              propertyToSearch: 'Excerpt',
+              resultsLimit: 20,
+              tokenLimit: 1
+            });
+        label.gray 条件:
+        select(name='Condition')
+          option(value='',selected= !searchParams.Condition) 全部
+          option(value='1',selected= searchParams.Condition == 1) 1
+          option(value='2',selected= searchParams.Condition == 2) 2
+        label.gray 问法:
+        select(name='Method')
+          option(value='',selected= !searchParams.Method) 全部
+          option(value='1',selected= searchParams.Method == 1) 1
+          option(value='2',selected= searchParams.Method == 2) 2
+        input.type(type='hidden',value='',name='type')
+        button(type='submit').btn.btn-blue 确定
+        button.export.btn.btn-orange 导出
+  .main.customer_records.customer_report
+    .report
+      if report.customers
+        h1.orange
+          |错误率: #{Math.round(100 * report.question.wcount / report.question.qcount)}%
+          |错误人数: #{report.question.ccount}
+        h1.orange
+          |包含知识点:&nbsp;
+          :qejs(report=report)
+            <% report.question.getKnowledges() -> knowledges %>
+              <% knowledges.forEach(function(knowledge){ -%>
+                <span><%= knowledge.Name %></span>
+              <% }) -%>
+            <% <- %>
+        table
+          thead
+            tr
+              th 会员ID
+              th 会员类别
+              th 姓名
+              th 身份
+              th 用户名
+              th 邮箱
+              th 性别
+              th 学校
+              th 年级
+              th 到期时间
+              th 最后登陆时间
+              th
+          tbody
+            each model, i in report.customers
+              tr(class=((i % 2 == 0) ? 'odd' : 'even') + (model.level.Order == 4 ? ' highlight' : ''))
+                td= model.id
+                td= model.levelText()
+                td= model.Name
+                td= model.roleText()
+                td= model.UserName
+                td= model.Email
+                td= model.Gender ? '男' : '女'
+                td= model.School
+                td= model.gradeText()
+                td= moment(model.ExpireDate).format('YYYY/MM/DD')
+                td= moment(model.LoginTime).format('YYYY/MM/DD')
+                td
+                  a(data-type='view',href='/customers/#{model.id}',target='_blank')查看
+  script
+    $('.export').click(function(e){
+      e.preventDefault();
+      var form = $(e.currentTarget).parents('form');
+      form.find('.type').val('export')
+      form.submit();
+    });

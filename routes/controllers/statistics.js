@@ -232,3 +232,63 @@ exports.report2 = function(req,res,next){
     next(error);
   });
 };
+
+
+exports.report3 = function(req,res,next){
+  var report = {};
+  var knowledges;
+  var searchParams = {};
+  var query = {};
+  var id = req.param('id');
+  if(!id)
+    res.render('statistics/report3',{report:report,searchParams:searchParams});
+  else
+    Q.when(models.Question.findAll({
+      where:{
+        id:id
+      },
+      include: ['CustomerPaper'],
+      join: ' LEFT OUTER JOIN `Customers` ON `Customers`.`id`=`CustomerPapers`.`CustomerId` ',
+      addAttributes: ' sum(case when `Wrong` = 1  then 1 else 0 end) as `wcount`, '+
+                     ' count(DISTINCT `CustomerPapers`.`id`) as `qcount` ,' +
+                     ' count(DISTINCT case when `Wrong` = 1 then `Customers`.`id` else NULL end) as ccount',
+      group: '`Questions`.`id`'
+    }))
+    .then(function(questions){
+      report.question=questions[0];
+      return Q.when(models.Customer.findAll({
+        include: ['CustomerPaper','Level','Grade','Role'],
+        join: ' LEFT OUTER JOIN `CustomerPapersQuestions` ON `CustomerPapers`.`id` = `CustomerPapersQuestions`.`CustomerPaperId` ',
+        group: '`Customers`.`id`',
+        where: '`CustomerPapersQuestions`.`QuestionId` = "'+id+'" AND `CustomerPapersQuestions`.`Wrong` = 1'
+      }));
+    })
+    .then(function(customers){
+      report.customers = customers;
+      if(req.param('type') == 'export'){
+        var data=[['会员ID','会员类别','姓名','身份','用户名','邮箱','性别','学校','年级','到期时间','最后登陆时间']];
+        report.customers.forEach(function(customer){
+          data.push([
+            customer.id,
+            customer.levelText(),
+            customer.Name,
+            customer.roleText(),
+            customer.UserName,
+            customer.Email,
+            customer.Gender ? '男' : '女',
+            customer.School,
+            customer.gradeText(),
+            customer.ExpireDate ? moment(customer.ExpireDate).format('YYYY/MM/DD') : '',
+            customer.LoginTime ? moment(customer.LoginTime).format('YYYY/MM/DD') : ''
+          ]);
+        });
+        exportExcel(res,'错题用户名单统计',data);
+      }
+      else
+        res.render('statistics/report3',{report:report,searchParams:searchParams});
+    })
+    .fail(function(error){
+      logger.log(error);
+      next(error);
+    });
+};
