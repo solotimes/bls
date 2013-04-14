@@ -29,7 +29,7 @@ app.controller('ReportCtrl',['$scope','$http','paper','knowledgeTree','modal',fu
 
 
 }]);
-app.controller('CustomerReportCtrl',['$scope','$http','paper','knowledgeTree','modal',function(scope,http,paper,knowledgeTree){
+app.controller('CustomerReportCtrl',['$scope','$http','paper','knowledgeTree','modal',function(scope,http,paper,knowledgeTree,modal){
   // scope.$watch('paper.questions',function(questions){
   var report = window.report;
   if(report){
@@ -52,4 +52,12 @@ app.controller('CustomerReportCtrl',['$scope','$http','paper','knowledgeTree','m
       row[5] = questions;
     });
   });
+}]);
+
+
+app.controller('StatisticsReportCtrl',['$scope','$http','paper','modal',function(scope,http,paper,modal){
+  scope.report = window.report;
+  scope.viewQuestion = function(question){
+    modal.show("/templates/question-modal.html",{question:question,mode:0});
+  };
 }]);

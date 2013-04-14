@@ -1,0 +1,109 @@
+extends ../layout
+append head
+  link(rel="stylesheet",href="/jmeditor/mathquill-0.9.1/mathquill.css")
+  !=css('facebox')
+  !=js('papers')
+  script(src='/jmeditor/JMEditor.js')
+  script
+    window.report = !{JSON.stringify(report)};
+block sidebar
+  h1 搜索统计
+  ul.sidenav
+    li
+      a(href='/statistics/report1') 学生错题目知识点综合统计
+    li.current
+      a(href='/statistics/report2') 学校年级错题统计
+    li
+      a(href='/statistics/report3') 错题用户名单统计
+    li
+      a(href='/statistics/report4') 错题知识点用户名单统计
+    li
+      a(href='/statistics/report5') 卷子知识点题目分布
+block content
+  .report-form.report1
+    h1 学校年级错题统计:
+    form(method='get',action=req.path).box
+      .row
+        label
+          span.orange.star *
+          span.hidden 填
+          |学校:
+        input(name='School',type='text',value=searchParams.School)
+        label 年级:
+        select(name='GradeId')
+          option(value='',selected= !searchParams.GradeId) 全部
+          :qejs(models=models,searchParams=searchParams)
+            <% models.Grade.findAll() -> grades %>
+              <% grades.forEach(function(grade){ -%>
+                <option value="<%= grade.id %>" <%= grade.id == searchParams.GradeId ? 'selected' : '' %>><%= grade.Name %></option>
+              <% }) -%>
+            <% <- -%>
+      .row
+        label 知识点:
+        input(type='text',name='KnowledgeIds',value='')
+        if searchParams.KnowledgeIds
+          :qejs(models=models,ids=searchParams.KnowledgeIds)
+            <script>
+              <% models.Knowledge.findAll({where: {id:ids} }) -> knowledges %>
+                window.preloadKnowledges = <%-JSON.stringify(knowledges)%>;
+              <% <- -%>
+            </script>
+        script
+          $('input[name="KnowledgeIds"]').tokenInput('/knowledges',{
+              prePopulate: window.preloadKnowledges,
+              theme: 'facebook',
+              hintText: '请输入知识点进行搜索...',
+              noResultsText: '结果为空',
+              searchingText: '搜索中',
+              propertyToSearch: 'Name'
+            });
+        label.gray 条件:
+        select(name='Condition')
+          option(value='',selected= !searchParams.Condition) 全部
+          option(value='1',selected= searchParams.Condition == 1) 1
+          option(value='2',selected= searchParams.Condition == 2) 2
+        label.gray 问法:
+        select(name='Method')
+          option(value='',selected= !searchParams.Method) 全部
+          option(value='1',selected= searchParams.Method == 1) 1
+          option(value='2',selected= searchParams.Method == 2) 2
+        input.type(type='hidden',value='',name='type')
+        button(type='submit').btn.btn-blue 确定
+        button.export.btn.btn-orange 导出
+  .main.customer_records.customer_report
+    .report(ng-app='Paper',ng-controller='StatisticsReportCtrl')
+      if report.questions
+        h1.orange 错题总数: #{report.questions.length}
+        h1 错题列表:
+        table(style='table-layout: fixed;')
+          thead
+            tr
+              th.span50px.center 类型
+              th.span50px.center 复合
+              th 提干
+              th.span50px.center  错误率
+              th.span50px.center  错误数量
+              th.span100px.center 修改时间
+              th.span100px.center 录入时间
+              th.span100px
+          tbody
+            each question,i in report.questions
+              tr
+                td=models.Question.Types[question.Type]
+                td.center.orange=question.knowledges && question.knowledges.length ? '复' : ''
+                td(style='overflow:hidden')
+                  span.math-html!=question.Body
+                td.center.red #{question.wrate}%
+                td.center.red=question.wcount
+                td=moment(question.UpdatedAt).format('YYYY/MM/DD')
+                td=moment(question.CreatedAt).format('YYYY/MM/DD')
+                td
+                  a(ng-click='viewQuestion(report.questions[#{i}])',data-type='view')查看
+  script
+    $('.math-html').mathquill();
+    $('.export').click(function(e){
+      e.preventDefault();
+      var form = $(e.currentTarget).parents('form');
+      form.find('.type').val('export')
+      form.submit();
+    });

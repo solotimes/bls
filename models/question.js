@@ -126,6 +126,12 @@ module.exports = function(sequelize, DataTypes)
             }
             return p.then(function(){return question;});
           }
-        },STATUS)
+        },STATUS,{
+          Types:{
+            0: '选择题',
+            1: '填空题',
+            2: '主观题'
+          }
+        })
       });
 };

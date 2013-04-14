@@ -65,7 +65,7 @@ module.exports = function(sequelize, DataTypes)
         Mobile: {type:DataTypes.STRING}, //手机号码
         Address: {type:DataTypes.STRING}, //地址
         ZipCode: {type:DataTypes.STRING}, //邮编
-        Amount: {Type:DataTypes.FLOAT}, //储值金额
+        Amount: {type:DataTypes.FLOAT}, //储值金额
         Comment: {type:DataTypes.TEXT} //备注
     },{
           instanceMethods: {

@@ -25,6 +25,7 @@
     "qejs": "~3.0.5",
     "querystring": "0.2.x",
     "iconv-lite": "~0.2.7",
-    "require-all": "*"
+    "require-all": "*",
+    "node-xlsx": "~0.2.1"
   }
 }

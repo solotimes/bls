@@ -82,5 +82,3 @@ GeneratedPaper.hasMany(Question);
 GeneratedPaper.hasMany(CustomerPaperPic,{as:'Pics'});
 CustomerPaperPic.belongsTo(GeneratedPaper);
 Question.hasMany(GeneratedPaper);
-GeneratedPaper.hasMany(GeneratedPaperResult);
-Question.hasMany(GeneratedPaperResult);

@@ -1,3 +1,7 @@
+var Sequelize = require('sequelize');
+var Utils = Sequelize.Utils;
+var fs = require('fs');
+
 var lines = [
 "第一章 数的整除,1.1 整数和整除的意义",
 "第一章 数的整除,1.2 因数和倍数",
@@ -285,34 +289,50 @@ var lines = [
 "第二十三章 概率初步,23.4 概率计算举例,与几何图形有关的概率问"
 ];
 
-var points=[],tree={name:"root",children:[]};
-
 function find(level,name){
-	var sel = level.filter(function(node){
-		return node.name === name;
-	});
-	if(sel.length){
-		return sel[0];
-	}
-	else{
-		return false;
-	}
+  var sel = level.filter(function(node){
+    return node.name === name;
+  });
+  if(sel.length){
+    return sel[0];
+  }
+  else{
+    return false;
+  }
 }
 
+exports.records = [];
+exports.tree = {name:"root",children:[]};
 lines.forEach(function(line,i){
-	var cols = line.split(',');
-	var point = cols.splice(-1,1);
-	var deepNode = cols.reduce(function(node,col){
-		var subnode = find(node.children,col);
-		if(!subnode){
-			subnode = {name: col,children:[],pointIds:[]};
-			node.children.push(subnode);
-		}
-		return subnode;
-	},tree);
-	points.push(point[0]);
-	deepNode.pointIds.push(i+1);
-});
-tree.points= points;
+  var cols = line.split(',');
+  var point = cols.splice(-1,1);
+  var deepNode = cols.reduce(function(node,col){
+    var subnode = find(node.children,col);
+    if(!subnode){
+      subnode = {name: col,children:[],pointIds:[]};
+      node.children.push(subnode);
+    }
+    return subnode;
+  },exports.tree);
 
-console.log(JSON.stringify(tree,null,'  '));
+  var record = {
+    Level1: cols[0],
+    Level2: cols.length > 1 ? cols[1] : point,
+    Name: point,
+    Difficulty: 3
+  };
+  exports.records.push(record);
+  deepNode.pointIds.push(i+1);
+});
+
+if (!module.parent) {
+  var models = require('./models');
+  models.Knowledge.sync({force:true}).success(function(){
+    var chainer = new Sequelize.Utils.QueryChainer();
+    exports.records.forEach(function(record){
+      chainer.add(models.Knowledge,'create',[record]);
+    });
+    chainer.runSerially();
+  });
+  fs.writeFileSync(__dirname + '/public/knowledge-tree.json',JSON.stringify(exports.tree,null,'  '));
+}

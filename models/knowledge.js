@@ -11,6 +11,8 @@ module.exports = function(sequelize, DataTypes)
     return sequelize.define('Knowledge', {
         Name: {type:DataTypes.STRING},
         //可实现性
-        Difficulty: {type:DataTypes.INTEGER}
+        Difficulty: {type:DataTypes.INTEGER},
+        Level1: {type:DataTypes.STRING},
+        Level2: {type:DataTypes.STRING}
     });
 }

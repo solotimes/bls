@@ -109,7 +109,7 @@ exports.index = {
         return res.send(500,error);
       }
         var results = (collection || []).map(function(model){
-          return {name:model.Name, id:model.id};
+          return {Name:model.Name, id:model.id};
         });
         res.send(results);
     });

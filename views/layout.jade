@@ -45,8 +45,8 @@ html.no-js
                 a(href='/papers') 试卷模板管理
               li(class=/^\/questions/.test(req.url) ? 'current' : '')
                 a(href='/questions') 题目库管理
-              li
-                a(href='#') 搜索统计
+              li(class=/^\/statistics/.test(req.url) ? 'current' : '')
+                a(href='/statistics/') 搜索统计
               li
                 a(href='#') 系统设置
       block container

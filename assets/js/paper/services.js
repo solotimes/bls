@@ -423,8 +423,8 @@ angular.module('paper.services', [])
     var res =  !!question.id &&
            !this.isBlank(question.Body) &&
            !this.isBlank(question.Solution) &&
-           !this.isBlank(question.Condition) &&
-           !this.isBlank(question.Method) &&
+           // !this.isBlank(question.Condition) &&
+           // !this.isBlank(question.Method) &&
            !this.isBlank(question.Answer) &&
            !this.isBlank(question.knowledges);
     // console.log(question.Order,'Body',!this.isBlank(question.Body));

@@ -135,18 +135,18 @@ function seed(){
         chainer.runSerially().done(fn);
       }],
       CustomerPapers: ['Customers',function(fn,results){
-        // var customers = results.Customers;
-        // var papers = [];
-        // for(var i = 0; i < 40 ; i++){
-        //     var cid = Math.round(Math.random()*(customers.length-1));
-        //     papers.push({
-        //         Name:'测试试卷'+i,
-        //         CustomerId: customers[cid].id,
-        //         CreatedAt:utility.getCurrentTime(),
-        //         CodeName: moment().format('YYYYMDD-X')
-        //     });
-        // }
-        // createAll(CustomerPaper,papers).done(fn);
+        var customers = results.Customers;
+        var papers = [];
+        for(var i = 0; i < 40 ; i++){
+            var cid = Math.round(Math.random()*(customers.length-1));
+            papers.push({
+                Name:'测试试卷'+i,
+                CustomerId: customers[cid].id,
+                CreatedAt:utility.getCurrentTime(),
+                CodeName: moment().format('YYYYMDD-X')
+            });
+        }
+        createAll(CustomerPaper,papers).done(fn);
         fn();
       }],
       CustomerPaperPics: function(fn){
@@ -163,11 +163,10 @@ function seed(){
         createAll(CustomerPaperPic,pics).done(fn);
       },
       Knowledges: function(fn){
-        var json = JSON.parse(fs.readFileSync(__dirname + '/knowledges.json'));
-        points = json.points;
+        var records = require('./knowledge-tree').records;
         var chainer = new Sequelize.Utils.QueryChainer();
-        points.forEach(function(point,i){
-          chainer.add(Knowledge,'create',[{Name:point,Difficulty:3}]);
+        records.forEach(function(record,i){
+          chainer.add(Knowledge,'create',[record]);
         });
         chainer.runSerially().done(fn);
       }

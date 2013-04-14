@@ -63,3 +63,8 @@ questions.map('get','statistics',controllers.questions.statistics);
 
 var knowledges = app.resource('knowledges',controllers.knowledges);
 var uploads = app.resource('uploads',controllers.uploads);
+
+app.get('/statistics/',controllers.statistics.report1);
+for(var action in controllers.statistics){
+  app.get('/statistics/'+action, controllers.statistics[action]);
+}
