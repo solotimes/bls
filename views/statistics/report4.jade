@@ -4,8 +4,6 @@ append head
   !=css('facebox')
   !=js('papers')
   script(src='/jmeditor/JMEditor.js')
-  script
-    window.report = !{JSON.stringify(report)};
 block sidebar
   h1 搜索统计
   ul.sidenav
@@ -13,33 +11,40 @@ block sidebar
       a(href='/statistics/report1') 学生错题目知识点综合统计
     li
       a(href='/statistics/report2') 学校年级错题统计
-    li.current
-      a(href='/statistics/report3') 错题用户名单统计
     li
+      a(href='/statistics/report3') 错题用户名单统计
+    li.current
       a(href='/statistics/report4') 错题知识点用户名单统计
     li
       a(href='/statistics/report5') 卷子知识点题目分布
 block content
   .report-form.report1
-    h1.underline-dashed 错题用户名单统计:
+    h1.underline-dashed 错题知识点用户名单统计:
     form(method='get',action=req.path).box
       .row
         label
           span.orange.star *
           span.hidden 填
-          |题目:
-        input(type='text',name='id',value='')
-        script
-          $('input[name="id"]').tokenInput('/questions.json',{
-              prePopulate: window.report.question && [window.report.question],
-              theme: 'facebook',
-              hintText: '请输入提干进行搜索...',
-              noResultsText: '结果为空',
-              searchingText: '搜索中',
-              propertyToSearch: 'Excerpt',
-              resultsLimit: 20,
-              tokenLimit: 1
-            });
+          |知识点:
+          input(type='text',name='KnowledgeId',value='')
+          if searchParams.KnowledgeId
+            :qejs(models=models,id=searchParams.KnowledgeId)
+              <script>
+                <% models.Knowledge.findAll({where: {id:id} }) -> knowledges %>
+                  window.preloadKnowledges = <%-JSON.stringify(knowledges)%>;
+                <% <- -%>
+              </script>
+          script
+            $('input[name="KnowledgeId"]').tokenInput('/knowledges',{
+                prePopulate: window.preloadKnowledges,
+                theme: 'facebook',
+                hintText: '请输入知识点进行搜索...',
+                noResultsText: '结果为空',
+                searchingText: '搜索中',
+                propertyToSearch: 'Name',
+                resultsLimit: 20,
+                tokenLimit: 1
+              });
         label.gray 条件:
         select(name='Condition')
           option(value='',selected= !searchParams.Condition) 全部
@@ -57,16 +62,9 @@ block content
     .report
       if report.customers
         h1.orange
-          |错误率: #{Math.round(100 * report.question.wcount / report.question.qcount)}%
-          |错误人数: #{report.question.ccount}
-        h1.orange
-          |包含知识点:&nbsp;
-          :qejs(report=report)
-            <% report.question.getKnowledges() -> knowledges %>
-              <% knowledges.forEach(function(knowledge){ -%>
-                <span><%= knowledge.Name %></span>
-              <% }) -%>
-            <% <- %>
+          |错误率: #{Math.round(100 * report.wcount / report.qcount)}%
+          |错误人数: #{report.ccount}
+        h1 错题用户名单:
         table
           thead
             tr

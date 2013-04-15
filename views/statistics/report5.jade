@@ -1,0 +1,94 @@
+extends ../layout
+append head
+  - locals.bodyClass = 'report1'
+  link(rel="stylesheet",href="/jmeditor/mathquill-0.9.1/mathquill.css")
+  link(rel="stylesheet",href="/stylesheets/jquery-ui.css")
+  script(src='/javascripts/jquery.ui.datepicker.min.js')
+  !=css('facebox')
+  !=js('papers')
+  script(src='/jmeditor/JMEditor.js')
+  script
+    window.report = !{JSON.stringify(report)};
+block sidebar
+  h1 搜索统计
+  ul.sidenav
+    li
+      a(href='/statistics/report1') 学生错题目知识点综合统计
+    li
+      a(href='/statistics/report2') 学校年级错题统计
+    li
+      a(href='/statistics/report3') 错题用户名单统计
+    li
+      a(href='/statistics/report4') 错题知识点用户名单统计
+    li.current
+      a(href='/statistics/report5') 卷子知识点题目分布
+block content
+  .report-form.report1
+    h1.underline-dashed 卷子知识点题目分布:
+    form(method='get',action=req.path).box.box-inline
+      .row
+        label 标题:
+        input(type='text',value=searchParams.Name,name='Name',placeholder='输入关键字')
+        button(type='sumit').btn.btn-blue 确定
+    form(method='get',action=req.path).box.box-inline
+      .row
+        label 年级:
+        select(name='GradeId')
+          option(value='',selected= !searchParams.GradeId) --选择年级--
+          :qejs(models=models,searchParams=searchParams)
+            <% models.Grade.findAll() -> grades %>
+              <% grades.forEach(function(grade){ -%>
+                <option value="<%= grade.id %>" <%= grade.id == searchParams.GradeId ? 'selected' : '' %>><%= grade.Name %></option>
+              <% }) -%>
+            <% <- -%>
+        button(type='sumit').btn.btn-blue 确定
+    form(method='get',action=req.path).box.box-inline
+      .row
+        label 性质:
+        select(name='Type')
+          option(value='',selected= !searchParams.Type) --选择性质--
+          each type,value in models.Paper.Types
+            option(value=value,selected= searchParams.Type == value)=type
+        button(type='sumit').btn.btn-blue 确定
+    if searchParams.GradeId || searchParams.Type || searchParams.Name
+      form.inline-block
+        input(type='hidden',name='export',value='true')
+        input(type='hidden',name='GradeId',value=searchParams.GradeId)
+        input(type='hidden',name='Type',value=searchParams.Type)
+        button(type='sumit').btn.btn-orange 导出
+  .main.customer_records.customer_report
+    if report.knowledges
+      .report
+        h1
+          span.orange
+            if searchParams.GradeId
+              | 年级:
+              :qejs(models=models,searchParams=searchParams)
+                <% models.Grade.find(searchParams.GradeId) -> grade %>
+                  <%= grade.Name %>
+                <% <- -%>
+            else if searchParams.Name
+              | 标题: #{searchParams.Name}
+            else if searchParams.Type
+              | 性质: #{models.Paper.Types[parseInt(searchParams.Type)]}
+        h1 卷子知识点分布:
+        table(style='table-layout: fixed;')
+          thead
+            tr
+              th 分类
+              th 子分类
+              th 知识点
+              th.span100px.center 出现率
+              th.span100px.center 单选(分)
+              th.span100px.center 填空(分)
+              th.span100px.center 主管(分)
+          tbody
+            each knowledge,i in report.knowledges
+              tr
+                td= knowledge.Level1
+                td= knowledge.Level2
+                td= knowledge.Name
+                td.orange.center=Math.round(100 * knowledge.pcount/report.paperCount) + '%'
+                td.green.center=knowledge.t0count * 3
+                td.green.center=knowledge.t1count * 3
+                td.green.center=knowledge.t2count * 8

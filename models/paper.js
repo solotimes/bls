@@ -78,7 +78,9 @@ module.exports = function(sequelize, DataTypes)
                       });
             }
           },
-          STATUS
+          STATUS,{
+            Types:["增加练习", "月考", "期中", "期末", "初三中考模拟", "中考真题"]
+          }
           )
       });
 };
