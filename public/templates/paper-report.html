@@ -1,0 +1,38 @@
+<div class="inner view report">
+	<div class="paper-info underline-dashed">
+		<div  ng-hide='readonly' class="buttons pull-right">
+			<a ng-click='window.close()' class="btn">关闭</a>
+		</div>
+		<span paper-status="paper.Status"></span>
+		<span class='blue large'>试卷库</span>
+		<span class='gray'>卷子ID: {{paper.id}}</span>
+		<h1 class='center' style='clear:both'>{{paper.GradeName()}}  &nbsp; &nbsp; <b>{{paper.Name}}</b></h1>
+	</div>
+	<div class="paper-content">
+
+	</div>
+	<div class="paper-report">
+		<table>
+			<thead>
+				<tr>
+					<th>分类</th>
+					<th>子类</th>
+					<th>知识点</th>
+					<th class='span100px center'>单选(分)</th>
+					<th class='span100px center'>填空(分)</th>
+					<th class='span100px center'>主管(分)</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat='knowledge in knowledges'>
+					<td>{{knowledge.Level1}}</td>
+					<td>{{knowledge.Level2}}</td>
+					<td>{{knowledge.Name}}</td>
+					<td class='center orange'>{{knowledge.counts[0]*3}}</td>
+					<td class='center orange'>{{knowledge.counts[1]*3}}</td>
+					<td class='center orange'>{{knowledge.counts[2]*8}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
