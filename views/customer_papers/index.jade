@@ -21,17 +21,44 @@ append head
           $('form#select').submit();
         }
       })
+      $(document).on('click','a[data-type=batch-selected]',function(e){
+        e.preventDefault();
+        var left,top;
+        var offset = $(this).offset();
+        $('#batch-popup').toggle().css('left',offset.left).css('top',offset.top+ $(this).height() + 10);
+      });
+      $(document).on('click','#batch-popup button',function(){
+        if(!$('input[name="ids[]"]:checked').length){
+          alert('请先选择需要编辑的记录.');
+          return false;
+        }
+        //- $('form#selects').attr('action','/customer_papers/assign');
+        $('form#selects input[name=_method]').val('put');
+        $('form#selects input[name=adminId]').val($('#batch-popup').find('select').val());
+        $('form#selects').submit();
+      });
     });
 
 block content
   .toolbar
     //- a.btn.btn-green.btn-round(href='#' , data-type='add') 录入
-    //- if currentUser.checkRoles(['分配员'])
-      //- a.btn.btn-green.btn-round(href='#' , data-type='batch') 分配录入员
+    if currentUser.checkRoles(['分配员'])
+      a.relative.btn.btn-green.btn-round(href='#' ,data-type='batch-selected')
+        |分配录入员
+      #batch-popup
+        label 分配录入员:
+        select
+          :qejs(models=models)
+            <% models.Admin.findAll({where:{'AdminRoles.Name':'录入员'},include: ['Roles']}) -> admins %>
+              <% admins.forEach(function(admin){ -%>
+                <option value="<%= admin.id %>"><%= admin.Name %></option>
+              <% }) -%>
+            <% <- -%>
+        button.btn.btn-blue 应用
     a.btn.btn-green.btn-round(href='#' , data-type='refresh') 刷新
     if currentUser.checkRoles(['分配员'])
       a.btn.btn-green.btn-round(href='#' , data-type='delete-selected') 删除
-    form(method='get').search
+    form#s(method='get').search
       select(name='by')
         option(value='Name',selected=collection.by=='Name') 试卷标题
         option(value='CodeName' ,selected=collection.by=='CodeName') 试卷编号
@@ -41,8 +68,9 @@ block content
       input(name='q',value='#{collection.q||''}')
       button(type='submit').btn.btn-blue 搜索
   .main
-    form#select(method='post' ,action='/customer_papers')
+    form#selects(method='post' ,action='/customer_papers')
       input(type='hidden',name='_method',value='delete')
+      input(type='hidden',name='adminId',value='')
       table
         thead
           tr
@@ -68,7 +96,7 @@ block content
               td
                 span.status(class='status-#{model.Status}')=model.statusText()
               td
-                if model.assignedTo
+                if model.assignedTo && model.assignedTo.Name
                   =model.assignedTo.Name
                 else
                   |未分配

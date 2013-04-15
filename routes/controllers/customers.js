@@ -250,7 +250,7 @@ exports.update = function(req, res){
       req.customer.setAttributes(instance);
       errors = req.customer.validate();
       if(errors){
-        console.log(errors);
+        logger.log(errors);
         return fn('填写内容错误');
       }
       req.customer.save().done(fn);

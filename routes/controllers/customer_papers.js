@@ -222,7 +222,26 @@ exports.show = {
 };
 
 exports.assign = function(req,res){
-
+  var ids = req.param('ids'),
+    adminId= req.param('adminId');
+  if(!ids || !adminId || ids.length === 0){
+    res.redirect('back');
+  }
+  else{
+    models.CustomerPaper.findAll({where:{id: ids}}).success(function(collection){
+      var chainer = new Sequelize.Utils.QueryChainer();
+      collection.forEach(function(m) {
+          chainer.add(m.updateAttributes({AdminId:adminId}));
+      });
+      return chainer.run().success(function(){
+        req.flash('success','更新成功!');
+        res.redirect('back');
+      }).fail(function(error){
+        logger.log(error);
+        res.redirect('back');
+      });
+    });
+  }
 };
 
 exports.update = function(req, res ,next){

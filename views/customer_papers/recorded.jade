@@ -50,8 +50,8 @@ block content
               td
                 span.status(class='status-#{model.Status}')=model.statusText()
               td
-                if model.assignedto
-                  =model.assignedto.Name
+                if model.assignedTo && model.assignedTo.Name
+                  =model.assignedTo.Name
                 else
                   |未分配
               td= model.customer.Name
