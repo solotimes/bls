@@ -1,0 +1,18 @@
+.info
+  span 用户: #{instance.UserName}
+  span 邮箱: #{instance.Email}
+  span 姓名: #{instance.Gender ? '男' : '女'}
+  span 身份: #{instance.roleText()}
+  span
+      | 有效期:
+      = moment(instance.BeginDate).format('YYYY-MM-DD')
+      |-
+      = moment(instance.ExpireDate).format('YYYY-MM-DD')
+  span 学校: #{instance.School}
+  span 年级: #{instance.gradeText()}
+  span 类别: #{instance.levelText()}
+  span 上传#{customerPapers.length}张卷子
+  - var finishedCount = customerPapers.filter(function(cp){return cp.Status == 6 || cp.Status == 7}).length;
+  span 完成解答#{finishedCount}张
+  - var untouchedCount = customerPapers.filter(function(cp){return cp.Status == 0}).length;
+  span 未处理#{untouchedCount}张

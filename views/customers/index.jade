@@ -138,9 +138,9 @@ block content
               td= moment(model.ExpireDate).format('YYYY-MM-DD')
               td= moment(model.LoginTime).format('YYYY-MM-DD hh:mm:ss')
               td
-                a(href='/customers/#{model.id}', data-type='view') 查看
+                a(href='/customers/#{model.id}', data-type='view' ,target='_blank') 查看
                 a(data-type='delete', href='/customers/#{model.id}' , data-method='delete' , data-confirm='确定删除本记录?' , rel="nofollow") 删除
-                a(data-type='edit'  ,href='/customers/#{model.id}/edit') 编辑
+                a(data-type='edit'  ,href='/customers/#{model.id}/edit',target='_blank') 编辑
                 a(data-type='toggle-enabled', href='/customers/#{model.id}/toggle_enabled', data-method='put',data-confirm='确定禁用本用户?' )
                   if model.Enabled
                     |禁用

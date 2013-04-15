@@ -39,6 +39,9 @@
       $.facebox.settings.closeImage = '/img/closelabel.png';
       $.facebox.settings.loadingImage = '/img/loading.gif';
     }
+    $('a.close').click(function(){
+      window.close();
+    });
   });
 
   function getCaretPosition(editableDiv) {
@@ -99,4 +102,5 @@
     if(!!ch_x || !!ch_y)
       return {x:ch_x,y:ch_y};
   };
+
 })(window.jQuery);

@@ -35,10 +35,6 @@ form(action= !instance.isNewRecord ? '/admins/#{instance.id}' : '/admins',method
           </label>
         <% }) -%>
       <% <- %>
-    //- each role in roles
-    //-   label
-    //-     input(type='checkbox',name='roleIds[]',value=role.id,checked= (instance.rolesList().indexOf(role.Name)!=-1))
-    //-     =role.Name
   .actions
     if !instance.isNewRecord
       button(type="submit").btn.btn-orange 更新

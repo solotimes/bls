@@ -114,7 +114,7 @@ form(action= !instance.isNewRecord ? '/customers/#{instance.id}' : '/customers',
     span.label 备注:
     textarea(name='instance[Comment]',value=instance.Comment,rows=5)
   .actions
-    a.btn(href='javasctip:history.go(-1)') 取消
+    a.btn(href='/customers/#{instance.id}') 取消
     if !instance.isNewRecord
       button(type="submit").btn.btn-orange 更新
     else
@@ -144,3 +144,11 @@ form(action= !instance.isNewRecord ? '/customers/#{instance.id}' : '/customers',
         }
       });
     });
+    $('input,select,textarea').change(function(){
+      window.dirty = true;
+    });
+    window.onbeforeunload = function(e) {
+      if(window.dirty){
+        return '将丢失未保存的更改,您确定要退出本页?';
+      }
+    };

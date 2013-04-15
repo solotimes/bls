@@ -199,13 +199,18 @@ exports.records = function(req, res, next){
 
 exports.report = function(req, res){
   var report;
+  var customerPapers;
   var sql = "SELECT `KnowledgesQuestions`.`KnowledgeId` as `kid` ," +
             "sum(case when `Wrong` = 1  then 1 else 0 end) as `wcount`,"+
             "count(`Questions`.`id`) as `qcount` "+
             "FROM CustomerPapers,CustomerPapersQuestions,Questions,`KnowledgesQuestions` "+
             "where `CustomerPapers`.`CustomerId`= "+ req.customer.id +
             " AND `CustomerPapersQuestions`.`CustomerPaperId` = `CustomerPapers`.`id` AND `CustomerPapersQuestions`.`QuestionId` = `Questions`.`id` AND `KnowledgesQuestions`.`QuestionId` = `Questions`.`id` GROUP BY `kid`";
-  Q.when(models.sequelize.query(sql))
+  Q.when(req.customer.getCustomerPapers())
+  .then(function(cps){
+    customerPapers = cps;
+    return models.sequelize.query(sql);
+  })
   .then(function(results){
     report = results;
     var kids = results.map(function(row){return row.kid;});
@@ -218,7 +223,7 @@ exports.report = function(req, res){
       include: ['Knowledge','CustomerPaper']}));
   })
   .then(function(questions){
-    res.render('customers/report',{instance: req.customer,questions:questions,report:report});
+    res.render('customers/report',{instance: req.customer,questions:questions,report:report,customerPapers:customerPapers});
   })
   .fail(function(error){
     logger.log(error);

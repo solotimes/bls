@@ -60,6 +60,7 @@ angular.module('paper.services', [])
   };
 
   Paper.prototype.refresh = function(){
+    this.$listPath = Type2Path[this.$type];
     this.$path = Type2Path[this.$type] + (this.id || '');
     this.$questionsPath =  !!this.id ? (this.$path + '/questions') : '/questions';
   };

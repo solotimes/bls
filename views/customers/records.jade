@@ -1,23 +1,17 @@
-extends index
-
+extends show
 block content
   .main.customer_records
     .form
       .form-header
-        ul.tabs
+        ul.tabs.inline-block
           li.tab
             a(href='/customers/#{instance.id}')会员信息
           li.tab.current
             a(href='/customers/#{instance.id}/records')上传记录
           li.tab
             a(href='/customers/#{instance.id}/report')错误报告
-      .info
-        span 用户: #{instance.Name}
-        span 上传#{customerPapers.length}张卷子
-        - var finishedCount = customerPapers.filter(function(cp){return cp.Status == 6 || cp.Status == 7}).length;
-        span 完成解答#{finishedCount}张
-        - var untouchedCount = customerPapers.filter(function(cp){return cp.Status == 0}).length;
-        span 未处理#{untouchedCount}张
+          a(style='margin-left:20px').close.btn 关闭
+      include infobar
       table
         thead
           tr
@@ -51,6 +45,6 @@ block content
                   a(href='/customer_papers/#{model.id}#report',data-type='report',target='_blank') 报告
                 else
                   a.hidden 占位
-                a(href='/customer_papers/#{model.id}#recording',data-type='view',target='_blank') 查看
+                a(href='/customer_papers/#{model.id}#view',data-type='view',target='_blank') 查看
                 a(href='/customer_papers/#{model.id}#edit',data-type='edit',target='_blank') 修改
                 a(data-type='delete', href='/customer_papers/#{model.id}' , data-method='delete' , data-confirm='确定删除本记录?' , rel="nofollow") 删除

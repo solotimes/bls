@@ -234,7 +234,7 @@ a,a:hover{
   float: right;
 }
 
-.fluid .header{
+.fluid .header,.lite .header{
   height: 50px;
   overflow: hidden;
   .corner{
@@ -337,6 +337,9 @@ a,a:hover{
 }
 
 .sidebar{
+  .lite &{
+    display: none;
+  }
   /*background: gray;*/
   width: 200px;
   padding-bottom: 5000px;
@@ -383,6 +386,9 @@ a,a:hover{
 
 .content{
   margin-left: 205px;
+  .lite &{
+    margin-left: 0;
+  }
 }
 
 .btn{
