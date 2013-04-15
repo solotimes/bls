@@ -50,6 +50,10 @@ app.controller('PaperCtrl',['$scope','$http' ,'paper','modal','$location',functi
 			location.path('/');
 		});
 	};
+	scope.pushPaper = function(){
+		if(confirm('推送的试卷将不能编辑, 是否推送试卷? (本操作不可撤销) '))
+			paper.save(null,{pushPaper:true});
+	};
 	scope.dump = function(){
 		if(confirm('是否存入试卷库? (本操作不可撤销)'))
 			paper.dump();

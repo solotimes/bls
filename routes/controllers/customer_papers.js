@@ -110,6 +110,10 @@ exports.recorded = function(req,res,next){
     },
     {
       roles: ['老师','试题库管理员','分配员','推送'],
+      value: '待推送'
+    },
+    {
+      roles: ['老师','试题库管理员','分配员','推送'],
       value: '已推送'
     }
   ];
@@ -117,7 +121,11 @@ exports.recorded = function(req,res,next){
   var q = (req.param('q') || '').trim();
   var by = (req.param('by')||'').trim();
   var scope = (req.param('scope')||'').trim();
-  var condition = '`Status` in(5,6,7,8) ';//'RecordedAt is NULL';
+  var condition;
+  if(scope == '待推送')
+    condition = '`Status` in(3,6,8) ';
+  else
+    condition = '`Status` in(5,6,7,8) ';//'RecordedAt is NULL';
   var where,searchParams={};
 
   if("undefined" !== typeof models.CustomerPaper[scope]){

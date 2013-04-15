@@ -503,7 +503,7 @@ angular.module('paper.services', [])
               !allQuestionFinished;
       //已推送
       case 7:
-        return (this.Status === 3 || this.Status === 8 || this.Status === 6) && events.pushed;
+        return (this.Status === 3 || this.Status === 8 || this.Status === 6) && events.pushPaper;
       default:
         return false;
     }
