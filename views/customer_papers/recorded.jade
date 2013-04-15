@@ -18,6 +18,8 @@ block content
         option(value='Name',selected=collection.by=='Name') 试卷标题
         option(value='CodeName' ,selected=collection.by=='CodeName') 试卷编号
         option(value='CreatedAt' ,selected=collection.by=='CreatedAt') 上传日期
+        option(value='AssignedTo' ,selected=collection.by=='AssignedTo') 录入员
+        option(value='CustomerName' ,selected=collection.by=='CustomerName') 会员名
       input(name='q',value='#{collection.q||''}')
       button(type='submit').btn.btn-blue 搜索
   .main

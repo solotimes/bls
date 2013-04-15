@@ -66,13 +66,25 @@ exports.raw = function(req, res ,next){
     searchParams.q=q;
     searchParams.by=by;
     where = [ condition, "%"+q+"%"];
-  }else{
+  }else if(q.length && by == 'AssignedTo'){
+    condition += ' AND `Admins`.`Name` LIKE ? ';
+    where = [ condition, "%"+q+"%"];
+    searchParams.q=q;
+    searchParams.by=by;
+  }else if(q.length && by == 'CustomerName'){
+    condition += ' AND `Customers`.`Name` LIKE ? ';
+    where = [ condition, "%"+q+"%"];
+    searchParams.q=q;
+    searchParams.by=by;
+  }
+  else{
     where = condition;
   }
 
   models.CustomerPaper.pageAll({
       where:where,
       include: ['Customer','AssignedTo'],
+      countJoin: " LEFT OUTER JOIN `Customers` ON `CustomerPapers`.`CustomerId`=`Customers`.`id` LEFT OUTER JOIN `Admins` ON `CustomerPapers`.`AdminId`=`Admins`.`id` ",
       addAttributes: ' `Levels`.`Name` as `lname` ,`Levels`.`Order` as `lorder` ',
       join: ' LEFT OUTER JOIN `Levels` ON `Customers`.`LevelID`=`Levels`.`id` ',
       order: ' `lorder` DESC ,`CreatedAt` '
@@ -146,14 +158,25 @@ exports.recorded = function(req,res,next){
     searchParams.q=q;
     searchParams.by=by;
     where = [ condition, "%"+q+"%"];
+  }else if(q.length && by == 'AssignedTo'){
+    condition += ' AND `Admins`.`Name` LIKE ? ';
+    where = [ condition, "%"+q+"%"];
+    searchParams.q=q;
+    searchParams.by=by;
+  }else if(q.length && by == 'CustomerName'){
+    condition += ' AND `Customers`.`Name` LIKE ? ';
+    where = [ condition, "%"+q+"%"];
+    searchParams.q=q;
+    searchParams.by=by;
   }else{
     where = condition;
   }
 
   models.CustomerPaper.pageAll({
       where:where,
+      countJoin: " LEFT OUTER JOIN `Customers` ON `CustomerPapers`.`CustomerId`=`Customers`.`id` LEFT OUTER JOIN `Admins` ON `CustomerPapers`.`AdminId`=`Admins`.`id` ",
       include: ['Customer','AssignedTo'],
-      addAttributes: ' `Levels`.`Name` as `lname` ,`Levels`.`Order` as `lorder` ',
+      addAttributes: ' `Levels`.`Na,e` as `lname` ,`Levels`.`Order` as `lorder` ',
       join: ' LEFT OUTER JOIN `Levels` ON `Customers`.`LevelID`=`Levels`.`id` ',
       order: ' `lorder` DESC ,`CreatedAt` '
     },
