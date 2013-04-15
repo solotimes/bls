@@ -55,6 +55,7 @@ block content
         input(type='hidden',name='export',value='true')
         input(type='hidden',name='GradeId',value=searchParams.GradeId)
         input(type='hidden',name='Type',value=searchParams.Type)
+        input(type='hidden',name='Name',value=searchParams.Name)
         button(type='sumit').btn.btn-orange 导出
   .main.customer_records.customer_report
     if report.knowledges
@@ -88,7 +89,7 @@ block content
                 td= knowledge.Level1
                 td= knowledge.Level2
                 td= knowledge.Name
-                td.orange.center=Math.round(100 * knowledge.pcount/report.paperCount) + '%'
+                td.orange.center=knowledge.rate+ '%'
                 td.green.center=knowledge.t0count * 3
                 td.green.center=knowledge.t1count * 3
                 td.green.center=knowledge.t2count * 8

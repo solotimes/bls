@@ -408,6 +408,15 @@ exports.report5 = function(req,res,next){
             });
   })
   .then(function(){
+    if(report.knowledges){
+      report.knowledges = report.knowledges.sort(function(a,b){
+        [a,b].forEach(function(k){
+          if(Utils._.isUndefined(k.rate))
+            k.rate = Math.round(100*k.pcount/report.paperCount);
+        });
+        return b.rate - a.rate;
+      });
+    }
     if(req.param('export') == 'true' && report.knowledges){
       var data=[['分类','子分类','知识点','出现率','单选(分)','填空(分)','主管(分)']];
       report.knowledges.forEach(function(knowledge){
@@ -415,7 +424,7 @@ exports.report5 = function(req,res,next){
           knowledge.Level1,
           knowledge.Level2,
           knowledge.Name,
-          {value:Math.round(100*knowledge.pcount/report.paperCount)/100,formatCode: '00%'},
+          {value:knowledge.rate/100,formatCode: '00%'},
           knowledge.t0count * 3,
           knowledge.t1count * 3,
           knowledge.t2count * 8
