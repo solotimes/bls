@@ -134,7 +134,7 @@ exports.recorded = function(req,res,next){
   var by = (req.param('by')||'').trim();
   var scope = (req.param('scope')||'').trim();
 
-  if(!scope.length && req.currentUser.checkRoles(['推送']))
+  if(!scope.length && !req.currentUser.checkRoles(['试卷库题库管理']))
     return res.redirect('/customer_papers/recorded/待推送');
 
   var condition;
@@ -176,7 +176,7 @@ exports.recorded = function(req,res,next){
       where:where,
       countJoin: " LEFT OUTER JOIN `Customers` ON `CustomerPapers`.`CustomerId`=`Customers`.`id` LEFT OUTER JOIN `Admins` ON `CustomerPapers`.`AdminId`=`Admins`.`id` ",
       include: ['Customer','AssignedTo'],
-      addAttributes: ' `Levels`.`Na,e` as `lname` ,`Levels`.`Order` as `lorder` ',
+      addAttributes: ' `Levels`.`Name` as `lname` ,`Levels`.`Order` as `lorder` ',
       join: ' LEFT OUTER JOIN `Levels` ON `Customers`.`LevelID`=`Levels`.`id` ',
       order: ' `lorder` DESC ,`CreatedAt` '
     },
