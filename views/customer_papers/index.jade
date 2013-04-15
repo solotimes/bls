@@ -4,7 +4,7 @@ block sidebar
   h1 上传试卷管理
   ul.sidenav
     each scope in scopes
-      if currentUser.checkRoles(scope.roles,'试卷上传')
+      if currentUser.checkRoles(scope.roles)
         li(class= (req.param('scope')||'') == scope.value ? 'current' : '')
           a(href='/customer_papers/raw/#{scope.value}')=scope.name || scope.value
 

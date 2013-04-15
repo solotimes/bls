@@ -9,8 +9,8 @@ exports.index = function(req, res){
   var to = req.redirectByRole([
     [['分配员'],'/customer_papers/raw/未处理'],
     // [['标错题'],'/customer_papers/scope/待标错题'],
-    [['录入员'],'/customer_papers/raw/待录错题'],
-    [['老师','试题库管理员','推送'],'/customer_papers/recorded/']
+    [['录入员'],'/customer_papers/raw/待录错题']
+    // [['老师','试题库管理员','推送'],'/customer_papers/recorded/']
   ]);
   res.redirect(to);
 };
@@ -21,7 +21,7 @@ exports.raw = function(req, res ,next){
   res.locals.scopes = [
     {
       name: '全部',
-      roles: ['分配员','推送'],
+      roles: ['管理员'],
       value: ''
     },
     {
@@ -33,7 +33,7 @@ exports.raw = function(req, res ,next){
       value: '待标错题'
     },
     {
-      roles: ['录入员','推送'],
+      roles: ['录入员'],
       value: '待录全卷'
     },
     {
@@ -93,27 +93,27 @@ exports.recorded = function(req,res,next){
   res.locals.scopes = [
     {
       name: '全部',
-      roles: ['分配员','推送','老师','试题库管理员'],
+      roles: ['试卷库题库管理'],
       value: ''
     },
     {
-      roles: ['老师','试题库管理员','分配员','录入员'],
+      roles: ['试卷库题库管理'],
       value: '错题未解答'
     },
     {
-      roles: ['老师','试题库管理员','分配员','录入员','推送'],
+      roles: ['试卷库题库管理'],
       value: '待完善'
     },
     {
-      roles: ['老师','试题库管理员','分配员','推送'],
+      roles: ['试卷库题库管理'],
       value: '完成解答'
     },
     {
-      roles: ['老师','试题库管理员','分配员','推送'],
+      roles: ['推送'],
       value: '待推送'
     },
     {
-      roles: ['老师','试题库管理员','分配员','推送'],
+      roles: ['试卷库题库管理','推送'],
       value: '已推送'
     }
   ];
@@ -121,6 +121,10 @@ exports.recorded = function(req,res,next){
   var q = (req.param('q') || '').trim();
   var by = (req.param('by')||'').trim();
   var scope = (req.param('scope')||'').trim();
+
+  if(!scope.length && req.currentUser.checkRoles(['推送']))
+    return res.redirect('/customer_papers/recorded/待推送');
+
   var condition;
   if(scope == '待推送')
     condition = '`Status` in(3,6,8) ';
