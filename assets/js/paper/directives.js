@@ -376,9 +376,11 @@ return {
           compile(list[0])(subscope);
           iElm.on('blur',function(){
             subscope.showList = false;
+            subscope.$apply();
           });
           iElm.on('focus',function(){
             subscope.showList = true;
+            subscope.$apply();
           });
           subscope.showList = false;
           subscope.selectQuestion = function(question){
