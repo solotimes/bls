@@ -136,7 +136,7 @@ block content
               td= model.School
               td= model.gradeText()
               td= moment(model.ExpireDate).format('YYYY-MM-DD')
-              td= moment(model.LoginTime).format('YYYY-MM-DD hh:mm:ss')
+              td= moment(model.LoginTime).format('YYYY-MM-DD HH:mm:ss')
               td
                 a(href='/customers/#{model.id}', data-type='view' ,target='_blank') 查看
                 a(data-type='delete', href='/customers/#{model.id}' , data-method='delete' , data-confirm='确定删除本记录?' , rel="nofollow") 删除
