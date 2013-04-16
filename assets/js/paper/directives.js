@@ -376,7 +376,10 @@ return {
           compile(list[0])(subscope);
           iElm.on('blur',function(){
             subscope.showList = false;
-            subscope.$apply();
+            setTimeout(function(){
+              subscope.$apply();
+            },100);
+
           });
           iElm.on('focus',function(){
             subscope.showList = true;

@@ -36,8 +36,8 @@
 			<div ng-include='"/templates/question.html"'></div>
 			<div class='buttons'>
 			  <a class='btn' href='{{paper.$listPath}}'>退出</a>
-			  <a class='btn btn-blue' ng-show='[5,6,8,7].indexOf(paper.Status) > -1' ng-click='paper.save()'>保存试卷</a>
-			  <a class='btn btn-green' ng-show='paper.readyForAny([3,5,6,8],{finishWrongRecord: true}) &amp;&amp; paper.Status==2' ng-click='paper.save(null,{finishWrongRecord: true})'>完成错题录入</a>
+			  <a class='btn btn-blue' ng-show='[5,6,8,7].indexOf(paper.Status) > -1' ng-click='savePaper()'>保存试卷</a>
+			  <a class='btn btn-green' ng-show='paper.readyForAny([3,5,6,8],{finishWrongRecord: true}) &amp;&amp; paper.Status==2' ng-click='finishWrongRecord()'>完成错题录入</a>
 			  <a class='btn' ng-hide='isLastQuestion()' ng-click='nextQuestion()'>下一题</a>
 			  <a class='btn btn-orange' ng-click='saveQuestion()'>保存</a>
 			  <a class='btn btn-orange' ng-hide='isLastQuestion()' ng-click='saveQuestionAndNext()'>保存并下一题</a>

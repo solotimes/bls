@@ -57,6 +57,23 @@ app.controller('RecordingCtrl',['$scope','$http','paper','$location',function(sc
     scope.$broadcast('save-question');
   };
 
+  scope.finishWrongRecord = function(){
+    scope.$broadcast('save-question');
+    scope.saveCallback = function(){
+      paper.save(null,{finishWrongRecord: true}).then(function(){
+        if(confirm('保存完毕,是否返回列表?'))
+          window.location.href = paper.$listPath;//退出
+      });
+    };
+  };
+
+  scope.savePaper = function(){
+    scope.$broadcast('save-question');
+    scope.saveCallback = function(){
+      paper.save();
+    };
+  };
+
   scope.saveQuestionAndNext = function(){
     scope.goNext = true;
     scope.saveQuestion();
@@ -73,6 +90,10 @@ app.controller('RecordingCtrl',['$scope','$http','paper','$location',function(sc
         scope.nextQuestion();
         scope.goNext = false;
       },0);
+    }
+    if(scope.saveCallback){
+      scope.saveCallback();
+      scope.saveCallback = null;
     }
   });
 
