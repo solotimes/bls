@@ -36,7 +36,7 @@ html.no-js
               if currentUser.checkRoles(['录入员','分配员'])
                 li(class=/^\/customer_papers\/(raw|\d+)/.test(req.url) ? 'current' : '')
                   a(href='/customer_papers') 上传试卷管理
-              if currentUser.checkRoles(['试卷库题库管理员','推送'])
+              if currentUser.checkRoles(['老师','试卷库题库管理','推送'])
                 li(class=/^\/customer_papers\/recorded/.test(req.url) ? 'current' : '')
                   a(href='/customer_papers/recorded') 用户试卷管理
               if currentUser.checkRoles(['老师'])
@@ -45,10 +45,10 @@ html.no-js
               if currentUser.checkRoles(['管理员'])
                 li(class= /^\/admins|\/customers|\/levels/.test(req.url) ? 'current' : '')
                   a(href='/customers') 会员管理
-              if currentUser.checkRoles(['老师','试卷库题库管理员','录入员'])
+              if currentUser.checkRoles(['老师','试卷库题库管理','录入员'])
                 li(class=/^\/papers/.test(req.url) ? 'current' : '')
                   a(href='/papers') 试卷模板管理
-              if currentUser.checkRoles(['老师','试卷库题库管理员'])
+              if currentUser.checkRoles(['老师','试卷库题库管理'])
                 li(class=/^\/questions/.test(req.url) ? 'current' : '')
                   a(href='/questions') 题目库管理
               if currentUser.checkRoles(['管理员'])

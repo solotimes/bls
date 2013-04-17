@@ -105,27 +105,27 @@ exports.recorded = function(req,res,next){
   res.locals.scopes = [
     {
       name: '全部',
-      roles: ['试卷库题库管理'],
+      roles: ['老师','试卷库题库管理'],
       value: ''
     },
     {
-      roles: ['试卷库题库管理'],
+      roles: ['老师','试卷库题库管理'],
       value: '错题未解答'
     },
     {
-      roles: ['试卷库题库管理'],
+      roles: ['老师','试卷库题库管理'],
       value: '待完善'
     },
     {
-      roles: ['试卷库题库管理'],
+      roles: ['老师','试卷库题库管理'],
       value: '完成解答'
     },
     {
-      roles: ['推送'],
+      roles: ['老师','推送'],
       value: '待推送'
     },
     {
-      roles: ['试卷库题库管理','推送'],
+      roles: ['老师','试卷库题库管理','推送'],
       value: '已推送'
     }
   ];
@@ -134,7 +134,7 @@ exports.recorded = function(req,res,next){
   var by = (req.param('by')||'').trim();
   var scope = (req.param('scope')||'').trim();
 
-  if(!scope.length && !req.currentUser.checkRoles(['试卷库题库管理']))
+  if(!scope.length && !req.currentUser.checkRoles(['试卷库题库管理','老师']))
     return res.redirect('/customer_papers/recorded/待推送');
 
   var condition;
@@ -148,7 +148,7 @@ exports.recorded = function(req,res,next){
     // console.log(models.CustomerPaper[scope]);
     condition += 'AND `Status` = ' + models.CustomerPaper[scope];
   }
-  if(!req.currentUser.checkRoles(['分配员','老师','试题库管理员','推送'])){
+  if(!req.currentUser.checkRoles(['分配员','老师','试卷库题库管理','推送'])){
     condition = condition ? (condition + ' AND ') :  '';
     condition += ('AdminId = '+req.currentUser.id);
   }

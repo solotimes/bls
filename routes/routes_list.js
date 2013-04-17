@@ -16,7 +16,10 @@ var auth = require('./auth'),
 
 app.get('/', function(req,res){
   var to = req.redirectByRole([
-    [['分配员','录入员','标错题','推送'],'/customer_papers'],
+    [['分配员'],'/customer_papers/raw'],
+    [['标错题'],'/customer_papers/raw/待标错题'],
+    [['录入员','/customer_papers/raw/待录全卷']],
+    [['推送'],'/customer_papers/recorded'],
     [['试卷库题库管理','老师'],'/papers'],
     [['管理员'],'/customers']
   ]);

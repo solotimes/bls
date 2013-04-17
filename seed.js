@@ -142,7 +142,7 @@ function seed(){
             papers.push({
                 Name:'测试试卷'+i,
                 CustomerId: customers[cid].id,
-                CreatedAt:utility.getCurrentTime(),
+                CreatedAt: utility.getCurrentTime(),
                 CodeName: moment().format('YYYYMDD-X')
             });
         }
