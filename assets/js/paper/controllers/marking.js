@@ -23,7 +23,9 @@ app.controller('MarkingCtrl',['$scope','$http' ,'paper',function(scope,http,pape
 		if(confirm('是否确定完成错题标记? (本操作不可撤销)'))
 		paper.saveAllQuestions().then(function(){
 			scope.markingForm.$setPristine();
-			paper.save(null,{finishMarking:true});
+			paper.save(null,{finishMarking:true}).then(function(){
+				window.location = paper.$listPath+'raw/待标错题';
+			});
 		});
 	};
 }]);
