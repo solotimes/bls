@@ -17,8 +17,8 @@ append head
           return false;
         }
         if(window.confirm('确定删除选中的记录?')){
-          $('form#select input[name=_method]').val('delete');
-          $('form#select').submit();
+          $('form#selects input[name=_method]').val('delete');
+          $('form#selects').submit();
         }
       })
       $(document).on('click','a[data-type=batch-selected]',function(e){

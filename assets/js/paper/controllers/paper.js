@@ -16,7 +16,7 @@ app.controller('PaperCtrl',['$scope','$http' ,'paper','modal','$location',functi
     return !scope.missingSolution(question) && !scope.missingKnowledges(question);
   };
   scope.missingSolution = function(question){
-    return $(question.Solution).text().trim().length === 0;
+    return (question.Answer ||'').trim().length === 0 || $(question.Solution).text().trim().length === 0;
   };
   scope.missingKnowledges = function(question){
     return !question.knowledges || !question.knowledges.length;
