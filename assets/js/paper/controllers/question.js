@@ -45,7 +45,8 @@ app.controller('QuestionCtrl',['$scope','$http','$routeParams','$location','pape
     var temp = $(value);
     temp.find('.math').mathquill();
     temp.find('.selectable').remove();
-    scope.question.Excerpt = temp.text().substring(0,20);
+    if(scope.question)
+      scope.question.Excerpt = temp.text().substring(0,20);
     temp.remove();
   });
 
@@ -53,7 +54,9 @@ app.controller('QuestionCtrl',['$scope','$http','$routeParams','$location','pape
     var attrs = angular.copy(question);
     delete attrs.CreatedAt;
     delete attrs.UpdatedAt;
+    var order = scope.question.Order;
     angular.copy(attrs,scope.question);
+    scope.question.Order = order;
   };
 }]);
 

@@ -48,7 +48,7 @@ app.controller('RecordingCtrl',['$scope','$http','paper','$location',function(sc
 
   scope.$watch('question',function(currentQuestion){
     var prevType = currentQuestion && currentQuestion.Order && paper.questions[currentQuestion.Order-1].Type;
-    if(!currentQuestion.id){
+    if(currentQuestion && !currentQuestion.id){
       currentQuestion.Type = prevType || 0; //若问题为空,使用上题的类型
     }
   });
@@ -93,7 +93,7 @@ app.controller('RecordingCtrl',['$scope','$http','paper','$location',function(sc
     }
     if(scope.saveCallback){
       scope.saveCallback();
-      scope.saveCallback = null;
+      delete scope.saveCallback;
     }
   });
 
