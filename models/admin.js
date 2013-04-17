@@ -22,7 +22,7 @@ module.exports = function(sequelize, DataTypes)
             validate:{
                 len:{
                     args:[4, 30],
-                    msg:format(messages.lengthBetween, "用户名", "4", "30")
+                    msg:format(messages.lengthBetween, "用户名", "2", "30")
                 },
                 notNull:{
                     msg:format(messages.notNull, "用户名")
