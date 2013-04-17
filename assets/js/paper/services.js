@@ -37,7 +37,7 @@ angular.module('paper.services', [])
 
 //试卷相关操作
 
-.factory('paper', ['$http','$window','$q','$rootScope',function (http,window,Q,rootScope) {
+.factory('paper', ['$http','$window','$q','$rootScope','$filter',function (http,window,Q,rootScope,$filter) {
   Paper = function(attrs,type,questions,grades){
     angular.copy(attrs,this);
     this.$type = type || 'CustomerPaper';
@@ -91,7 +91,7 @@ angular.module('paper.services', [])
       saveObj.Status = changeTo;
     // console.log('changeTo:',changeTo);
     if(saveObj.Status !== 0 && saveObj.Status !== 4 && saveObj.Status !== 2 && !saveObj.RecordedAt){
-      saveObj.RecordedAt = new Date();
+      saveObj.RecordedAt = $filter('date')(new Date(),"yyyy-MM-dd HH:mm:ss");
       // console.log('createdAt:',saveObj.Status);
     }
     saveObj.CorrectRate = this.getCorrectRate();
