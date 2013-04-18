@@ -5,7 +5,7 @@
 			<button class="btn" ng-click='cancel()'>关闭</button>
 		</div>
 		<span class='gray'>题目ID：  {{question.id}}</span>
-		<span class='gray'>{{questionTypes[question.Type]}}</span>
+		<span class='gray'>{{paper.questionTypes[question.Type]}}</span>
 	</div>
 	<div class='question-statistics' ng-show='!!question.statistics'>
 	  <span>试卷库出现次数: {{question.statistics.pcount}}</span>
