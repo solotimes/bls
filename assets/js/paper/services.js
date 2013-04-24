@@ -406,7 +406,7 @@ angular.module('paper.services', [])
 
   Paper.prototype.isAllWrongQuestionsSolved = function(){
     var select = this.questions.filter(function(q){
-      return q.Wrong && $(q.Solution||'').text().trim().length === 0;
+      return q.Wrong && $(q.Answer||'').text().trim().length === 0;
     });
     return select.length === 0;
   };
@@ -423,7 +423,7 @@ angular.module('paper.services', [])
   Paper.prototype.isQuestionFinished = function(question){
     var res =  !!question.id &&
            !this.isBlank(question.Body) &&
-           !this.isBlank(question.Solution) &&
+           // !this.isBlank(question.Solution) &&
            // !this.isBlank(question.Condition) &&
            // !this.isBlank(question.Method) &&
            !this.isBlank(question.Answer) &&
