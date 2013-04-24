@@ -6,6 +6,8 @@
  */
 var messages = require('../messages'),
     format = require('util').format;
+var Sequelize = require('sequelize');
+var moment = require('moment');
 
 module.exports = function(sequelize, DataTypes)
 {

@@ -6,6 +6,7 @@
  */
 var Q = require('q');
 var Sequelize = require('sequelize');
+var moment = require('moment');
 var Utils = Sequelize.Utils;
 var extend = require('extend');
 var STATUS = {

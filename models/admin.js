@@ -5,6 +5,8 @@
  * Time: 上午10:20
  */
 var messages = require('../messages'),
+    Sequelize = require('sequelize'),
+    moment = require('moment');
     format = require('util').format;
 
 module.exports = function(sequelize, DataTypes)

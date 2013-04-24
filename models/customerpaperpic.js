@@ -5,6 +5,8 @@
  * Time: 下午5:20
  */
 var Q = require('q');
+var Sequelize = require('sequelize');
+var moment = require('moment');
 
 module.exports = function(sequelize, DataTypes){
     return sequelize.define('CustomerPaperPic', {
