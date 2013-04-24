@@ -71,6 +71,10 @@ module.exports = function(sequelize, DataTypes)
             values.pics = this.pics;
             values.assignedTo = this.assignedTo;
             values.audio = this.AudioPath ? (config.uploadPath + this.AudioPath) : null;
+            for(var k in values){
+              if(Sequelize.Utils._.isDate(values[k]))
+                values[k]=moment(values[k]).format('YYYY-MM-DD HH:mm:ss');
+            }
             return values;
         },
         //导出到试卷库

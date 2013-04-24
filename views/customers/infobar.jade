@@ -1,7 +1,8 @@
 .info
   span 用户: #{instance.UserName}
+  span 姓名: #{instance.Name}
   span 邮箱: #{instance.Email}
-  span 姓名: #{instance.Gender ? '男' : '女'}
+  span 性别: #{instance.Gender ? '男' : '女'}
   span 身份: #{instance.roleText()}
   span
       | 有效期:

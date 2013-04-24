@@ -42,6 +42,10 @@ module.exports = function(sequelize, DataTypes)
           toJSON: function(){
               var values = this.values;
               values.pics = this.pics; //取paper.pics
+              for(var k in values){
+                if(Sequelize.Utils._.isDate(values[k]))
+                  values[k]=moment(values[k]).format('YYYY-MM-DD HH:mm:ss');
+              }
               return values;
           }
         },

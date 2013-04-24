@@ -85,6 +85,10 @@ module.exports = function(sequelize, DataTypes)
                 values.level = this.level;
                 values.grade = this.grade;
                 values.role = this. role;
+                for(var k in values){
+                  if(Sequelize.Utils._.isDate(values[k]))
+                    values[k]=moment(values[k]).format('YYYY-MM-DD HH:mm:ss');
+                }
                 return values;
             }
           },

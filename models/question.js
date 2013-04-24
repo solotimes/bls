@@ -60,6 +60,10 @@ module.exports = function(sequelize, DataTypes)
             values.Wrong = this.Wrong;
             values.Order = this.Order;
             values.knowledges = this.knowledges;
+            for(var k in values){
+              if(Sequelize.Utils._.isDate(values[k]))
+                values[k]=moment(values[k]).format('YYYY-MM-DD HH:mm:ss');
+            }
             return values;
         }
       },
