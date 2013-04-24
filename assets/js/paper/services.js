@@ -234,7 +234,7 @@ angular.module('paper.services', [])
   Paper.prototype.updateQuestionStatus = function(question){
     if(this.isQuestionFinished(question))
       question.Status = 6;
-    else if(!this.isBlank(question.Solution))
+    else if(!this.isBlank(question.Answer))
       question.Status = 8;
     else
       question.Status = 5;
