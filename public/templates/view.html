@@ -38,7 +38,7 @@
 					<span class='wrong pull-right' ng-show='question.Wrong'>错误</span>
 					<a ng-click="viewQuestion(question)" ng-show='isFinished(question)'>查看解答,知识点</a>
 					<span class='missing' ng-show='missingKnowledges(question)'>缺少知识点</span>
-					<span class='missing' ng-show='missingSolution(question)'>缺少解答</span>
+					<span class='missing' ng-show='missingAnswer(question)'>缺少解答</span>
 					<button class="btn btn-orange" ng-hide='readonly' ng-click='editQuestion(question)'>修改</button>
 				</div>
 			</li>
