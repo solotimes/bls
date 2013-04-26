@@ -13,7 +13,7 @@ app.controller('PaperCtrl',['$scope','$http' ,'paper','modal','$location',functi
     destroyed = true;
   });
   scope.isFinished = function(question){
-    return !scope.missingSolution(question) && !scope.missingKnowledges(question);
+    return !scope.missingAnswer(question) && !scope.missingKnowledges(question);
   };
   scope.missingSolution = function(question){
     return (question.Answer ||'').trim().length === 0 || $(question.Solution).text().trim().length === 0;
