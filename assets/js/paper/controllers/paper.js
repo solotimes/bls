@@ -19,7 +19,7 @@ app.controller('PaperCtrl',['$scope','$http' ,'paper','modal','$location',functi
     return (question.Answer ||'').trim().length === 0 || $(question.Solution).text().trim().length === 0;
   };
   scope.missingAnswer = function(question){
-    return (question.Answer ||'').trim().length === 0;
+    return $((question.Answer ||'')).text().trim().length === 0;
   };
   scope.missingKnowledges = function(question){
     return !question.knowledges || !question.knowledges.length;
