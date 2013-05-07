@@ -418,7 +418,7 @@ exports.report5 = function(req,res,next){
       });
     }
     if(req.param('export') == 'true' && report.knowledges){
-      var data=[['分类','子分类','知识点','出现率','单选(分)','填空(分)','主管(分)']];
+      var data=[['分类','子分类','知识点','出现率','单选(分)','填空(分)','主观(分)']];
       report.knowledges.forEach(function(knowledge){
         data.push([
           knowledge.Level1,
