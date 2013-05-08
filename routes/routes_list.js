@@ -61,6 +61,8 @@ var generated_papers = app.resource('generated_papers',controllers.generated_pap
 customer_papers.add(app.resource('questions',controllers.questions));
 papers.add(app.resource('questions',controllers.questions));
 generated_papers.add(app.resource('questions',controllers.questions));
+
+app.get('/questions/wrong',controllers.questions.wrong);
 app.get('/questions/scope/:scope?',controllers.questions.index.html);
 var questions = app.resource('questions',controllers.questions);
 questions.map('delete','/',controllers.questions.batchDestroy);

@@ -30,7 +30,7 @@ block content
           |题目:
         input(type='text',name='id',value='')
         script
-          $('input[name="id"]').tokenInput('/questions.json',{
+          $('input[name="id"]').tokenInput('/questions/wrong',{
               prePopulate: window.report.question && [window.report.question],
               theme: 'facebook',
               hintText: '请输入提干进行搜索...',
