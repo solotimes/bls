@@ -112,7 +112,7 @@ exports.index = {
       p = Q.when(models.Question.findAll({
             include: ['Knowledge'],
             where: ['`Status` in (5,6,8) AND `Excerpt` LIKE ?', "%"+keywords+"%" ],
-            limit: 50
+            limit: 20
           })).then(function(quesions){
             // 删除空的knowledge 记录
             quesions.forEach(function(question){

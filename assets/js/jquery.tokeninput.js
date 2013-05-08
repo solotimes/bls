@@ -656,8 +656,12 @@ $.TokenList = function (input, url_or_data, settings) {
     function highlight_term(value, term) {
         return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<b>$1</b>");
     }
-    
+    RegExp.escape= function(s) {
+        if(!s) return '';
+        return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    };
     function find_value_and_highlight_term(template, value, term) {
+        value = RegExp.escape(value) ;
         return template.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + value + ")(?![^<>]*>)(?![^&;]+;)", "g"), highlight_term(value, term));
     }
 
