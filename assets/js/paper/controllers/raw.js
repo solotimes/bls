@@ -15,7 +15,7 @@ app.controller('RawCtrl',['$scope','$http' ,'paper',function(scope,http,paper){
   scope.recapture = function(){
     if(confirm("已要求重拍，将返回列表"))
       paper.save().then(function(){
-
+        window.location.href = paper.$listPath;
       });
     // paper.save({Status: 4});
     // .success(function(){
