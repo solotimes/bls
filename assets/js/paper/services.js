@@ -153,9 +153,22 @@ angular.module('paper.services', [])
   var _TypeNames = ['选择题','填空题','简答题'];
   var _types;
   Paper.prototype.getQuestionsGroupByTypes = function(){
+    var _TypeNames = ['选择题','填空题','简答题'];
     if(_types) return _types;
+    if(!this.questions) return [];
+    var typeOrder = [0,1,2];
+    switch(this.questions[0].Type){
+      case 1:
+        typeOrder = [1,0,2];
+        break;
+      case 2:
+        typeOrder = [2,0,1];
+        break;
+    }
     _types = [ ];
-    for(var i = 0,j = 0; i< 3; i++){
+    var j = 0;
+    for(var t in typeOrder){
+      i = typeOrder[t];
       if(this.$questionsByType[i].length){
         _types.push({
           order: j,
