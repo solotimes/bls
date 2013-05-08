@@ -61,6 +61,33 @@ exports.index = {
   }
 };
 
+exports.inputers = function(req,res,next){
+  models.Admin.findAll({
+    where:{
+      'AdminRoles.Name': '录入员'
+    },
+    include:['AssignedPapers','Roles']
+  }).done(function(error,collection){
+    if(error){
+      return next(error);
+    }
+    collection = collection.map(function(admin){
+      admin.assignedPapers = admin.assignedPapers || [];
+      recordCount = admin.assignedPapers.filter(function(paper){
+        return paper.Status == 2;
+      }).length;
+      markCount = admin.assignedPapers.filter(function(paper){
+        return paper.Status == 1;
+      }).length;
+      admin = admin.toJSON();
+      admin.recordCount = recordCount;
+      admin.markCount = markCount;
+      return admin;
+    });
+    res.send(collection);
+  });
+};
+
 exports['new'] = function(req, res){
   res.render('admins/new',{instance: models.Admin.build(),roles:req.roles});
 };

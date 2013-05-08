@@ -31,6 +31,7 @@ app.post('/login', auth.loginPost);
 app.get('/logout', authorization.checkLogin);
 app.get('/logout', auth.logout);
 
+app.get('/admins/inputers',controllers.admins.inputers);
 var admins = app.resource('admins',controllers.admins);
 admins.map('delete','/',controllers.admins.batchDestroy);
 var customers = app.resource('customers',controllers.customers);

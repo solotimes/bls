@@ -17,7 +17,7 @@
 				<button class='btn btn-orange' ng-click='recapture()' ng-show='paper.readyFor(4)'>需要重拍</button>
 				<div class='assign' ng-show='showAssgin &amp;&amp; !paper.readyFor(4)'>
 					<button class='btn btn-blue' ng-click='loadInputers()' ng-disabled='!!inputers'>分配录入</button>
-					<select ng-options="i.id as i.Name for i in inputers" ng-model='adminId' ng-show='!!inputers'></select>
+					<select ng-options="i.id as i.$label for i in inputers" ng-model='adminId' ng-show='!!inputers'></select>
 					<button class='btn btn-orange' ng-click='assign()' ng-show='adminId'>确定</button>
 				</div>
 			</div>

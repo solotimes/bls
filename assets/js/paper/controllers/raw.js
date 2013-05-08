@@ -1,9 +1,13 @@
-app.controller('RawCtrl',['$scope','$http' ,'paper',function(scope,http,paper){
+app.controller('RawCtrl',['$scope','$http' ,'paper','$filter',function(scope,http,paper,$filter){
   //监视是否需要重拍
   scope.showAssgin = !paper.AdminId;
   scope.loadInputers = function(){
-    scope.inputers = http.get('/admins.json?by=Role&q=录入员&per=1000').success(function(res){
-      scope.inputers=res;
+    scope.inputers = http.get('/admins/inputers').success(function(res){
+      (res||[]).forEach(function(inputer){
+        inputer.$label = inputer.Name + '(待录:' + inputer.recordCount + ')' +
+        '(待标:' + inputer.markCount + ')';
+      });
+      scope.inputers= $filter('orderBy')(res, 'markCount+recordCount' , true);
     })
     ;
   };
