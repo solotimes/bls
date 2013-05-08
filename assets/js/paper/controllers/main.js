@@ -19,6 +19,15 @@ app.controller('MainCtrl',['$scope','$window','$http','$route','$location','$q',
   // if(scope.paper.QuestionsTotal > 0){
   //   location.path('/question');
   // }
+  scope.close = function(){
+    if($('.marking').length){
+      window.location.href = '/customer_papers/raw/待标错题';
+    }else if($('.recording').length){
+      window.location.href = paper.$listPath;
+    }else{
+      window.close();
+    }
+  };
 
   window.onbeforeunload = function(e) {
     var event = scope.$root.$broadcast('unload');

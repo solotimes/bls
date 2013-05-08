@@ -6,6 +6,7 @@
 				<span class='field'>等级: {{paper.customer.level.Name}}</span>
 				<span class='field'>学校: {{paper.customer.School}}</span>
 				<span class='field'>年级: {{paper.customer.grade.Name}}</span>
+				<a ng-click='close()' class="btn pull-right" style='margin-top:10px;margin-right:10px'>关闭</a>
 			</p>
 			<p>
 				<span class='field'>上传日期: {{paper.customer.CreatedAt | date:'yyyy-MM-dd'}}</span>
