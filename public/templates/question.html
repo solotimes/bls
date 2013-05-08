@@ -13,13 +13,13 @@
       <button class='btn' ng-class='{"btn-orange": (question.Type==2)}' ng-click='question.Type=2'>主观题</button>
     </div>
     <div class='fields question-body'>
-      <label class='gray'>提干: <span class="red">复制请使用 Ctrl+Shift+V 快捷键</span></label>
+      <label class='gray'>提干: <span class="red">粘帖请使用 Ctrl+Shift+V 快捷键</span></label>
       <div ng-model='question.Body' contenteditable='true' enable-question-filter='!question.CreatedAt' on-switch-question='setQuestion($question)'/>
     </div>
     <div class='fields question-answers'>
       <div ng-switch='question.Type'>
         <div ng-switch-when='0' ng-controller='MultipleChoiceCtrl'>
-          <label class='gray'>选项: <span class="red">复制请使用 Ctrl+Shift+V 快捷键</span></label>
+          <label class='gray'>选项: <span class="red">粘帖请使用 Ctrl+Shift+V 快捷键</span></label>
           <button class='btn-add pull-right' ng-click='addChoice()'>+ 添加</button>
           <div class='choice' ng-repeat='choice in question.Choices' ng-class='{correct:$index==(question.Answer.charCodeAt(0)-65)}'>
             <div class='pull-left'><label class='abc'>{{$index | toABC}}:</label></div>
@@ -29,11 +29,11 @@
           </div>
         </div>
         <div ng-switch-when='1' ng-controller='FillinBlanksCtrl'>
-          <label class='gray'>正确答案: <span class="red">复制请使用 Ctrl+Shift+V 快捷键</span></label>
+          <label class='gray'>正确答案: <span class="red">粘帖请使用 Ctrl+Shift+V 快捷键</span></label>
           <div ng-model='question.Answer' contenteditable='true' class='less'/>
         </div>
         <div ng-switch-when='2' ng-controller='FillinBlanksCtrl'>
-          <label class='gray'>正确答案: <span class="red">复制请使用 Ctrl+Shift+V 快捷键</span></label>
+          <label class='gray'>正确答案: <span class="red">粘帖请使用 Ctrl+Shift+V 快捷键</span></label>
           <div ng-model='question.Answer' contenteditable='true'/>
         </div>
       </div>
