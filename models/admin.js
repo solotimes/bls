@@ -87,6 +87,18 @@ module.exports = function(sequelize, DataTypes)
                 });
                 return passed;
             },
+            ownRoles: function(roles,scope){
+                if(!roles || !roles.length)
+                    return false;
+                var rolesList = this.rolesList();
+                var passed = false;
+                roles.forEach(function(role){
+                    if(rolesList.indexOf(role) != -1){
+                        passed = true;
+                    }
+                });
+                return passed;
+            },
             toJSON: function(){
                 var values = this.values;
                 delete values.Password;

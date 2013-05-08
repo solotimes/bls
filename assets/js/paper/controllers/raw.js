@@ -17,9 +17,5 @@ app.controller('RawCtrl',['$scope','$http' ,'paper',function(scope,http,paper){
       paper.save().then(function(){
         window.location.href = paper.$listPath;
       });
-    // paper.save({Status: 4});
-    // .success(function(){
-    //   // window.confirm('设置成功, 是否分配下一张试卷?');
-    // });
   };
 }]);
