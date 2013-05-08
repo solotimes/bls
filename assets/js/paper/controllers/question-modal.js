@@ -10,6 +10,9 @@ app.controller('QuestionModalCtrl',['$scope','$http','paper',function(scope,http
     scope.mode = 0;
   scope.switchMode = function(mode,e){
     if(scope.mode == mode) return;
+    if(mode === 0 && scope.dirty && confirm('未保存的数据将丢失, 是否取消?')){
+      scope.$broadcast('reset-question');
+    }
     scope.mode = mode;
   };
   scope.save = function(){
@@ -22,4 +25,7 @@ app.controller('QuestionModalCtrl',['$scope','$http','paper',function(scope,http
     scope.$emit('cancel');
   };
 
+  scope.$on('dirty-state-change',function(e,value){
+    scope.dirty = value;
+  });
 }]);

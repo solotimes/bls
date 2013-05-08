@@ -6,7 +6,12 @@ app.controller('QuestionCtrl',['$scope','$http','$routeParams','$location','pape
 
   scope.$watch('question',function(question){
     scope.qform.$setPristine();
+    scope.originQuestion = angular.copy(scope.question);
       // scope.question = question;
+  });
+
+  scope.$on('reset-question',function(){
+    angular.copy(scope.originQuestion,scope.question);
   });
 
   scope.$on('save-question',function(){
@@ -14,6 +19,7 @@ app.controller('QuestionCtrl',['$scope','$http','$routeParams','$location','pape
       return window.alert('提干未填写');
     paper.saveQuestion(scope.question).then(function(){
       scope.qform.$setPristine();
+      scope.originQuestion = angular.copy(scope.question);
       scope.$emit('question-saved',scope.question);
     });
   });
