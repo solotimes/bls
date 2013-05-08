@@ -13,7 +13,10 @@ app.controller('RawCtrl',['$scope','$http' ,'paper',function(scope,http,paper){
     });
   };
   scope.recapture = function(){
-    paper.save();
+    if(confirm("已要求重拍，将返回列表"))
+      paper.save().then(function(){
+
+      });
     // paper.save({Status: 4});
     // .success(function(){
     //   // window.confirm('设置成功, 是否分配下一张试卷?');
