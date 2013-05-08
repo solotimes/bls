@@ -7,19 +7,19 @@
       <span class='orange' ng-show='dirty'>未保存</span>
     </div>
     <div class='fields question-type'>
-      <label>题目类型:</label>
+      <label>题目类型: </label>
       <button class='btn' ng-class='{"btn-orange": (question.Type==0)}' ng-click='question.Type=0'>单选题</button>
       <button class='btn' ng-class='{"btn-orange": (question.Type==1)}' ng-click='question.Type=1'>填空题</button>
       <button class='btn' ng-class='{"btn-orange": (question.Type==2)}' ng-click='question.Type=2'>主观题</button>
     </div>
     <div class='fields question-body'>
-      <label class='gray'>提干: </label>
+      <label class='gray'>提干: <span class="red">复制请使用 Ctrl+Shift+V 快捷键</span></label>
       <div ng-model='question.Body' contenteditable='true' enable-question-filter='!question.CreatedAt' on-switch-question='setQuestion($question)'/>
     </div>
     <div class='fields question-answers'>
       <div ng-switch='question.Type'>
         <div ng-switch-when='0' ng-controller='MultipleChoiceCtrl'>
-          <label class='gray'>选项: </label>
+          <label class='gray'>选项: <span class="red">复制请使用 Ctrl+Shift+V 快捷键</span></label>
           <button class='btn-add pull-right' ng-click='addChoice()'>+ 添加</button>
           <div class='choice' ng-repeat='choice in question.Choices' ng-class='{correct:$index==(question.Answer.charCodeAt(0)-65)}'>
             <div class='pull-left'><label class='abc'>{{$index | toABC}}:</label></div>

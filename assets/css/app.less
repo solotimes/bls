@@ -1427,13 +1427,22 @@ a,a:hover{
       text-align: center;
       font-weight: normal;
     }
-    ol{
+    ol:not(.choices){
       list-style: decimal inside;
-      li{
+      > li{
+        font-size: 18px;
+        & > *{
+          font-size: 12px;
+        }
         .border-box;
         padding-left: 10px;
         &.wrong{
           border-color: red;
+        }
+        &:before{
+          content: '';
+          display: 'inline-block';
+          min-height: 1em;
         }
       }
     }
@@ -1452,8 +1461,13 @@ a,a:hover{
       margin-left: 10px;
     }
     .question-body{
-      display: inline-block;
+      margin-left: 18px;
+      margin-top: -20px;
       min-height: 20px;
+      display: block;
+    }
+    .question-body > span{
+      // display: inline-block;
     }
   }
   ol.choices{
