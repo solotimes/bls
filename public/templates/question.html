@@ -29,11 +29,11 @@
           </div>
         </div>
         <div ng-switch-when='1' ng-controller='FillinBlanksCtrl'>
-          <label class='gray'>正确答案:</label>
+          <label class='gray'>正确答案: <span class="red">复制请使用 Ctrl+Shift+V 快捷键</span></label>
           <div ng-model='question.Answer' contenteditable='true' class='less'/>
         </div>
         <div ng-switch-when='2' ng-controller='FillinBlanksCtrl'>
-          <label class='gray'>正确答案:</label>
+          <label class='gray'>正确答案: <span class="red">复制请使用 Ctrl+Shift+V 快捷键</span></label>
           <div ng-model='question.Answer' contenteditable='true'/>
         </div>
       </div>
