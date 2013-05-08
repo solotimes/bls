@@ -406,7 +406,7 @@ angular.module('paper.services', [])
 
   Paper.prototype.isAllWrongQuestionsSolved = function(){
     var select = this.questions.filter(function(q){
-      return q.Wrong && $(q.Answer||'').text().trim().length === 0;
+      return q.Wrong && $('<div>'+(q.Answer ||'')+'</div>').text().trim().length === 0;
     });
     return select.length === 0;
   };
