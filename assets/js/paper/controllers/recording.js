@@ -153,10 +153,11 @@ app.controller('PaperSearchCtrl',['$scope','$http','paper',function(scope,http,p
     });
   };
   scope.import = function(p){
-    if(!confirm('确定要选定并导入本试卷? (本操作不可撤销)'))
+    if(!confirm('确定要选定并导入本试卷? (本操作不可撤销, 选择确定后将返回试卷列表)'))
       return;
     paper.importPaper(p).then(function(){
       scope.$emit('paper-imported');
+      window.location.href = paper.$listPath;
     });
   };
 }]);
