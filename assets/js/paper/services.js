@@ -38,12 +38,14 @@ angular.module('paper.services', [])
 //试卷相关操作
 
 .factory('paper', ['$http','$window','$q','$rootScope','$filter',function (http,window,Q,rootScope,$filter) {
-  Paper = function(attrs,type,questions,grades){
+  Paper = function(attrs,type,questions,grades,conditions,methods){
     angular.copy(attrs,this);
     this.$type = type || 'CustomerPaper';
     this.GradeId = this.GradeId || (this.customer && this.customer.GradeId);
     this.questions = questions || [];
     this.$grades = grades;
+    this.$conditions = conditions;
+    this.$methods = methods;
     if(!this.id){
       this.Status = 3;
       this.Source = 1;
@@ -598,7 +600,7 @@ angular.module('paper.services', [])
     });
   };
 
-  var paper = new Paper(window.paper,window.paperType,window.questions,window.grades);
+  var paper = new Paper(window.paper,window.paperType,window.questions,window.grades,window.conditions,window.methods);
   rootScope.paper = paper;
 
   return paper;

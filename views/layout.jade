@@ -20,6 +20,9 @@ html.no-js
       !=css('reset')
       !=css('app')
       !=css('token-input')
+      script
+        window.conditions = !{JSON.stringify(models.Settings.get('conditions')||[])};
+        window.methods = !{JSON.stringify(models.Settings.get('methods')||[])};
   body(class=(locals.bodyClass || []))
     .wrapper
       block header
@@ -54,6 +57,9 @@ html.no-js
               if currentUser.checkRoles(['管理员'])
                 li(class=/^\/statistics/.test(req.url) ? 'current' : '')
                   a(href='/statistics/') 搜索统计
+              if currentUser.checkRoles(['管理员'])
+                li(class=/^\/settings/.test(req.url) ? 'current' : '')
+                  a(href='/settings/') 系统设置
       block container
         .container
           .sidebar

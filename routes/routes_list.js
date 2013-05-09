@@ -75,3 +75,5 @@ app.get('/statistics/',controllers.statistics.report1);
 for(var action in controllers.statistics){
   app.get('/statistics/'+action, controllers.statistics[action]);
 }
+
+var settings = app.resource('settings',controllers.settings);

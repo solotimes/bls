@@ -112,7 +112,8 @@ form(action= !instance.isNewRecord ? '/customers/#{instance.id}' : '/customers',
     input(type='number',name='instance[Amount]',value=instance.Amount,min=0,placeholder='0.0',step='0.01')
   .field
     span.label 备注:
-    textarea(name='instance[Comment]',value=instance.Comment,rows=5)
+    textarea(name='instance[Comment]',rows=5)
+      =instance.Comment
   .actions
     a.btn(href='/customers/#{instance.id}') 取消
     if !instance.isNewRecord

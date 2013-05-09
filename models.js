@@ -82,3 +82,21 @@ GeneratedPaper.hasMany(Question);
 GeneratedPaper.hasMany(CustomerPaperPic,{as:'Pics'});
 CustomerPaperPic.belongsTo(GeneratedPaper);
 Question.hasMany(GeneratedPaper);
+
+models.Settings = {
+    _values: {},
+    get: function(key){
+        if(this._values[key]){
+            return this._values[key];
+        }
+        var path = __dirname + '/settings/'+key+'.json';
+        if(fs.existsSync(path))
+            return ( this._values[key] = JSON.parse(fs.readFileSync(path)) );
+        return null;
+    },
+    set: function(key,value){
+        var path = __dirname + '/settings/'+key+'.json';
+        fs.writeFileSync(path,JSON.stringify(value,null,'  '));
+        this._values[key]=value;
+    }
+};

@@ -57,9 +57,9 @@
     </div>
     <div class='fields question-condition hbox'>
       <label class='blue'>条件:</label>
-      <select ng-model='question.Condition' ng-options='v.value as v.label for v in [{label:"条件1",value:"1"},{label:"条件2",value:"2"}]'></select>
+      <select ng-model='question.Condition' ng-options='v for v in paper.$conditions'></select>
       <label class='blue'>问法:</label>
-      <select ng-model='question.Method' ng-options='v.value as v.label for v in [{label:"问法1",value:"1"},{label:"问法2",value:"2"}]'></select>
+      <select ng-model='question.Method' ng-options='v for v in paper.$methods'></select>
     </div>
     <div class='fields question-difficulty'>
       <label class='blue'>难易度:</label>
