@@ -11,11 +11,10 @@ exports.index = function(req,res){
 
 exports.create = function(req,res){
   var settings = req.param('settings');
-  console.log(settings);
   if(!settings || !settings.length)
     return res.redirect('back');
   settings.forEach(function(setting){
-    models.Settings.set(setting.key,(setting.value || '').trim().split('\n'));
+    models.Settings.set(setting.key,(setting.value || '').trim().replace(/\r/g,'').split('\n'));
   });
   res.redirect('back');
 };
