@@ -1,7 +1,7 @@
 .nodemonignore
 .svn
 node_modules/*
-settings/
+/settings/*
 /config.js
 Guardfile
 test.js
