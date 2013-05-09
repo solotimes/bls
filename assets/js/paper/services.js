@@ -46,6 +46,10 @@ angular.module('paper.services', [])
     this.$grades = grades;
     this.$conditions = conditions;
     this.$methods = methods;
+
+    if($type == 'GeneratedPaper'){
+      this.QuestionsTotal = questions.length;
+    }
     if(!this.id){
       this.Status = 3;
       this.Source = 1;
