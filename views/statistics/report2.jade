@@ -60,13 +60,13 @@ block content
         label.gray 条件:
         select(name='Condition')
           option(value='',selected= !searchParams.Condition) 全部
-          option(value='1',selected= searchParams.Condition == 1) 1
-          option(value='2',selected= searchParams.Condition == 2) 2
+          each condition in models.Settings.get('conditions')||[]
+            option(value=condition,selected= searchParams.Condition == condition)=condition
         label.gray 问法:
         select(name='Method')
           option(value='',selected= !searchParams.Method) 全部
-          option(value='1',selected= searchParams.Method == 1) 1
-          option(value='2',selected= searchParams.Method == 2) 2
+          each method in models.Settings.get('methods')||[]
+            option(value=method,selected= searchParams.Method == method)=method
         input.type(type='hidden',value='',name='type')
         button(type='submit').btn.btn-blue 确定
         button.export.btn.btn-orange 导出
