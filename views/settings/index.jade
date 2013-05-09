@@ -1,0 +1,20 @@
+extends ../layout
+
+block sidebar
+  h1 系统设置
+
+block content
+  .main
+    form(method='post',action='/settings')
+      .field
+        span.label 条件(每个一行):
+        input(type='hidden',name='settings[0][key]',value="conditions")
+        textarea(name='settings[0][value]')
+          =(models.Settings.get('conditions')||[]).join('\n')
+      .field
+        span.label 问法(每个一行):
+        input(type='hidden',name='settings[1][key]',value="methods")
+        textarea(name='settings[1][value]')
+          =(models.Settings.get('methods')||[]).join('\n')
+      .actions
+        button(type="submit").btn.btn-orange 更新
