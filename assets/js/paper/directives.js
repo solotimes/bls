@@ -201,6 +201,7 @@ return {
         var span = $(sp);
         span.replaceWith($('<span class="math">'+span.mathquill('latex')+'</span>'));
       });
+      c.find('*:not(.math,.math *)').removeAttr('style');
       // .mathquill('latex')
       //   .data('editing','false')
       //   .attr('class','math')
