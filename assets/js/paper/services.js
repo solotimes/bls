@@ -47,7 +47,7 @@ angular.module('paper.services', [])
     this.$conditions = conditions;
     this.$methods = methods;
 
-    if($type == 'GeneratedPaper'){
+    if(this.$type == 'GeneratedPaper'){
       this.QuestionsTotal = questions.length;
     }
     if(!this.id){
