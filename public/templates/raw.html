@@ -27,7 +27,7 @@
 				<span class='field'>最后编辑: {{paper.lastlog.Name}} {{paper.lastlog.CreatedAt | date:'yyyy-MM-dd HH:mm'}}</span>
 			</p>
 		</div>
-		<div class='record' ng-show='paper.pics' ng-show='paper.pics[selectedPic].AudioPath'>
+		<div class='record' ng-show='paper.pics[selectedPic].AudioPath &amp;&amp; paper.pics[selectedPic].AudioPath != "null"'>
 			第{{selectedPic+1}}面:
 			<button  class='btn btn-blue audio' audio-src='paper.pics[selectedPic].audio'>播放录音</button>
 		</div>
