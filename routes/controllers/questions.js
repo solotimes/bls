@@ -110,9 +110,8 @@ exports.index = {
       p = Q.when(req.parentModel.getFullQuestions());
     }else if(keywords.length){
       p = Q.when(models.Question.findAll({
-            include: ['Knowledge','CustomerPaper'],
-            where: [' `Questions`.`Status` in (5,6,8) AND `Excerpt` LIKE ? ', "%"+keywords+"%" ],
-            limit: 20
+            include: ['Knowledge'],
+            where: ['`Status` in (5,6,8) AND `Excerpt` LIKE ?', "%"+keywords+"%" ]
           })).then(function(quesions){
             // 删除空的knowledge 记录
             quesions.forEach(function(question){
