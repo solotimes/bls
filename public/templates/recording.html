@@ -22,7 +22,7 @@
 			<span>试卷来源: {{ {true:'录入',false:'会员上传'}[paper.Source==1] }}</span>
 		</div>
 	</div>
-	<div class="buttons" ng-show='!paper.id || paper.Status == 0 &amp;&amp; !!paper.AdminId'>
+	<div class="buttons" ng-show='!paper.id || paper.Status == 0'>
 		<a ng-click='initPaper()' class='btn btn-orange big'>创建新卷子</a>
 		<a ng-show='paper.$type=="CustomerPaper"' ng-click='subview="search";searchStyle={height:"42px"}' class='btn btn-blue big' ng-style='searchStyle'>搜索试卷库</a>
 	</div>
@@ -35,7 +35,7 @@
 			</div>
 			<div ng-include='"/templates/question.html"'></div>
 			<div class='buttons'>
-			  <a class='btn' href='{{paper.$listPath}}'>退出</a>
+			  <a class='btn' ng-click='close()'>退出</a>
 			  <a class='btn btn-blue' ng-show='[5,6,8,7].indexOf(paper.Status) > -1' ng-click='savePaper()'>保存试卷</a>
 			  <a class='btn btn-green' ng-show='paper.readyForAny([3,5,6,8],{finishWrongRecord: true}) &amp;&amp; paper.Status==2' ng-click='finishWrongRecord()'>完成错题录入</a>
 			  <a class='btn' ng-hide='isLastQuestion()' ng-click='nextQuestion()'>下一题</a>
