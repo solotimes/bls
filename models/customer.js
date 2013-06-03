@@ -68,7 +68,8 @@ module.exports = function(sequelize, DataTypes)
         Address: {type:DataTypes.STRING}, //地址
         ZipCode: {type:DataTypes.STRING}, //邮编
         Amount: {type:DataTypes.FLOAT}, //储值金额
-        Comment: {type:DataTypes.TEXT} //备注
+        Comment: {type:DataTypes.TEXT}, //备注
+        Credit: {type:DataTypes.INTEGER, defaultValue: 0}
     },{
           instanceMethods: {
             roleText: function(){

@@ -24,6 +24,16 @@ block content
         span.label 会员类别:
         span=instance.levelText()
       .field
+        span.label 积分:
+        span=instance.Credit
+      .field
+        span.label 试卷:
+        span 上传#{customerPapers.length}张卷子
+        - var finishedCount = customerPapers.filter(function(cp){return cp.Status == 6 || cp.Status == 7}).length;
+        span 完成解答#{finishedCount}张
+        - var untouchedCount = customerPapers.filter(function(cp){return cp.Status == 0}).length;
+        span 未处理#{untouchedCount}张
+      .field
         span.label 有效期:
         span=moment(instance.BeginDate).format('YYYY-MM-DD')
         |至

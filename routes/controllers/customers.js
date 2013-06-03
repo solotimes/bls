@@ -183,7 +183,14 @@ exports.create = function(req, res){
 };
 
 exports.show = function(req, res){
-  res.render('customers/show',{instance:req.customer});
+  Q.when(req.customer.getCustomerPapers())
+  .then(function(customerPapers){
+    res.render('customers/show',{instance:req.customer,customerPapers:customerPapers});
+  })
+  .fail(function(error){
+    logger.log(error);
+    next(error);
+  });
 };
 
 exports.records = function(req, res, next){
@@ -232,7 +239,14 @@ exports.report = function(req, res){
 };
 
 exports.edit = function(req, res){
-  res.render('customers/edit',{instance:req.customer});
+  Q.when(req.customer.getCustomerPapers())
+  .then(function(customerPapers){
+    res.render('customers/edit',{instance:req.customer,customerPapers:customerPapers});
+  })
+  .fail(function(error){
+    logger.log(error);
+    next(error);
+  });
 };
 
 exports.update = function(req, res){

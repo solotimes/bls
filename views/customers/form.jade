@@ -17,6 +17,16 @@ form(action= !instance.isNewRecord ? '/customers/#{instance.id}' : '/customers',
           <% }) -%>
         <% <- -%>
   .field
+    span.label 积分:
+    input(type='text',name='instance[Credit]',value=instance.Credit)
+  .field
+    span.label 试卷:
+    span 上传#{customerPapers.length}张卷子
+    - var finishedCount = customerPapers.filter(function(cp){return cp.Status == 6 || cp.Status == 7}).length;
+    span 完成解答#{finishedCount}张
+    - var untouchedCount = customerPapers.filter(function(cp){return cp.Status == 0}).length;
+    span 未处理#{untouchedCount}张
+  .field
     span.label 有效期:
     input.datepicker(type = 'text',value = moment(instance.BeginDate).format('YYYY-MM-DD'),name='instance[BeginDate]')
     |-
