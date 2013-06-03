@@ -59,7 +59,7 @@ exports.scope = function(req, res ,next){
       include: ['Customer'],
       addAttributes: ' `Levels`.`Name` as `lname` ,`Levels`.`Order` as `lorder` ',
       join: ' LEFT OUTER JOIN `Levels` ON `Customers`.`LevelID`=`Levels`.`id` ',
-      order: ' `lorder` DESC ,`CreatedAt` '
+      order: ' `lorder` DESC ,`CreatedAt` DESC'
     },
       req.param('page'),req.param('per'),
   function(error,collection){

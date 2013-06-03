@@ -21,7 +21,6 @@ angular.module( 'facebox', [] )
 		$('#facebox .close').off('click');
 		$('#facebox .close').on('click',function(e){
 			e.preventDefault();
-			console.log('!!!!');
 			var event = scope.$broadcast('modal-closing');
 			if(!event.defaultPrevented)
 				return $.facebox.close(e)
