@@ -8,6 +8,7 @@
  var Sequelize = require("sequelize");
  var Q = require('q');
  var moment = require('moment');
+ var utility = require('../routes/logics/utility');
  var STATUS = {
   '未处理': 0,
   '待录全卷': 3,
@@ -20,6 +21,7 @@ module.exports = function(sequelize, DataTypes)
     Name: {type:DataTypes.STRING},
     Status: {type:DataTypes.INTEGER, defaultValue: 0},
     CreatedAt: {type:DataTypes.DATE, defaultValue: DataTypes.NOW},
+    UpdatedAt: {type:DataTypes.DATE, defaultValue: DataTypes.NOW},
     RecordedAt: {type:DataTypes.DATE},
     CodeName: {type:DataTypes.STRING},
     AudioPath: {type:DataTypes.STRING},
@@ -69,6 +71,7 @@ module.exports = function(sequelize, DataTypes)
             },
             saveInstance: function(instance,attrs){
               var self=this;
+              attrs.UpdatedAt = utility.getCurrentTime();
               if(!instance){
                 attrs.CodeName = moment().format('YYYYMDD-X');
                 instance = self.build(attrs);

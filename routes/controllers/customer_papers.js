@@ -3,6 +3,7 @@ var models = require('../../models'),
     utility = require('../logics/utility'),
     extend = require('extend'),
     Q = require('q'),
+    utility = require('../logics/utility'),
     async = require('async');
 
 exports.index = function(req, res){
@@ -270,7 +271,7 @@ exports.update = function(req, res ,next){
     try{
       attrs.Meta = JSON.stringify(attrs.Meta);
     }catch(e){}
-    req.customer_paper.update(req.param('instance'))
+    req.customer_paper.update(extend(req.param('instance'),{UpdatedAt: utility.getCurrentTime()}))
     .then(function(){
       return Q.nfcall(findPaperAndCustomer,req,instance.id);
     })

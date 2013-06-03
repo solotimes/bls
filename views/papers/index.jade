@@ -55,7 +55,7 @@ block content
             th 状态
             th 试卷来源
             th 试卷标题
-            th 上传时间
+            th 更改时间
             th 录入时间
             th.span20 操作
         tbody
@@ -75,8 +75,8 @@ block content
                   录入
               td= model.Name
               td
-                if model.CreatedAt
-                  = moment(model.CreatedAt).format('YYYY-MM-DD HH:mm')
+                if model.UpdatedAt || model.RecordedAt
+                  = moment(model.UpdatedAt || model.RecordedAt).format('YYYY-MM-DD HH:mm')
               td
                 if model.RecordedAt
                   = moment(model.RecordedAt).format('YYYY-MM-DD HH:mm')
