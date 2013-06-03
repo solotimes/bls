@@ -277,10 +277,14 @@ angular.module('paper.services', [])
   Paper.prototype.saveAllQuestions = function() {
     var self = this;
     if(self.questions.length){
-      questions.forEach(function(question){
+      self.questions.forEach(function(question){
         self.updateQuestionStatus(question);
       });
-      return http.post(self.$questionsPath,{instance:self.questions}).then(function(res){
+
+      var questions = self.questions.filter(function(q){
+        return (!!q.id)
+      });
+      return http.post(self.$questionsPath,{instance:questions}).then(function(res){
         var qs = res.data;
         if(!qs.length) qs = [qs];
         qs.forEach(function(q,i){
