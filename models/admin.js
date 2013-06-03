@@ -53,7 +53,8 @@ module.exports = function(sequelize, DataTypes)
         LoginIP: {type:DataTypes.STRING},
         LoginTime: {type:DataTypes.DATE},
         LastLoginIP: {type:DataTypes.STRING},
-        LastLoginTime: {type:DataTypes.DATE}
+        LastLoginTime: {type:DataTypes.DATE},
+        Online: {type:DataTypes.Boolean, defaultValue: false}
         },
         {
           instanceMethods: {

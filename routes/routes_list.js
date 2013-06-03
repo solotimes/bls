@@ -28,7 +28,6 @@ app.get('/', function(req,res){
 
 app.get('/login', auth.login);
 app.post('/login', auth.loginPost);
-app.get('/logout', authorization.checkLogin);
 app.get('/logout', auth.logout);
 
 app.get('/admins/inputers',controllers.admins.inputers);

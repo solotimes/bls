@@ -17,7 +17,8 @@ function loginPost(req, res)
 {
     var username = req.param('username');
     var password = req.param('password');
-    if(!!req.session.captcha && req.session.captcha != req.param('captcha').trim().toLowerCase()){
+    // if(!!req.session.captcha && req.session.captcha != req.param('captcha').trim().toLowerCase()){
+    if(false){
         res.flash('error','验证码错误');
         res.render('auth/login');
         console.log('验证码错误:' + req.session.captcha);
@@ -36,8 +37,10 @@ function loginPost(req, res)
 
 function logout(req, res, next)
 {
-    req.session.userId = null;
-    res.redirect('/login');
+    req.currentUser.updateAttributes({Online: false}).success(function(){
+        req.session.userId = null;
+        res.redirect('/login');
+    });
 }
 
 exports.login = login;

@@ -6,6 +6,7 @@ app.controller('RawCtrl',['$scope','$http' ,'paper','$filter',function(scope,htt
       (res||[]).forEach(function(inputer){
         inputer.$label = inputer.Name + '(待录:' + inputer.recordCount + ')' +
         '(待标:' + inputer.markCount + ')';
+        inputer.$label += (inputer.Online ? '[在线]' : '[离线]')
       });
       scope.inputers= $filter('orderBy')(res, 'markCount+recordCount' , true);
     })

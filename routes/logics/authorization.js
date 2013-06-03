@@ -20,6 +20,7 @@ function validateUser(req, username, password, callback)
                     admin.LastLoginTime = admin.LoginTime;
                     admin.LoginIP = req.ip;
                     admin.LoginTime = utility.getCurrentTime();
+                    admin.Online = true;
                     admin.save().success(function(){
                         callback(true, admin);
                     }).failure(function(){
