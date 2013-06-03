@@ -60,17 +60,18 @@ block content
                 td= row.Level1
                 td= row.Level2
                 td= row.Name
-                each customer in report.customers
+                each customer,i in report.customers
+                  - var cls = (i%2 === 0) ? 'odd' : 'even'
                   if row[customer.id]
-                    td.orange.center #{row[customer.id].wrate}%
-                    td.orange.center=row[customer.id].wcount
-                    td
+                    td(class=cls).orange.center #{row[customer.id].wrate}%
+                    td(class=cls).orange.center=row[customer.id].wcount
+                    td(class=cls)
                       a.question(ng-click='viewQuestion(question)',ng-repeat="question in report.rows[#{i}][#{customer.id}].questions")
                         | {{paper.questionTypes[question.Type]}}{{question.id}}
                   else
-                    td
-                    td
-                    td
+                    td(class=cls)
+                    td(class=cls)
+                    td(class=cls)
   script
     $('input#ids').tokenInput('/customers.json',{
         prePopulate: report && report.customers,
