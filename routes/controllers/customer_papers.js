@@ -150,6 +150,26 @@ exports.recorded = function(req,res,next){
     }
   ];
 
+  var p = Q.when();
+  p =  res.locals.scopes.reduce(function(p,scope){
+    var where = {};
+    where.Status = models.CustomerPaper[scope.value];
+    if(scope.value == '待推送'){
+      where.Status = [3,6,8];
+    }else if("undefined" == typeof where.Status){
+      where.Status = [5,6,7,8];
+    }
+    var condition = {};
+    if(Sequelize.Utils._.keys(where).length > 0)
+      condition.where = where;
+    return p.then(function(){
+      return Q.when(models.CustomerPaper.count(condition));
+    }).then(function(count){
+      if(count)
+        scope.name = (scope.name || scope.value) + ( '('+count+')' );
+    });
+  },p);
+
   var q = (req.param('q') || '').trim();
   var by = (req.param('by')||'').trim();
   var scope = (req.param('scope')||'').trim();
@@ -192,21 +212,23 @@ exports.recorded = function(req,res,next){
     where = condition;
   }
 
-  models.CustomerPaper.pageAll({
-      where:where,
-      countJoin: " LEFT OUTER JOIN `Customers` ON `CustomerPapers`.`CustomerId`=`Customers`.`id` LEFT OUTER JOIN `Admins` ON `CustomerPapers`.`AdminId`=`Admins`.`id` ",
-      include: ['Customer','AssignedTo'],
-      addAttributes: ' `Levels`.`Name` as `lname` ,`Levels`.`Order` as `lorder` ',
-      join: ' LEFT OUTER JOIN `Levels` ON `Customers`.`LevelID`=`Levels`.`id` ',
-      order: ' `lorder` DESC ,`CreatedAt` '
-    },
-      req.param('page'),req.param('per'),
-  function(error,collection){
-    if(error){
-      logger.log(error);
-      return next(error);
-    }
-    res.render('customer_papers/recorded',{collection: extend(collection||[],searchParams)});
+  p.then(function(){
+    models.CustomerPaper.pageAll({
+        where:where,
+        countJoin: " LEFT OUTER JOIN `Customers` ON `CustomerPapers`.`CustomerId`=`Customers`.`id` LEFT OUTER JOIN `Admins` ON `CustomerPapers`.`AdminId`=`Admins`.`id` ",
+        include: ['Customer','AssignedTo'],
+        addAttributes: ' `Levels`.`Name` as `lname` ,`Levels`.`Order` as `lorder` ',
+        join: ' LEFT OUTER JOIN `Levels` ON `Customers`.`LevelID`=`Levels`.`id` ',
+        order: ' `lorder` DESC ,`CreatedAt` '
+      },
+        req.param('page'),req.param('per'),
+    function(error,collection){
+      if(error){
+        logger.log(error);
+        return next(error);
+      }
+      res.render('customer_papers/recorded',{collection: extend(collection||[],searchParams)});
+    });
   });
 };
 
