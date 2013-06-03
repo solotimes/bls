@@ -91,7 +91,7 @@ function authenticateUser(req, res, next) {
         if(error || !admin){
             logout(req,function(){
                 if(req.xhr){
-                    res.send(401);
+                    res.end();
                 }else{
                     res.flash('error','权限不足');
                     res.redirect('/login');
