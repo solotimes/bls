@@ -28,7 +28,15 @@ block content
     a.btn.btn-green.btn-round(href='/papers/new' , data-type='add') 添加
     a.btn.btn-green.btn-round(href='#' , data-type='refresh') 刷新
     a.btn.btn-green.btn-round(href='#' , data-type='delete-selected') 删除
-    form(method='get').search
+    form(method='get').search.paper
+      select(name='GradeId')
+        option(value='',selected= !collection.GradeId) 全部年级
+        :qejs(models=models,collection=collection)
+          <% models.Grade.findAll() -> grades %>
+            <% grades.forEach(function(grade){ -%>
+              <option value="<%= grade.id %>" <%= grade.id == collection.GradeId ? 'selected' : '' %>><%= grade.Name %></option>
+            <% }) -%>
+          <% <- -%>
       select(name='by')
         option(value='Name',selected=collection.by=='Name') 试卷标题
         option(value='CodeName' ,selected=collection.by=='CodeName') 试卷编号

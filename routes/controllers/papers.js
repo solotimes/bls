@@ -66,6 +66,7 @@ exports.scope = function(req, res ,next){
   ];
   var q = (req.param('q') || '').trim();
   var by = (req.param('by')||'').trim();
+  var gradeId = req.param('GradeId');
   var scope = (req.param('scope')||'').trim();
   var condition = '`Status` in(3,6,8) ';//'RecordedAt is NULL';
   var where,searchParams={};
@@ -78,6 +79,9 @@ exports.scope = function(req, res ,next){
   //   condition = condition ? (condition + ' AND ') :  '';
   //   condition += ('AdminId = '+req.currentUser.id);
   // }
+  if(gradeId){
+    condition += Utils.format([' AND `Papers`.`GradeId` = ? ',gradeId]);
+  }
   if(q.length && by.length && (by == 'Name' || by == 'CodeName' || by == 'CreatedAt')){
     if(condition)
       condition += ' AND `Papers`.`'+by+"` LIKE ?";
@@ -87,6 +91,7 @@ exports.scope = function(req, res ,next){
   }else{
     where = condition;
   }
+
   models.Paper.pageAll({
       where:where,
       // include: ['Customer','AssignedTo'],
@@ -100,7 +105,7 @@ exports.scope = function(req, res ,next){
       logger.log(error);
       return next(error);
     }
-    res.render('papers/index',{collection: extend(collection||[],searchParams)});
+    res.render('papers/index',{collection: extend(collection||[],searchParams,{GradeId:gradeId})});
   });
 };
 
