@@ -93,4 +93,4 @@ block content
                   a(href='/papers/#{model.id}#edit',data-type='edit',target='_blank') 修改
                 a(data-type='delete', href='/papers/#{model.id}' , data-method='delete' , data-confirm='确定删除本记录?' , rel="nofollow") 删除
     .pagination
-      != paginate(collection)
+      != paginate(collection,{action: req.path, params: {GradeId: collection.GradeId}})
