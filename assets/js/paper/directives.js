@@ -76,23 +76,24 @@ angular.module('paper.directives', [])
         if(attrs.audioSrc){
           elm.on('click',function(e){
             e.preventDefault();
-            if(scope.sound){
-              scope.sound.stop();
-              return false;
-            }
-            var url = scope.$eval(attrs.audioSrc);
-            if(url){
-              for(var i in buzz.sounds) {
-                  buzz.sounds[i].mute();
-              }
-              scope.sound = new buzz.sound(url);
-              scope.sound.bind('playing',function(){
-                elm.text(attrs.stopLabel);
-              }).bind('abort pause ended',function(){
-                scope.sound = null;
-                elm.text(attrs.playLabel);
-              }).play();
-            }
+            window.open(scope.$eval(attrs.audioSrc));
+            // if(scope.sound){
+            //   scope.sound.stop();
+            //   return false;
+            // }
+            // var url = scope.$eval(attrs.audioSrc);
+            // if(url){
+            //   for(var i in buzz.sounds) {
+            //       buzz.sounds[i].mute();
+            //   }
+            //   scope.sound = new buzz.sound(url);
+            //   scope.sound.bind('playing',function(){
+            //     elm.text(attrs.stopLabel);
+            //   }).bind('abort pause ended',function(){
+            //     scope.sound = null;
+            //     elm.text(attrs.playLabel);
+            //   }).play();
+            // }
           });
         }
       }
