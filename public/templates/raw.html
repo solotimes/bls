@@ -24,7 +24,7 @@
 			<p>
 				<span class='field' ng-show='paper.$type == "CustomerPaper"'>录入:  {{paper.assignedTo.Name}}</span>
 				<span class='field'>{{paper.RecordedAt | date:'yyyy-MM-dd'}}</span>
-				<span class='field'>最后编辑: {{paper.lastlog.Name}} {{paper.lastlog.CreatedAt | date:'yyyy-MM-dd HH:mm'}}</span>
+				<span class='field'>最后编辑: {{paper.UpdatedAt || paper.RecordedAt || paper.CreatedAt | date:'yyyy-MM-dd HH:mm'}}</span>
 			</p>
 		</div>
 		<div class='record' ng-show='paper.pics[selectedPic].AudioPath &amp;&amp; paper.pics[selectedPic].AudioPath != "null"'>
