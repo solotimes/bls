@@ -18,6 +18,15 @@ angular.module( 'facebox', [] )
 		$compile(el)(scope);
 		$.facebox('');
 		$('#facebox .content').empty().append(el);
+		$('#facebox .close').off('click');
+		$('#facebox .close').on('click',function(e){
+			e.preventDefault();
+			console.log('!!!!');
+			var event = scope.$broadcast('modal-closing');
+			if(!event.defaultPrevented)
+				return $.facebox.close(e)
+		});
+
 		$(document).one('afterClose.facebox',function(){
 			scope.$destroy();
 		});
