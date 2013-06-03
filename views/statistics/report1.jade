@@ -60,8 +60,8 @@ block content
                 td= row.Level1
                 td= row.Level2
                 td= row.Name
-                each customer,i in report.customers
-                  - var cls = (i%2 === 0) ? 'odd' : 'even'
+                each customer,j in report.customers
+                  - cls = (j%2 === 0) ? 'odd' : 'even'
                   if row[customer.id]
                     td(class=cls).orange.center #{row[customer.id].wrate}%
                     td(class=cls).orange.center=row[customer.id].wcount
