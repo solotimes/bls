@@ -21,6 +21,7 @@ app.controller('QuestionModalCtrl',['$scope','$http','paper',function(scope,http
     scope.$broadcast('save-question');
   };
   scope.$on('question-saved',function(){
+    scope.dirty = false;
     scope.mode = 0;
   });
   scope.cancel = function(e){
