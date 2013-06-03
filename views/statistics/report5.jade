@@ -72,6 +72,9 @@ block content
               | 标题: #{searchParams.Name}
             else if searchParams.Type
               | 性质: #{models.Paper.Types[parseInt(searchParams.Type)]}
+          if report.knowledges
+            span.orange
+              试卷数: #{report.paperCount} 张
         h1 卷子知识点分布:
         table(style='table-layout: fixed;')
           thead
