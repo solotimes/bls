@@ -61,7 +61,7 @@ block content
                 span.status(class='status-#{model.Status}')=model.statusText()
               td= model.customer.Name
               td= model.lname
-              td= model.Name
+              td(style='text-align:left')= model.Name
               td
                 if model.AppliedTime
                   = moment(model.AppliedTime).format('YYYY-MM-DD HH:mm')

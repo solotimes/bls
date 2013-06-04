@@ -116,7 +116,7 @@ block content
               td {{ paper.questionTypes[question.Type]}}
               td
                 span.orange(ng-show='question.knowledges.length > 1') 复
-              td
+              td(style='text-align:left')
                 div.math-html(math-html='question.Body')
               td
                 | {{ question.UpdatedAt | date: 'yyyy-MM-dd HH:mm' }}

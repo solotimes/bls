@@ -56,7 +56,7 @@ block content
                   |未分配
               td= model.customer.Name
               td= model.lname
-              td= model.Name
+              td(style='text-align:left')= model.Name
               td
                 if model.CreatedAt
                   = moment(model.CreatedAt).format('YYYY-MM-DD HH:mm')
