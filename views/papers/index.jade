@@ -73,7 +73,7 @@ block content
                   用户上传
                 else
                   录入
-              td= model.Name
+              td(style='text-align:left')= model.Name
               td
                 if model.UpdatedAt || model.RecordedAt
                   = moment(model.UpdatedAt || model.RecordedAt).format('YYYY-MM-DD HH:mm')
@@ -81,6 +81,10 @@ block content
                 if model.RecordedAt
                   = moment(model.RecordedAt).format('YYYY-MM-DD HH:mm')
               td
+                if model.Status == 6 || model.Status == 8
+                  a(href='/papers/#{model.id}/print',data-type='print',target='_blank') 打印
+                else
+                  a.hidden 占位
                 if model.Status == 6
                   a(href='/papers/#{model.id}#paper-report',data-type='report',target='_blank') 报告
                 else

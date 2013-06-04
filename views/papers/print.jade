@@ -1,0 +1,47 @@
+!!! 5
+//if lt IE 7
+  html.no-js.lt-ie9.lt-ie8.lt-ie7.ie6
+//if IE 7
+  html.no-js.lt-ie9.lt-ie8.ie7
+//if IE 8
+  html.no-js.lt-ie9.ie8
+// [if gt IE 8] <!
+html.no-js
+  // <![endif]
+  head
+    meta(charset='utf-8')
+    meta(content='IE=edge,chrome=1', http-equiv='X-UA-Compatible')
+    title=instance.Name
+    meta(content='', name='description')
+    meta(content='andrew', name='author')
+    link(href='/favicon.ico', rel='shortcut icon')
+    block head
+      !=js('app')
+      !=css('reset')
+      !=css('app')
+      !=css('token-input')
+      !=js('papers')
+      script(src='/jmeditor/JMEditor.js')
+      script
+        window.paperType = 'Paper';
+        window.paper = !{JSON.stringify(instance)};
+        window.admin = !{JSON.stringify(currentUser)};
+      :qejs(models=models,instance=instance)
+        <script>
+          <% models.Grade.findAll() -> grades %>
+            window.grades = <%-JSON.stringify(grades)%>;
+          <% <- -%>
+          <% instance.getFullQuestions() -> questions %>
+            window.questions = <%-JSON.stringify(questions || [])%>;
+          <% <- -%>
+        </script>
+  body.paper-print
+    .wrapper
+      div(ng-app='Paper', ng-controller="MainCtrl")
+        .paper(ng-include,src="'/templates/print.html'")
+    .ajax-spinner
+      .sending 发送中...
+      .loading 加载中...
+      .success 完成!
+      .fail 错误 点击
+        a(href='javascript:window.location.reload();')刷新

@@ -50,6 +50,7 @@ customer_papers.map('post','dump',controllers.customer_papers.dump);
 
 app.get('/papers/scope/:scope?',controllers.papers.scope);
 var papers = app.resource('papers',controllers.papers);
+papers.map('get','print',controllers.papers.print);
 papers.map('delete','/',controllers.papers.batchDestroy);
 papers.map('post','/filter',controllers.papers.filter);
 

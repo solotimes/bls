@@ -120,6 +120,17 @@ exports.show = {
   }
 };
 
+exports.print = {
+  html: function(req,res,next){
+    res.locals.instance = req.paper;
+    res.render('papers/print');
+  },
+  json: function(req,res,next){
+    res.send(paper);
+  }
+};
+
+
 exports['new'] = function(req,res){
   res.render('papers/new');
 };

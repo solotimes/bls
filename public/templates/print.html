@@ -1,0 +1,29 @@
+<div class="inner view">
+	<div class="paper-info underline-dashed clearfix">
+		<div  ng-hide='readonly' class="buttons pull-right">
+			<a ng-click='window.close()' class="btn">关闭</a>
+			<button class="btn btn-cyan" ng-click='window.print()'>打印</button>
+		</div>
+		<span paper-status="paper.Status"></span>
+		<span class='gray'>卷子ID: {{paper.id}}</span>
+	</div>
+	<h1 class="paper-body">{{paper.GradeName()}}  &nbsp; &nbsp; <b>{{paper.Name}}</b></h1>
+	<div ng-repeat='type in paper.getQuestionsGroupByTypes()' class="question-section">
+		<h3>{{type.long}}</h3>
+		<ol>
+			<li class="question" ng-repeat='question in type.questions'>
+				<span math-html='question.Body' class='question-body'></span>
+				<div ng-switch='question.Type' style='margin-top: 10px'>
+					<ol class="choices" ng-switch-when='0'>
+						<!-- 选择题 -->
+						<li ng-repeat='choice in question.Choices' style='display:inline-block;width:25%'>
+							<div class='choice-body' math-html='choice.body'></div>
+						</li>
+					</ol>
+					<div ng-switch-when='1'></div>
+					<div ng-switch-when='2' style='height:50px'></div>
+				</div>
+			</li>
+		</ol>
+	</div>
+</div>

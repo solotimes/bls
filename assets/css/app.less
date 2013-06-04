@@ -1651,3 +1651,29 @@ a,a:hover{
     opacity: 0;
   }
 }
+
+.paper-print{
+  font-size: 12px;
+}
+
+.paper-print .paper .view{
+  .paper-info{
+    padding-bottom: 10px;
+    min-height: auto;
+  }
+  h3{
+    line-height: 50px;
+  }
+  li{
+    margin-bottom: 10px;
+  }
+}
+
+@media print {
+   .paper-print .paper-info{
+      display: none;
+   }
+   .paper-print{
+    font-size: 10px;
+   }
+}
