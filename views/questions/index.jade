@@ -47,13 +47,13 @@ block content
           label.gray 条件
           select(name='Condition')
             option(value='',selected= !collection.Condition) 全部
-            option(value='1',selected= collection.Condition == 1) 1
-            option(value='2',selected= collection.Condition == 2) 2
+            each condition in (models.Settings.get('conditions')||[])
+              option(value=condition,selected= collection.Condition == condition)=condition
           label.gray 问法
           select(name='Method')
             option(value='',selected= !collection.Method) 全部
-            option(value='1',selected= collection.Method == 1) 1
-            option(value='2',selected= collection.Method == 2) 2
+            each method in (models.Settings.get('methods')||[])
+              option(value=method,selected= collection.Method == method)=method
           label.gray 难度
           select(name='Difficulty')
             option(value='',selected= !collection.Difficulty) 全部
