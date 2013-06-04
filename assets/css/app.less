@@ -348,12 +348,17 @@ a,a:hover{
   }
 }
 
+@sidebarWidth: 132px;
+
 .sidebar{
   .lite &{
     display: none;
   }
+  .report &{
+    width: 200px;
+  }
   /*background: gray;*/
-  width: 200px;
+  width: @sidebarWidth;
   padding-bottom: 5000px;
   margin-bottom: -5000px;
   position: absolute;
@@ -397,9 +402,12 @@ a,a:hover{
 }
 
 .content{
-  margin-left: 205px;
+  margin-left: @sidebarWidth + 5px;
   .lite &{
     margin-left: 0;
+  }
+  .report &{
+    margin-left: 205px;
   }
 }
 
@@ -646,6 +654,9 @@ a,a:hover{
 }
 .span200px{
   width: 200px;
+}
+.span230px{
+  width: 230px;
 }
 .span05{
   width: 5%;
