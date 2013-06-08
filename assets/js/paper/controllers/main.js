@@ -23,7 +23,7 @@ app.controller('MainCtrl',['$scope','$window','$http','$route','$location','$q',
     if($('.marking').length){
       window.location.href = '/customer_papers/raw/待标错题';
     }else if($('.recording').length){
-      if(paper.AdminId || (!paper.AdminId && confirm('没有分配录入员是否退出? 将不保存状态'))){
+      if(paper.$type != 'CustomerPaper' || (paper.$type=='CustomerPaper' && (paper.AdminId || (!paper.AdminId && confirm('没有分配录入员是否退出? 将不保存状态'))))){
         window.location.href = paper.$listPath;
       }
     }else{
