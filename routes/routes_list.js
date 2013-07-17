@@ -17,8 +17,8 @@ var auth = require('./auth'),
 app.get('/', function(req,res){
   var to = req.redirectByRole([
     [['分配员'],'/customer_papers/raw'],
-    [['标错题'],'/customer_papers/raw/待标错题'],
-    [['录入员'],'/customer_papers/raw/待录全卷'],
+    [['标错题'],'/customer_papers/raw/%E5%BE%85%E6%A0%87%E9%94%99%E9%A2%98'],
+    [['录入员'],'/customer_papers/raw/%E5%BE%85%E5%BD%95%E9%94%99%E9%A2%98'],
     [['推送'],'/customer_papers/recorded'],
     [['试卷库题库管理','老师'],'/papers'],
     [['管理员'],'/customers']
